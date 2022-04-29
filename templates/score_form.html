@@ -45,11 +45,11 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-          {% trans 'Received internship grades' %}
+          {% trans 'Internship grades' %}
           <span class="pull-right">
-              <strong>{% trans 'Internship master' %} </strong>: {{ master }}
+              <strong>{% trans 'Internship master' %} </strong>: {{ master | default_if_none:'-' }}
               <strong>|</strong>
-              <strong>{% trans 'Validated by' %} </strong>: {{ score.validated_by }}
+              <strong>{% trans 'Validated by' %} </strong>: {{ score.validated_by | default_if_none:'-' }}
           </span>
       </div>
         <div class="panel-body">
@@ -85,3 +85,4 @@
         </div>
     </div>
 {% endblock %}
+

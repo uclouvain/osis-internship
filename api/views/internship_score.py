@@ -27,11 +27,9 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 
 from internship.api.serializers.internship_score import InternshipScoreDetailSerializer, InternshipScorePutSerializer
-from internship.models.internship_master import InternshipMaster
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.utils.mails.mails_management import send_score_validated_email
-from osis_common.utils.models import get_object_or_none
 
 
 class InternshipScoreCreateRetrieveUpdate(generics.RetrieveUpdateAPIView):
@@ -70,7 +68,7 @@ class ValidateInternshipScore(generics.GenericAPIView):
     def post(self, request, *args, **kwargs) -> Response:
         score = self.get_object()
         score.validated = True
-        score.validated_by = get_object_or_none(InternshipMaster, person=request.user.person)
+        score.validated_by = request.user.person
         score.save()
         if score.student_affectation:
             send_score_validated_email(score)

@@ -42,41 +42,38 @@ CHOICES = [1, 2, 3, 4]
 
 
 class OfferViewTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    def setUp(self):
+        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        cls.user.user_permissions.add(permission)
-        cls.cohort = CohortFactory()
-        cls.organization = OrganizationFactory(cohort=cls.cohort)
-        cls.specialty = SpecialtyFactory(mandatory=True, cohort=cls.cohort)
-        cls.offer = OfferFactory(cohort=cls.cohort, organization=cls.organization,  speciality=cls.specialty)
+        self.user.user_permissions.add(permission)
+        self.cohort = CohortFactory()
+        self.organization = OrganizationFactory(cohort=self.cohort)
+        self.specialty = SpecialtyFactory(mandatory=True, cohort=self.cohort)
+        self.offer = OfferFactory(cohort=self.cohort, organization=self.organization,  speciality=self.specialty)
         students = [StudentFactory() for _ in range(0, 4)]
-        mandatory_internship = InternshipFactory(cohort=cls.cohort, speciality=cls.specialty)
-        non_mandatory_internship = InternshipFactory(cohort=cls.cohort)
+        mandatory_internship = InternshipFactory(cohort=self.cohort, speciality=self.specialty)
+        non_mandatory_internship = InternshipFactory(cohort=self.cohort)
 
         for internship in [mandatory_internship, non_mandatory_internship]:
             for choice in CHOICES:
                 create_internship_choice(
-                    organization=cls.organization,
+                    organization=self.organization,
                     student=students[0],
-                    speciality=cls.specialty,
+                    speciality=self.specialty,
                     choice=choice,
                     internship=internship
                 )
         for student in students[1:]:
             create_internship_choice(
-                organization=cls.organization,
+                organization=self.organization,
                 student=student,
-                speciality=cls.specialty,
+                speciality=self.specialty,
                 choice=random.choice([2, 3, 4]),
                 internship=mandatory_internship
             )
-        cls.url = reverse('internships', kwargs={
-            'cohort_id': cls.cohort.id,
+        self.url = reverse('internships', kwargs={
+            'cohort_id': self.cohort.id,
         })
-
-    def setUp(self):
         self.client.force_login(self.user)
 
     def test_home(self):
@@ -127,28 +124,27 @@ class OfferViewTestCase(TestCase):
 
 
 class OfferChoiceDistributionTestCase(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+    def setUp(self):
+        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
-        cls.user.user_permissions.add(permission)
-        cls.cohort = CohortFactory()
+        self.user.user_permissions.add(permission)
+        self.cohort = CohortFactory()
         students = [StudentFactory() for _ in range(0, 4)]
-        cls.specialty = SpecialtyFactory(mandatory=1, cohort=cls.cohort)
-        mandatory_internship = InternshipFactory(cohort=cls.cohort, speciality=cls.specialty)
-        non_mandatory_internship = InternshipFactory(cohort=cls.cohort)
-        organization = OrganizationFactory(cohort=cls.cohort)
+        self.specialty = SpecialtyFactory(mandatory=1, cohort=self.cohort)
+        mandatory_internship = InternshipFactory(cohort=self.cohort, speciality=self.specialty)
+        non_mandatory_internship = InternshipFactory(cohort=self.cohort)
+        organization = OrganizationFactory(cohort=self.cohort)
         OfferFactory(
-            cohort=cls.cohort,
+            cohort=self.cohort,
             organization=organization,
-            speciality=cls.specialty
+            speciality=self.specialty
         )
         for internship in [mandatory_internship, non_mandatory_internship]:
             for choice in CHOICES:
                 create_internship_choice(
                     organization=organization,
                     student=students[0],
-                    speciality=cls.specialty,
+                    speciality=self.specialty,
                     choice=choice,
                     internship=internship
                 )
@@ -156,16 +152,14 @@ class OfferChoiceDistributionTestCase(TestCase):
             create_internship_choice(
                 organization=organization,
                 student=student,
-                speciality=cls.specialty,
+                speciality=self.specialty,
                 choice=random.choice([2, 3, 4]),
                 internship=mandatory_internship
             )
-        cls.url = reverse('internships', kwargs={
-            'cohort_id': cls.cohort.id,
-            'specialty_id': cls.specialty.id
+        self.url = reverse('internships', kwargs={
+            'cohort_id': self.cohort.id,
+            'specialty_id': self.specialty.id
         })
-
-    def setUp(self):
         self.client.force_login(self.user)
 
     def test_count_number_first_choices(self):
