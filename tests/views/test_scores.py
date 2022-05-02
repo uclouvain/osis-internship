@@ -46,10 +46,13 @@ from base.tests.factories.student import StudentFactory
 from base.utils.cache import RequestCache
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.organization import Organization
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
+from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory, ScoreMappingFactory
 from internship.tests.factories.speciality import SpecialtyFactory
@@ -94,7 +97,8 @@ class ScoresEncodingTest(TestCase):
                 affectation = StudentAffectationStatFactory(
                     student=student,
                     internship=internship,
-                    speciality=internship.speciality if internship.speciality else SpecialtyFactory(),
+                    speciality=internship.speciality if internship.speciality else SpecialtyFactory(cohort=self.cohort),
+                    organization=OrganizationFactory(cohort=self.cohort),
                     period=periods[index]
                 )
                 if affectation.period.name == 'P1':
@@ -228,7 +232,12 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         person = PersonFactory(last_name="Éçàüî")
         searched_student = InternshipStudentInformationFactory(person=person, cohort=self.cohort)
-        StudentAffectationStatFactory(student=StudentFactory(person=person), period__cohort=self.cohort)
+        StudentAffectationStatFactory(
+            student=StudentFactory(person=person),
+            period__cohort=self.cohort,
+            organization__cohort=self.cohort,
+            speciality__cohort=self.cohort,
+        )
         data = {
             'free_text': searched_student.person.last_name,
         }
@@ -407,18 +416,24 @@ class ScoresEncodingTest(TestCase):
         student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         PeriodFactory(name='last_period', cohort=self.cohort)
+
         ScoreFactory(
             student_affectation__student=student,
             student_affectation__period=self.period,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='A',
             validated=True
         )
         ScoreFactory(
             student_affectation__student=student,
             student_affectation__period=self.other_period,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='C',
             validated=True
         )
+
         ScoreMappingFactory(
             period=self.other_period,
             cohort=self.cohort,
@@ -496,6 +511,8 @@ class ScoresEncodingTest(TestCase):
         ScoreFactory(
             student_affectation__student=student,
             student_affectation__period=self.period,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             excused=True,
             score=new_score,
             validated=True
@@ -560,6 +577,8 @@ class ScoresEncodingTest(TestCase):
         ScoreFactory(
             student_affectation__period=self.period,
             student_affectation__student=student_with_no_validated_score,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='A',
             validated=False
         )
@@ -671,6 +690,8 @@ class ScoresEncodingTest(TestCase):
         ScoreFactory(
             student_affectation__period=self.period,
             student_affectation__student=student_with_comment,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='A',
             validated=True,
             comments={"impr_areas": comment_content}
@@ -679,3 +700,37 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url)
         student_with_comment = response.context['students'].object_list[0]
         self.assertEqual(student_with_comment.comments[self.period.name], {_("Improvement areas"): comment_content})
+
+    def test_should_filter_scores_by_organization(self):
+        organization = Organization.objects.first()
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'organization': organization.pk})
+        student = response.context['students'].object_list[0]
+        self.assertIn(organization.name, str(student.organizations))
+
+    def test_should_filter_scores_by_specialty(self):
+        specialty = InternshipSpeciality.objects.first()
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'specialty': specialty.pk})
+        student = response.context['students'].object_list[0]
+        self.assertIn(specialty.name, str(student.specialties))
+
+    def test_should_filter_scores_by_specialty_and_organization(self):
+        organization = Organization.objects.first()
+        specialty = InternshipSpeciality.objects.first()
+
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort, person__last_name="A")
+        ScoreFactory(
+            student_affectation__student=StudentFactory(person=student_info.person),
+            student_affectation__period=self.period,
+            student_affectation__organization=organization,
+            student_affectation__speciality=specialty,
+            validated=True
+        )
+
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'organization': organization.pk, 'specialty': specialty.pk})
+        student = response.context['students'].object_list[0]
+        self.assertIn(specialty.name, str(student.specialties))
+        self.assertIn(organization.name, str(student.organizations))
+        self.assertEqual(student.person, student_info.person)

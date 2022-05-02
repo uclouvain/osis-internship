@@ -96,11 +96,13 @@ def scores_encoding(request, cohort_id):
         grades_filter = search_form.get_all_grades_submitted_filter()
         evals_filter = search_form.get_evaluations_submitted_filter()
         apds_filter = search_form.get_all_apds_validated_filter()
+        students_list = _filter_students_with_specialty_organization(cohort, students_list, search_form)
         students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
         students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
         students_list = _filter_students_with_all_apds_validated(cohort, students_list, periods, apds_filter)
 
     students = get_object_list(request, students_list)
+
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
     context = {
@@ -515,8 +517,9 @@ def empty_score(request, cohort_id):
 
 def _prepare_score_table(cohort, periods, students):
     persons = [student.person.pk for student in students]
+
     scores = InternshipScore.objects.filter(
-        student_affectation__student__person_id__in=persons, validated=True
+        student_affectation__student__person_id__in=persons, validated=True,
     ).select_related(
         'student_affectation__student__person', 'student_affectation__period__cohort'
     ).order_by('student_affectation__student__person')
@@ -828,6 +831,24 @@ def _filter_students_with_all_apds_validated(cohort, students, periods, filter):
         _match_scores_with_students(cohort, periods, scores, students)
         _set_condition_fulfilled_status(students)
         students = [s for s in students if s.fulfill_condition == filter]
+    return students
+
+
+def _filter_students_with_specialty_organization(cohort, students, search_form):
+    organization = search_form.get_organization(cohort)
+    specialty = search_form.get_specialty(cohort)
+    periods = search_form.get_period(cohort)
+
+    if organization or specialty or periods:
+        persons = students.values_list('person', flat=True)
+        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
+            organization__in=organization,
+            speciality__in=specialty,
+            period__in=periods,
+            student__person__in=persons
+        ).values_list('student', flat=True)
+        persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
+        students = students.filter(person__pk__in=persons_with_affectations)
     return students
 
 

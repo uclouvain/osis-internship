@@ -65,18 +65,12 @@
                             {{ search_form.period }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'All grades submitted' %}</label>
-                            <i title="{% trans "Show only students having submitted / not submitted all their grades considering only completed periods" %}"
-                               class="fas fa-info-circle text-info"></i>
-                            {{ search_form.all_grades_submitted_filter }}
+                            <label for="specialty_id">{% trans 'Specialty' %}</label>
+                            {{ search_form.specialty }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'Evaluations submitted' %}</label>
-                            {{ search_form.evaluations_submitted_filter }}
-                        </div>
-                        <div class="col-md-2">
-                            <label>{% trans 'All APDs validated' %}</label>
-                            {{ search_form.all_apds_validated_filter }}
+                            <label for="organization_id">{% trans 'Hospital' %}</label>
+                            {{ search_form.organization }}
                         </div>
                         <div class="col-md-1">
                             <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
@@ -132,10 +126,28 @@
                                 </ul>
                             </div>
                         </div>
-                        <div class="col-md-offset-7 col-md-2">
-                            <label>{% trans 'Show APD validation' %}</label>
-                            {{ search_form.show_apds_validation }}
+                    </div>
+                    <div style="margin-bottom: 10px;" class="row">
+                        <div class="col-md-2">
+                            <label>{% trans 'All grades submitted' %}</label>
+                            <i title="{% trans "Show only students having submitted / not submitted all their grades considering only completed periods" %}"
+                               class="fas fa-info-circle text-info"></i>
+                            {{ search_form.all_grades_submitted_filter }}
                         </div>
+                        <div class="col-md-2">
+                            <label>{% trans 'Evaluations submitted' %}</label>
+                            {{ search_form.evaluations_submitted_filter }}
+                        </div>
+                        <div class="col-md-2">
+                            <label>{% trans 'All APDs validated' %}</label>
+                            {{ search_form.all_apds_validated_filter }}
+                        </div>
+                    </div>
+                    <div class="row">
+                    <div class="col-md-offset-4 col-md-2">
+                        <label>{% trans 'Show APD validation' %}</label>
+                        {{ search_form.show_apds_validation }}
+                    </div>
                     </div>
                 </form>
 
@@ -182,10 +194,10 @@
                              {% with rowspan_no_remedial=mandatory_periods|length|add:1 %}
                              {% with rowspan_remedial=student.remedial_periods_count %}
                               <td
-                                {% if has_remedial %}
+                                {% if has_remedial and periods.count != 1 %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% else %}
-                                    rowspan="{{ rowspan_no_remedial }}"
+                                    rowspan="{% if periods.count == 1 %}2{% else %}{{ rowspan_no_remedial }}{% endif %}"
                                 {% endif %}>
                                     <input type="checkbox" name="selected_student" class="selected_object"
                                         data-periods="{{ student.periods_scores }}"
@@ -194,10 +206,10 @@
                                     />
                               </td>
                               <td
-                                {% if has_remedial %}
+                                {% if has_remedial and periods.count != 1 %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% else %}
-                                    rowspan="{{ rowspan_no_remedial }}"
+                                    rowspan="{% if periods.count == 1 %}2{% else %}{{ rowspan_no_remedial }}{% endif %}"
                                 {% endif %}>
                                 {% if not student.fulfill_condition %}
                                     <icon title="{% trans 'Aptitudes conditions not fulfilled' %}"
@@ -209,10 +221,10 @@
                                   {% endif %}
                               </td>
                               <td style="max-width: 10vw;" class="overflow-cell"
-                                {% if has_remedial %}
+                                {% if has_remedial and periods.count != 1 %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% else %}
-                                    rowspan="{{ rowspan_no_remedial }}"
+                                    rowspan="{% if periods.count == 1 %}2{% else %}{{ rowspan_no_remedial }}{% endif %}"
                                 {% endif %}>
                                 {{ student }}
                               </td>
@@ -227,10 +239,12 @@
                                 class="last-completed-period"
                               {% endif %}>
                             <td style="text-align: center;">
+                            {% if student_registration_id %}
                               <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk%}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
                               id="edit-btn-{{ student.pk }}-{{ period.pk }}">
                                 <icon class="far fa-edit"></icon>
                               </a>
+                            {% endif %}
                             </td>
                             <td>
                                 {{ period }}
@@ -246,7 +260,9 @@
                             {% with student.organizations|get_item:period.name as organization %}
                                 <td title="{{ organization.name | default_if_none:_('No organization') }}">
                                 {% if organization.name %}
-                                    {{ organization.reference }}
+                                    <span class="{% if organization.reference|is_searched_reference:request %}badge badge-primary{% endif %}">
+                                        {{ organization.reference }}
+                                    </span>
                                 {% else %}
                                     -
                                 {% endif %}
