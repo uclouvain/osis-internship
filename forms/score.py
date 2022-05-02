@@ -100,9 +100,6 @@ class ScoresFilterForm(Form):
             qs = cohort.organization_set.all()
         return qs
 
-    def is_filtered_by_organization_or_specialty(self):
-        return self.cleaned_data.get('organization') or self.cleaned_data.get('specialty')
-
     def get_all_grades_submitted_filter(self):
         return self.get_filter('all_grades_submitted_filter')
 
