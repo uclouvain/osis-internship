@@ -55,6 +55,5 @@ def is_searched_reference(reference, request) -> bool:
 
     if request.GET.get('organization') and request.GET.get('specialty'):
         return searched_organization and searched_specialty
-    else:
-        return searched_organization or searched_specialty
+    return searched_organization or searched_specialty
 

@@ -77,7 +77,9 @@ def scores_encoding(request, cohort_id):
     cohort = get_object_or_404(
         Cohort.objects.prefetch_related(
             'internshipstudentinformation_set',
-            'period_set'
+            'period_set',
+            'internshipspeciality_set',
+            'organization_set'
         ),
         pk=cohort_id
     )
@@ -92,7 +94,7 @@ def scores_encoding(request, cohort_id):
 
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
-        periods = search_form.get_period(cohort=cohort)
+        periods = search_form.get_periods(cohort=cohort)
         grades_filter = search_form.get_all_grades_submitted_filter()
         evals_filter = search_form.get_evaluations_submitted_filter()
         apds_filter = search_form.get_all_apds_validated_filter()
@@ -835,19 +837,18 @@ def _filter_students_with_all_apds_validated(cohort, students, periods, filter):
 
 
 def _filter_students_with_specialty_organization(cohort, students, search_form):
-    organization = search_form.get_organization(cohort)
-    specialty = search_form.get_specialty(cohort)
-    periods = search_form.get_period(cohort)
+    organization = search_form.get_organizations(cohort)
+    specialty = search_form.get_specialties(cohort)
+    periods = search_form.get_periods(cohort)
 
     if organization or specialty or periods:
         persons = students.values_list('person', flat=True)
-        students_with_affectations = InternshipStudentAffectationStat.objects.filter(
+        persons_with_affectations = InternshipStudentAffectationStat.objects.filter(
             organization__in=organization,
             speciality__in=specialty,
             period__in=periods,
             student__person__in=persons
-        ).values_list('student', flat=True)
-        persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
+        ).values_list('student__person', flat=True)
         students = students.filter(person__pk__in=persons_with_affectations)
     return students
 

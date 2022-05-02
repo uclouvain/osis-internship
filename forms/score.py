@@ -77,14 +77,14 @@ class ScoresFilterForm(Form):
 
         return qs.distinct()
 
-    def get_period(self, cohort):
+    def get_periods(self, cohort):
         period = self.cleaned_data.get('period')
         qs = get_effective_periods(cohort.id)  # exclude last period without grade associated
         if period:
             qs = qs.filter(pk=period.pk)
         return qs
 
-    def get_specialty(self, cohort):
+    def get_specialties(self, cohort):
         specialty = self.cleaned_data.get('specialty')
         if specialty:
             qs = cohort.internshipspeciality_set.filter(pk=specialty.pk)
@@ -92,7 +92,7 @@ class ScoresFilterForm(Form):
             qs = cohort.internshipspeciality_set.all()
         return qs
 
-    def get_organization(self, cohort):
+    def get_organizations(self, cohort):
         organization = self.cleaned_data.get('organization')
         if organization:
             qs = cohort.organization_set.filter(pk=organization.pk)
