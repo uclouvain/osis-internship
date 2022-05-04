@@ -74,6 +74,16 @@
                     </div>
                     {% endfor %}
                 </div>
+                <div class="row">
+                    <div class="col-md-12 form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                        <label class="col-md-1" for="reason">{% trans 'Comment (manager)' %}</label>
+                        <div class="col-md-12">
+                            <textarea class="form-control" name="reason" rows="5">
+                                {{ score.reason }}
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
             <br/>
             <div class="pull-right">
                 <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internship_scores_encoding' cohort_id=cohort.pk %}">
