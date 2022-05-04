@@ -78,9 +78,7 @@
                     <div class="col-md-12 form-group" style="margin-top: 20px; margin-bottom: 20px;">
                         <label class="col-md-1" for="reason">{% trans 'Comment (manager)' %}</label>
                         <div class="col-md-12">
-                            <textarea class="form-control" name="reason" rows="5">
-                                {{ score.reason }}
-                            </textarea>
+                            <textarea class="form-control" name="reason" rows="5">{{ score.reason | default_if_none:'' }}</textarea>
                         </div>
                     </div>
                 </div>

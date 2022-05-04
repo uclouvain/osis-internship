@@ -139,7 +139,7 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
 
     if request.POST:
         apds_data = {'APD_{}'.format(apd): request.POST.get('apd-{}'.format(apd)) for apd in apds}
-        reason = request.POST.get('reason')
+        reason = request.POST.get('reason') if request.POST.get('reason') else None
         if _validate_score(request, apds_data):
             update = InternshipScore.objects.filter(pk=score.pk).update(
                 **apds_data,
