@@ -592,7 +592,8 @@ def _get_scores_mean(scores, n_periods):
     effective_n_periods = n_periods - _count_emptied_scores(scores)
     for key in scores.keys():
         period_score = _get_period_score(scores[key])
-        evolution_score += period_score / effective_n_periods if period_score and isinstance(period_score, Real) else 0
+        evolution_score += period_score / effective_n_periods \
+            if period_score and isinstance(period_score, Real) and effective_n_periods != 0 else 0
     return round_half_up(evolution_score)
 
 
