@@ -25,7 +25,9 @@
 ##############################################################################
 from django.template.defaulttags import register
 
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.organization import Organization
 
 
 @register.filter()
@@ -34,3 +36,23 @@ def has_remedial(student, period=None):
     if period:
         qs = qs.filter(period=period)
     return qs.exists()
+
+
+@register.filter()
+def is_searched_reference(reference, request) -> bool:
+
+    organization = None
+    specialty = None
+
+    if request.GET.get('organization'):
+        organization = Organization.objects.get(pk=request.GET.get('organization'))
+
+    if request.GET.get('specialty'):
+        specialty = InternshipSpeciality.objects.get(pk=request.GET.get('specialty'))
+
+    searched_organization = organization.reference in reference if organization else False
+    searched_specialty = specialty.acronym in reference if specialty else False
+
+    if request.GET.get('organization') and request.GET.get('specialty'):
+        return searched_organization and searched_specialty
+    return searched_organization or searched_specialty
