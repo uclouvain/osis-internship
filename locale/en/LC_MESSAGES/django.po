@@ -52,7 +52,7 @@ msgid ""
 "nor selectable"
 msgstr ""
 
-msgid "APD Validation"
+msgid "EPA Validation"
 msgstr ""
 
 msgid "Accept"
@@ -115,7 +115,7 @@ msgstr ""
 msgid "Affectation's result"
 msgstr ""
 
-msgid "All APDs validated"
+msgid "All EPAs validated"
 msgstr ""
 
 msgid "All grades submitted"
@@ -160,7 +160,7 @@ msgstr ""
 msgid "An error occured while updating status"
 msgstr ""
 
-msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
+msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
 msgstr ""
 
 msgid "Aptitudes conditions fulfilled"
@@ -882,7 +882,7 @@ msgstr ""
 msgid "Sequence"
 msgstr ""
 
-msgid "Show APD validation"
+msgid "Show EPA validation"
 msgstr ""
 
 msgid ""
