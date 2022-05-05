@@ -32,10 +32,9 @@ from internship.tests.factories.period import PeriodFactory
 
 
 class TestScoreForm(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.cohort = CohortFactory()
-        cls.period = PeriodFactory(cohort=cls.cohort)
+    def setUp(self):
+        self.cohort = CohortFactory()
+        self.period = PeriodFactory(cohort=self.cohort)
 
     def test_valid_search_form(self):
         data = {
