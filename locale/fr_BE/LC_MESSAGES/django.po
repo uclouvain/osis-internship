@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-04 11:28+0200\n"
+"POT-Creation-Date: 2022-05-06 15:14+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -62,9 +62,6 @@ msgid ""
 msgstr ""
 "Une sous-specialité doit exclusivement définir un nom et ne doit ni être "
 "obligatoire ni sélectionnable"
-
-msgid "EPA Validation"
-msgstr "Validation APD"
 
 msgid "Accept"
 msgstr "Accepter"
@@ -326,6 +323,9 @@ msgstr "Afficher les étudiants"
 
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
+
+msgid "EPA Validation"
+msgstr "Validation APD"
 
 msgid "Edit"
 msgstr "Modifier"
@@ -1158,3 +1158,6 @@ msgstr "les affectations pour"
 
 msgid "{} day(s)"
 msgstr "{} jour(s)"
+
+#~ msgid "APD Validation"
+#~ msgstr "Validation APD"
