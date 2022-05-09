@@ -139,13 +139,13 @@
                             {{ search_form.evaluations_submitted_filter }}
                         </div>
                         <div class="col-md-2">
-                            <label>{% trans 'All APDs validated' %}</label>
+                            <label>{% trans 'All EPAs validated' %}</label>
                             {{ search_form.all_apds_validated_filter }}
                         </div>
                     </div>
                     <div class="row">
                     <div class="col-md-offset-4 col-md-2">
-                        <label>{% trans 'Show APD validation' %}</label>
+                        <label>{% trans 'Show EPA validation' %}</label>
                         {{ search_form.show_apds_validation }}
                     </div>
                     </div>
@@ -336,7 +336,7 @@
 
                             {% if search_form.show_apds_validation.value %}
                             <tr>
-                                <td colspan="8" style="text-align: right;">{% trans 'APD Validation' %}</td>
+                                <td colspan="8" style="text-align: right;">{% trans 'EPA Validation' %}</td>
                                 {% for apd in apd_range %}
                                     <td class="hidden-sm hidden-xs text-center">
                                         {% is_apd_validated cohort student apd as success %}

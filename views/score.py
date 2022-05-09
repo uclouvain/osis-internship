@@ -187,7 +187,7 @@ def _validate_score(request, apds_data):
         messages.add_message(
             request,
             messages.ERROR,
-            _("An evaluation should include minimum {} and maximum {} evaluated APDs").format(MIN_APDS, MAX_APDS)
+            _("An evaluation should include minimum {} and maximum {} evaluated EPAs").format(MIN_APDS, MAX_APDS)
         )
         return False
     return True
