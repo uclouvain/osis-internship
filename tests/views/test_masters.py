@@ -24,10 +24,12 @@
 #
 ##############################################################################
 import json
+from datetime import timedelta
 from types import SimpleNamespace
 from unittest import skipUnless
 
 import faker
+import mock
 from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
@@ -44,6 +46,7 @@ from internship.models import master_allocation
 from internship.models.enums.role import Role
 from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
+from internship.models.master_allocation import MasterAllocation
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
@@ -203,6 +206,10 @@ class MasterTestCase(TestCase):
         self.assertEqual(messages_list[0].level_tag, "success")
         self.assertIn(str(master.person), messages_list[0].message)
 
+        master.refresh_from_db()
+        self.assertEqual(master.user_account_status, UserAccountStatus.PENDING.name)
+        self.assertEqual(master.user_account_expiration_date, date.today() + timedelta(days=365))
+
     def test_create_user_account_for_internship_master_with_no_birth_date(self):
         master = MasterFactory(person=PersonFactory(birth_date=None))
         url = reverse('create_accounts', kwargs={'cohort_id': self.cohort.pk})
@@ -228,3 +235,71 @@ class MasterTestCase(TestCase):
         messages_list = [msg for msg in response.wsgi_request._messages]
         self.assertEqual(messages_list[0].level_tag, "warning")
         self.assertIn(str(master.person), messages_list[0].message)
+
+    def test_master_transfer_to_new_cohort(self):
+        allocation = MasterAllocationFactory(specialty__cohort=self.cohort, organization__cohort=self.cohort)
+        new_cohort = CohortFactory()
+        OrganizationFactory(cohort=new_cohort, reference=allocation.organization.reference)
+        SpecialtyFactory(cohort=new_cohort, acronym=allocation.specialty.acronym)
+
+        url = reverse('transfer_allocation', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={
+            'selected_masters': [allocation.master.pk],
+            'selected_cohort': new_cohort.pk,
+        })
+
+        transferred_allocation = MasterAllocation.objects.get(specialty__cohort=new_cohort)
+
+        self.assertEqual(transferred_allocation.master, allocation.master)
+        self.assertEqual(transferred_allocation.cohort(), new_cohort)
+
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "success")
+
+    def test_should_not_extend_master_account_validity_when_account_not_active(self):
+        master = MasterFactory()
+
+        url = reverse('extend_validity', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={'selected_masters': [master.pk]})
+
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "warning")
+
+    @mock.patch('internship.views.master.requests.post', return_value=SimpleNamespace(
+        status_code=500
+    ))
+    def test_should_not_extend_master_account_validity_when_service_not_reachable(self, ldap_service_mock):
+        original_expiration_date = date.today() + timedelta(days=1)
+        master = MasterFactory(
+            user_account_status=UserAccountStatus.ACTIVE.name,
+            user_account_expiration_date=original_expiration_date
+        )
+
+        url = reverse('extend_validity', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={'selected_masters': [master.pk]})
+
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "error")
+
+        master.refresh_from_db()
+        self.assertEqual(master.user_account_expiration_date, original_expiration_date)
+
+    @mock.patch('internship.views.master.requests.post', return_value=SimpleNamespace(
+        status_code=200,
+        json=lambda: {'status': 'success'}
+    ))
+    def test_should_extend_master_account_validity_by_one_year(self, ldap_service_mock):
+        original_expiration_date = date.today() + timedelta(days=1)
+        master = MasterFactory(
+            user_account_status=UserAccountStatus.ACTIVE.name,
+            user_account_expiration_date=original_expiration_date
+        )
+
+        url = reverse('extend_validity', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.post(url, data={'selected_masters': [master.pk]})
+
+        messages_list = [msg for msg in response.wsgi_request._messages]
+        self.assertEqual(messages_list[0].level_tag, "success")
+
+        master.refresh_from_db()
+        self.assertEqual(master.user_account_expiration_date, date.today() + timedelta(days=365))

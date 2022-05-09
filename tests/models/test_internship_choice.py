@@ -53,21 +53,15 @@ class TestSearchByStudentOrChoice(TestCase):
             cohort=self.cohort)
 
         self.choice_1 = create_internship_choice(
-            self.organization,
-            self.student,
-            self.speciality,
+            self.organization, self.student, self.speciality,
             internship=self.other_internship
         )
         self.choice_2 = create_internship_choice(
-            self.organization,
-            self.student,
-            self.speciality,
+            self.organization, self.student, self.speciality,
             internship=self.internship
         )
         self.choice_3 = create_internship_choice(
-            self.organization,
-            self.other_student,
-            self.speciality,
+            self.organization, self.other_student, self.speciality,
             internship=self.other_internship
         )
 

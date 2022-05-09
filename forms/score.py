@@ -28,6 +28,20 @@ class ScoresFilterForm(Form):
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
+    specialty = forms.ModelChoiceField(
+        queryset=None,
+        required=False,
+        empty_label='-',
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
+    organization = forms.ModelChoiceField(
+        queryset=None,
+        required=False,
+        empty_label='-',
+        widget=forms.Select(attrs={"class": "form-control"})
+    )
+
     yes_no_typed_choice_field = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
         required=False,
@@ -48,6 +62,8 @@ class ScoresFilterForm(Form):
         cohort = kwargs.pop('cohort')
         super(ScoresFilterForm, self).__init__(*args, **kwargs)
         self.fields['period'].queryset = cohort.period_set.all().order_by('date_start')
+        self.fields['specialty'].queryset = cohort.internshipspeciality_set.order_by('name')
+        self.fields['organization'].queryset = cohort.organization_set.order_by('reference')
 
     def get_students(self, cohort):
         free_text = self.cleaned_data.get('free_text')
@@ -61,11 +77,27 @@ class ScoresFilterForm(Form):
 
         return qs.distinct()
 
-    def get_period(self, cohort):
+    def get_periods(self, cohort):
         period = self.cleaned_data.get('period')
         qs = get_effective_periods(cohort.id)  # exclude last period without grade associated
         if period:
             qs = qs.filter(pk=period.pk)
+        return qs
+
+    def get_specialties(self, cohort):
+        specialty = self.cleaned_data.get('specialty')
+        if specialty:
+            qs = cohort.internshipspeciality_set.filter(pk=specialty.pk)
+        else:
+            qs = cohort.internshipspeciality_set.all()
+        return qs
+
+    def get_organizations(self, cohort):
+        organization = self.cleaned_data.get('organization')
+        if organization:
+            qs = cohort.organization_set.filter(pk=organization.pk)
+        else:
+            qs = cohort.organization_set.all()
         return qs
 
     def get_all_grades_submitted_filter(self):

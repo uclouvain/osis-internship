@@ -62,10 +62,10 @@
                     {% for speciality in specialities %}
                         <tr>
                             <td>
-                                {{ speciality.name }}
+                                {% if speciality.parent %} - {% endif %}{{ speciality.name }}
                             </td>
                             <td>
-                                {{ speciality.acronym }}
+                                {{ speciality.acronym | default_if_none:'' }}
                             </td>
                             <td>
                                 {{ speciality.sequence | default_if_none:'' }}
