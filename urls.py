@@ -26,7 +26,7 @@
 from django.conf.urls import include, url
 
 from internship.views import (
-    affectation, home, internship, master, offer, period, place, score, speciality, student, cohort
+    affectation, home, internship, master, offer, period, place, score, speciality, student, cohort, place_evaluation
 )
 
 urlpatterns = [
@@ -52,6 +52,8 @@ urlpatterns = [
                 url(r'^(?P<master_id>[0-9]+)$', master.master, name='master'),
                 url(r'^(?P<master_id>[0-9]+)/form/$', master.master_form, name='master_edit'),
                 url(r'^create_accounts/$', master.create_user_accounts, name='create_accounts'),
+                url(r'^transfer_allocation/$', master.transfer_master_allocation_to_cohort, name='transfer_allocation'),
+                url(r'^extend_validity/$', master.extend_accounts_validity, name='extend_validity'),
                 url(r'^form/$', master.master_form, name='master_new'),
                 url(r'^form/ajax/person_exists/$', master.person_exists, name='person_exists'),
                 url(r'^save/$', master.master_save, name="master_save"),
@@ -168,6 +170,20 @@ urlpatterns = [
                 url(r'^ajax/refresh_evolution_score/$', score.refresh_evolution_score, name='refresh_evolution_score'),
                 url(r'^ajax/empty_score/$', score.empty_score, name='empty_score'),
                 url(r'^send_summary(?:/(?P<period_id>[0-9]+)/)?$', score.send_recap, name='send_summary'),
+            ])),
+
+            url(r'^internship_evaluation/', include([
+                url(r'^$', place_evaluation.internship_place_evaluation, name='place_evaluation'),
+                url(r'^new/$', place_evaluation.internship_place_evaluation_item_new,
+                    name='place_evaluation_new'),
+                url(r'^edit/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_edit,
+                    name='place_evaluation_edit'),
+                url(r'^delete/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_delete,
+                    name='place_evaluation_delete'),
+                url(r'^move_up/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_move_up,
+                    name='place_evaluation_item_move_up'),
+                url(r'^move_down/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_move_down,
+                    name='place_evaluation_item_move_down'),
             ])),
         ])),
     ])),

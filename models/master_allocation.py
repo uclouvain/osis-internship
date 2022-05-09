@@ -24,12 +24,15 @@
 #
 ##############################################################################
 import uuid as uuid
+from datetime import timedelta
 
 from django.contrib import admin
 from django.db import models
 from django.db.models import Q
+from django.utils.datetime_safe import datetime
 
 from internship.models.enums.role import Role
+from internship.models.enums.user_account_expiry import UserAccountExpiry
 
 
 class MasterAllocationAdmin(admin.ModelAdmin):
@@ -82,7 +85,7 @@ def find_by_master(cohort, a_master):
     return find_by_cohort(cohort).filter(master=a_master)
 
 
-def search(cohort, specialty, hospital, account=None, role=Role.MASTER.name):
+def search(cohort, specialty, hospital, account=None, expiry=None, role=Role.MASTER.name):
     masters = find_by_cohort(cohort)
 
     if role:
@@ -96,6 +99,19 @@ def search(cohort, specialty, hospital, account=None, role=Role.MASTER.name):
 
     if account:
         masters = masters.filter(master__user_account_status=account)
+
+    if expiry:
+        if expiry == UserAccountExpiry.EXPIRED.value:
+            masters = masters.filter(master__user_account_expiration_date__lte=datetime.now())
+        elif expiry == UserAccountExpiry.LT_3MONTHS.value:
+            masters = masters.filter(
+                master__user_account_expiration_date__range=(
+                    datetime.now() + timedelta(days=1),
+                    datetime.now() + timedelta(days=31)
+                )
+            )
+        elif expiry == UserAccountExpiry.GT_3MONTHS.value:
+            masters = masters.filter(master__user_account_expiration_date__gte=datetime.now() + timedelta(days=31))
 
     if specialty or hospital:
         return masters.order_by("master__person__last_name", "master__person__first_name")

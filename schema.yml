@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.6"
+  version: "1.1.8"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -760,6 +760,7 @@ components:
           example: "MASTER"
     SpecialtyGet:
       type: object
+      nullable: true
       properties:
         url:
           type: string
@@ -772,6 +773,7 @@ components:
           example: "Xyzetologie"
         acronym:
           type: string
+          nullable: true
           example: "XYZ"
         mandatory:
           type: boolean
@@ -785,6 +787,8 @@ components:
         selectable:
           type: boolean
           example: true
+        parent:
+          $ref: '#/components/schemas/SpecialtyGet'
     CohortGet:
       type: object
       properties:
@@ -812,6 +816,7 @@ components:
           example: 01/03/2020
     OrganizationGet:
       type: object
+      nullable: true
       properties:
         url:
           type: string
@@ -1153,6 +1158,10 @@ components:
         nationality:
           type: string
           example: "Belgian"
+          nullable: true
+        dialing_code:
+          type: string
+          description: The dialing code of the country
           nullable: true
     PeriodPaging:
       properties:

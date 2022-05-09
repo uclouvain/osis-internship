@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import re
 from collections import OrderedDict
 from collections import defaultdict
 from operator import itemgetter
@@ -34,7 +35,7 @@ from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
-from internship.models.period import Period
+from internship.models.period import get_assignable_periods, get_effective_periods
 from statistics import mean, stdev
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
@@ -192,7 +193,7 @@ def compute_stats(cohort, sol):
     for key in non_mandatory_internships_stats:
         if 'count' not in key:
             count = non_mandatory_internships_stats[key]['count']
-            perc = count/non_mandatory_internships_stats['count']
+            perc = count / non_mandatory_internships_stats['count']
             non_mandatory_internships_stats[key]['count'] = count
             non_mandatory_internships_stats[key]['perc'] = round(perc * 100, 2)
     stats['non_mandatory_internships'] = non_mandatory_internships_stats
@@ -240,7 +241,7 @@ def compute_stats(cohort, sol):
 
 
 def load_solution_table(data, cohort):
-    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
+    periods = get_assignable_periods(cohort_id=cohort.id)
     period_ids = periods.values_list("id", flat=True)
     prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(
         period_id__in=period_ids
@@ -268,7 +269,7 @@ def load_solution_table(data, cohort):
     for item in data:
         # Update the number of available places for given organization, speciality, period
         if item.organization not in temp_internship_table or \
-                        item.speciality.acronym not in temp_internship_table[item.organization]:
+                item.speciality.acronym not in temp_internship_table[item.organization]:
             continue
         temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
@@ -289,17 +290,17 @@ def load_solution_table(data, cohort):
 
 
 def load_solution_sol(cohort, student_affectations):
-    keys = Period.objects.filter(cohort=cohort).order_by('date_end').values_list("name", flat=True)
+    keys = get_effective_periods(cohort_id=cohort.id).values_list("name", flat=True)
     internships = Internship.objects.filter(cohort=cohort)
     priority_choices = InternshipChoice.objects.filter(internship__in=internships, priority=True)
     students = Student.objects.filter(id__in=priority_choices.values("student").distinct())
     sol = {}
     for item in student_affectations:
-        # Initialize 12 empty period of each student
+        # Initialize empty periods of each student
         if item.student not in sol:
             sol[item.student] = {key: None for key in keys}
             # Sort the periods by name P1, P2, ...
-            sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=lambda t: int(t[0][1:])))
+            sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=_human_sort_key))
             sol[item.student]['score'] = 0
             item.student.priority = item.student in students
         # Put the internship in the solution
@@ -308,6 +309,11 @@ def load_solution_sol(cohort, student_affectations):
         sol[item.student]['score'] += item.cost
 
     return sol
+
+
+def _human_sort_key(object):
+    key = object[0]
+    return [int(t) if t.isdigit() else t for t in re.split('([0-9]+)', key)]
 
 
 def _fill_periods_default_values(acronym, keys, organization, temp_internship_table):
@@ -327,7 +333,7 @@ def _get_student_mandatory_choices(cohort, priority):
     """
     specialities = {}
     internships = models.internship.Internship.objects.filter(cohort=cohort)
-    choices = models.internship_choice.InternshipChoice.objects.filter(priority=priority, internship__in=internships).\
+    choices = models.internship_choice.InternshipChoice.objects.filter(priority=priority, internship__in=internships). \
         select_related("speciality", "student")
 
     if len(choices) == 0:
@@ -352,7 +358,7 @@ def _get_student_mandatory_choices(cohort, priority):
                     del specialities[enrollment.internship_offer.speciality.id][enrollment.student]
     else:
         for choice in models.internship_choice.InternshipChoice.objects.filter(priority=True,
-                                                                               internship__in=internships).\
+                                                                               internship__in=internships). \
                 select_related("speciality", "student"):
             if choice.student in specialities[choice.speciality.id]:
                 del specialities[choice.speciality.id][choice.student]
