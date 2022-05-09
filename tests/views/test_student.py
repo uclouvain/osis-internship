@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
 from unittest import skipUnless
 
 from django.contrib.auth.models import Permission, User
@@ -59,31 +60,28 @@ from internship.views.student import import_students, internships_student_import
 
 
 class TestStudentResume(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.cohort = CohortFactory()
-        organization = test_organization.create_organization(cohort=cls.cohort)
-        cls.student_1 = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
-        cls.student_2 = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
-        speciality = test_internship_speciality.create_speciality(cohort=cls.cohort)
-
-        cls.internship = InternshipFactory(cohort=cls.cohort)
-        cls.internship_2 = InternshipFactory(cohort=cls.cohort)
-        cls.internship_3 = InternshipFactory(cohort=cls.cohort)
-        cls.internship_4 = InternshipFactory(cohort=cls.cohort)
-
-        cls.choice_1 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship)
-        cls.choice_2 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_2)
-        cls.choice_3 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_3)
-        cls.choice_4 = create_internship_choice(organization, cls.student_1, speciality, internship=cls.internship_4)
-        cls.choice_5 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship)
-        cls.choice_6 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship_2)
-        cls.choice_7 = create_internship_choice(organization, cls.student_2, speciality, internship=cls.internship_3)
-        cls.url = reverse(internships_student_resume, kwargs={
-            'cohort_id': cls.cohort.id,
-        })
-
     def setUp(self):
+        self.cohort = CohortFactory()
+        organization = test_organization.create_organization(cohort=self.cohort)
+        self.student_1 = test_student.create_student(first_name="first", last_name="last", registration_id="64641200")
+        self.student_2 = test_student.create_student(first_name="first", last_name="last", registration_id="606012")
+        speciality = test_internship_speciality.create_speciality(cohort=self.cohort)
+
+        self.internship = InternshipFactory(cohort=self.cohort)
+        self.internship_2 = InternshipFactory(cohort=self.cohort)
+        self.internship_3 = InternshipFactory(cohort=self.cohort)
+        self.internship_4 = InternshipFactory(cohort=self.cohort)
+
+        self.choice_1 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship)
+        self.choice_2 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_2)
+        self.choice_3 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_3)
+        self.choice_4 = create_internship_choice(organization, self.student_1, speciality, internship=self.internship_4)
+        self.choice_5 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship)
+        self.choice_6 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_2)
+        self.choice_7 = create_internship_choice(organization, self.student_2, speciality, internship=self.internship_3)
+        self.url = reverse(internships_student_resume, kwargs={
+            'cohort_id': self.cohort.id,
+        })
         self.response = self.client.get(self.url)
 
     def test_get_students_status_empty(self):
@@ -209,8 +207,10 @@ class StudentsListImport(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "students_update.html")
-        self.assertEqual(len(find_by_cohort(self.cohort.id)),10)
-        self.assertRedirects(apply_response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
+        self.assertEqual(len(find_by_cohort(self.cohort.id)), 10)
+        self.assertRedirects(
+            apply_response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id})
+        )
 
     def test_valid_import_with_edited_row(self):
         uploaded_file = SimpleUploadedFile('student_list.xlsx', self.file_content)
@@ -228,7 +228,7 @@ class StudentsListImport(TestCase):
         student = InternshipStudentInformation.objects.get(pk=data.pk)
         self.assertEqual(approve_update_response.status_code, 200)
         self.assertTemplateUsed(approve_update_response, "students_update.html")
-        self.assertNotEqual(student.location,"Edited_Location")
+        self.assertNotEqual(student.location, "Edited_Location")
 
         apply_update_response = self.client.post(self.apply_update_url, {
             'data': approve_update_response.context['data_json']
@@ -237,48 +237,50 @@ class StudentsListImport(TestCase):
         self.assertRedirects(apply_update_response, reverse('internships_student_resume', kwargs={
             "cohort_id": self.cohort.id
         }))
-        self.assertEqual(student.location,"Edited_Location")
+        self.assertEqual(student.location, "Edited_Location")
 
     def test_invalid_import(self):
         invalid_file = SimpleUploadedFile('invalid_file.txt', self.file_content)
         response = self.client.post(self.import_url, {
             'file_upload': invalid_file
         })
-        self.assertEqual(len(find_by_cohort(self.cohort.id)),0)
+        self.assertEqual(len(find_by_cohort(self.cohort.id)), 0)
         self.assertRedirects(response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
 
 
 class StudentsAffectationModification(TestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
-        permission = Permission.objects.get(codename='is_internship_manager')
-        cls.user.user_permissions.add(permission)
-
-        cls.cohort = CohortFactory()
-
-        cls.student = StudentFactory()
-        PersonAddressFactory(person=cls.student.person)
-        InternshipStudentInformationFactory(person=cls.student.person, cohort=cls.cohort)
-
-        cls.periods = [PeriodFactory(name='P{}'.format(p), cohort=cls.cohort) for p in range(1, 7)]
-
-        cls.affectations = [StudentAffectationStatFactory(
-            student=cls.student,
-            period=period,
-            organization__cohort=cls.cohort,
-            speciality__cohort=cls.cohort,
-            internship__cohort=cls.cohort
-        ) for period in cls.periods]
-
-        cls.offers = [OfferFactory(
-            organization=a.organization, speciality=a.speciality, cohort=cls.cohort
-        ) for a in cls.affectations]
-
-        cls.scores = [ScoreFactory(student_affectation=a) for a in cls.affectations]
-        cls.choices = InternshipChoice(student=cls.student)
-
     def setUp(self):
+        self.user = User.objects.create_user('demo', email='demo@demo.org', password='password')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        self.user.user_permissions.add(permission)
+
+        self.cohort = CohortFactory()
+
+        self.student = StudentFactory()
+        PersonAddressFactory(person=self.student.person)
+        InternshipStudentInformationFactory(person=self.student.person, cohort=self.cohort)
+
+        self.periods = [
+            PeriodFactory(name='P{}'.format(p), date_end=date.today() + timedelta(days=p*30), cohort=self.cohort)
+            for p in range(1, 8)
+        ]
+
+        self.affectations = [StudentAffectationStatFactory(
+            student=self.student,
+            period=period,
+            organization__cohort=self.cohort,
+            speciality__cohort=self.cohort,
+            internship__cohort=self.cohort,
+            cost=1,
+        ) for period in self.periods[:-1]]
+
+        self.offers = [OfferFactory(
+            organization=a.organization, speciality=a.speciality, cohort=self.cohort
+        ) for a in self.affectations]
+
+        self.scores = [ScoreFactory(student_affectation=a) for a in self.affectations]
+        self.choices = InternshipChoice(student=self.student)
+
         self.client.force_login(self.user)
 
     def test_should_show_student_affectations_form(self):
@@ -292,8 +294,8 @@ class StudentsAffectationModification(TestCase):
             sorted([a.organization for a in self.affectations], key=lambda o: o.reference)
         )
         self.assertListEqual(
-            list(context['periods']),
-            sorted([a.period for a in self.affectations], key=lambda p: p.date_start)
+            list(context['periods'])[:-1],
+            sorted([a.period for a in self.affectations], key=lambda p: p.date_end)
         )
         self.assertEqual(list(context['affectations']), self.affectations)
         self.assertEqual(list(context['internships'].values()), [a.internship_id for a in self.affectations])
@@ -305,7 +307,12 @@ class StudentsAffectationModification(TestCase):
         url = reverse('student_save_affectation_modification', kwargs={
             'cohort_id': self.cohort.pk, 'student_id': self.student.pk
         })
-        response = self.client.get(url)
+        response = self.client.post(url, data={
+            'period': self.periods[0],
+            'internship': [a.internship.id for a in self.affectations],
+            'specialty': [a.speciality.name for a in self.affectations],
+            'organization': [a.organization.reference for a in self.affectations]
+        })
         error_msg = [m.message for m in get_messages(response.wsgi_request)][0]
         self.assertEqual(error_msg, gettext_lazy(
             'Cannot edit affectations because at least one affectation has a linked validated score'
@@ -316,6 +323,7 @@ class StudentsAffectationModification(TestCase):
 
     def test_should_update_student_affectations(self):
         organizations = [a.organization for a in self.affectations]
+        initial_cost = self.affectations[0].cost
         new_organization = OrganizationFactory(cohort=self.cohort)
         organizations[0] = new_organization
         OfferFactory(organization=new_organization, speciality=self.affectations[0].speciality, cohort=self.cohort)
@@ -326,15 +334,40 @@ class StudentsAffectationModification(TestCase):
 
         response = self.client.post(url, data={
             'organization': [o.reference for o in organizations],
-            'period': self.periods,
+            'period': self.periods[0],
             'specialty': [a.speciality.name for a in self.affectations],
             'internship': [a.internship.pk for a in self.affectations]
         })
 
         self.assertRedirects(response, reverse('internships_student_read', kwargs={
             'cohort_id': self.cohort.pk, 'student_id': self.student.pk
-        }))
+        })+"?tab=affectations")
 
-        self.assertTrue(InternshipStudentAffectationStat.objects.filter(
-            student=self.student, organization=new_organization
+        updated_affectation = self.affectations[0]
+        updated_affectation.refresh_from_db()
+
+        self.assertTrue(updated_affectation)
+        self.assertGreater(updated_affectation.cost, initial_cost)
+
+    def test_should_delete_student_affectations_when_at_least_one_post_data_is_set_to_empty(self):
+        organizations = [a.organization.reference for a in self.affectations]
+        organizations[0] = ''  # empty first organization post data
+
+        url = reverse('student_save_affectation_modification', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })
+
+        response = self.client.post(url, data={
+            'organization': organizations,
+            'period': self.periods[0],
+            'specialty': [a.speciality.name for a in self.affectations],
+            'internship': [a.internship.pk for a in self.affectations]
+        })
+
+        self.assertRedirects(response, reverse('internships_student_read', kwargs={
+            'cohort_id': self.cohort.pk, 'student_id': self.student.pk
+        })+"?tab=affectations")
+
+        self.assertFalse(InternshipStudentAffectationStat.objects.filter(
+            student=self.student, period=self.periods[0]
         ).exists())
