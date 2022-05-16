@@ -486,11 +486,11 @@
         });
     });
 
-    const all_periods_count = parseInt("{{ all_periods.count }}");
+    const all_periods_count = parseInt("{{ mandatory_periods.count }}");
     const completed_periods_count = parseInt("{{ completed_periods.count }}");
 
     function switchEvolutionScoreModalMsg(selected_periods_count) {
-        if (selected_periods_count === all_periods_count && all_periods_count === completed_periods_count) {
+        if (selected_periods_count >= all_periods_count && all_periods_count <= completed_periods_count) {
             $("#evolution_score_export_message").show();
             $("#no_evolution_score_export_message").hide();
         } else {

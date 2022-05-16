@@ -100,7 +100,7 @@ def _retrieve_score(period_score):
     if _is_dict_with_key(period_score, 'edited'):
         if _is_dict_with_key(period_score['edited'], 'excused'):
             return period_score['edited']['excused'] or ''
-        return period_score['edited'] or ''
+        return period_score['edited']['score'] or ''
     else:
         return period_score
 
@@ -127,9 +127,9 @@ def _make_complete_list(periods, students, worksheet):
 
 
 def _append_evolution_score(columns, score):
-    columns.append(score['edited'] if is_edited(score) else score)
+    columns.append(score['edited']['score'] if is_edited(score) else score)
     columns.append(score['computed'] if is_edited(score) else score)
-    columns.append(score['edited'] if is_edited(score) else '')
+    columns.append(score['edited']['score'] if is_edited(score) else '')
 
 
 def _complete_student_row_for_all_internships(columns, periods, student):

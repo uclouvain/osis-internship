@@ -57,8 +57,8 @@ class XlsExportScoresTestCase(TestCase):
         }
         cls.student.periods_scores = {
             cls.past_period_no_scores_submitted.name: NO_SUBMISSION_SCORE,
-            cls.past_period_excused.name: {'edited': EXCUSED_PERIOD_SCORE, 'computed': NO_SUBMISSION_SCORE},
-            cls.past_period_edited.name: {'edited': EDITED_PERIOD_SCORE, 'computed': COMPUTED_PERIOD_SCORE},
+            cls.past_period_excused.name: {'edited': {'score': EXCUSED_PERIOD_SCORE}, 'computed': NO_SUBMISSION_SCORE},
+            cls.past_period_edited.name: {'edited': {'score': EDITED_PERIOD_SCORE}, 'computed': COMPUTED_PERIOD_SCORE},
         }
         cls.periods = [
             cls.past_period_no_scores_submitted,
@@ -79,13 +79,13 @@ class XlsExportScoresTestCase(TestCase):
         self.assertEqual(columns[8], EDITED_PERIOD_SCORE)
 
     def test_append_evolution_score_edited(self):
-        evolution_score = {'computed': 15, 'edited': 20}
+        evolution_score = {'computed': 15, 'edited': {'score': 20, 'reason': ''}}
         columns = [self.student.person.last_name, self.student.person.first_name, self.student.registration_id]
         _append_evolution_score(columns, evolution_score)
         self.assertEqual(len(columns), 6)
-        self.assertEqual(columns[3], evolution_score['edited'])
+        self.assertEqual(columns[3], evolution_score['edited']['score'])
         self.assertEqual(columns[4], evolution_score['computed'])
-        self.assertEqual(columns[5], evolution_score['edited'])
+        self.assertEqual(columns[5], evolution_score['edited']['score'])
 
     def test_append_evolution_score_computed(self):
         evolution_score = 15
