@@ -35,14 +35,13 @@ from internship.tests.factories.score import ScoreFactory
 
 
 class InternshipScoreRulesTest(TestCase):
-    @classmethod
-    def setUpTestData(cls) -> None:
-        cls.cohort = CohortFactory()
-        cls.student = StudentFactory()
-        cls.period = PeriodFactory(cohort=cls.cohort)
-        cls.internship_score = ScoreFactory(
-            student_affectation__student=cls.student,
-            student_affectation__period=cls.period,
+    def setUp(self) -> None:
+        self.cohort = CohortFactory()
+        self.student = StudentFactory()
+        self.period = PeriodFactory(cohort=self.cohort)
+        self.internship_score = ScoreFactory(
+            student_affectation__student=self.student,
+            student_affectation__period=self.period,
         )
 
     def test_student_fulfill_requirements(self):
