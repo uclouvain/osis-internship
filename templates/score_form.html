@@ -45,9 +45,11 @@
 
     <div class="panel panel-default">
       <div class="panel-heading">
-          {% trans 'Received internship grades' %}
+          {% trans 'Internship grades' %}
           <span class="pull-right">
-              <strong>{% trans 'Internship master' %}</strong>: {{ master }}
+              <strong>{% trans 'Internship master' %} </strong>: {{ master | default_if_none:'-' }}
+              <strong>|</strong>
+              <strong>{% trans 'Validated by' %} </strong>: {{ score.validated_by | default_if_none:'-' }}
           </span>
       </div>
         <div class="panel-body">
@@ -72,6 +74,14 @@
                     </div>
                     {% endfor %}
                 </div>
+                <div class="row">
+                    <div class="col-md-12 form-group" style="margin-top: 20px; margin-bottom: 20px;">
+                        <label class="col-md-1" for="reason">{% trans 'Comment (manager)' %}</label>
+                        <div class="col-md-12">
+                            <textarea class="form-control" name="reason" rows="5">{{ score.reason | default_if_none:'' }}</textarea>
+                        </div>
+                    </div>
+                </div>
             <br/>
             <div class="pull-right">
                 <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internship_scores_encoding' cohort_id=cohort.pk %}">
@@ -83,3 +93,4 @@
         </div>
     </div>
 {% endblock %}
+

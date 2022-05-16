@@ -68,6 +68,7 @@ class ValidateInternshipScore(generics.GenericAPIView):
     def post(self, request, *args, **kwargs) -> Response:
         score = self.get_object()
         score.validated = True
+        score.validated_by = request.user.person
         score.save()
         if score.student_affectation:
             send_score_validated_email(score)

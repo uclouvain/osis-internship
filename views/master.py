@@ -24,48 +24,63 @@
 #
 ##############################################################################
 import json
+from datetime import timedelta
 
 import requests
 from django import shortcuts
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import Q
 from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
+from django.utils.datetime_safe import datetime
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from base.models.person import Person
 from base.models.person_address import PersonAddress
+from internship.business.copy_cohort import copy_master_allocations
 from internship.business.email import send_email
 from internship.forms.internship_person_address_form import InternshipPersonAddressForm
 from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
+from internship.models.cohort import Cohort
 from internship.models.enums import user_account_status
 from internship.models.enums.role import Role
 from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
+from internship.models.master_allocation import MasterAllocation
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
 from osis_common.decorators.download import set_download_cookie
 from osis_common.messaging import message_config
+
+# user account is valid for 1 year
+INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS = 365
 
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def masters(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
+    available_cohorts = Cohort.objects.all().exclude(pk=current_cohort.pk).order_by('-publication_start_date')
+
     filter_specialty = int(request.GET.get('specialty', 0))
     filter_hospital = int(request.GET.get('hospital', 0))
     filter_name = request.GET.get('name', '')
     filter_role = request.GET.get('role', Role.MASTER.name)
     filter_account = request.GET.get('account', '')
+    filter_expiry = request.GET.get('expiry', '')
 
     allocations = master_allocation.search(
-        current_cohort, filter_specialty, filter_hospital, role=filter_role, account=filter_account
+        current_cohort, filter_specialty, filter_hospital,
+        role=filter_role, account=filter_account, expiry=filter_expiry
     )
+
     if filter_name:
         allocations = allocations.filter(master__person__last_name__unaccent__icontains=filter_name) | \
                       allocations.filter(master__person__first_name__unaccent__icontains=filter_name)
@@ -73,6 +88,7 @@ def masters(request, cohort_id):
     hospitals = organization.find_by_cohort(current_cohort)
     allocations = get_object_list(request, allocations)
     account_status = user_account_status.UserAccountStatus.__members__
+
     return render(request, "masters.html", locals())
 
 
@@ -83,27 +99,21 @@ def create_user_accounts(request, cohort_id):
         pk__in=request.POST.getlist('selected_master')
     ).select_related('person')
 
-    filter_specialty = int(request.GET.get('specialty', 0))
-    filter_hospital = int(request.GET.get('hospital', 0))
-    filter_name = request.GET.get('name', '')
-
     for master in selected_masters:
-        if _user_already_exists_for_master(master):
+        if master.user_account_status == UserAccountStatus.ACTIVE.name:
+            _show_user_account_active_msg(request, master)
+        elif master.user_account_status == UserAccountStatus.PENDING.name:
             _send_creation_account_email(master, connected_user=request.user)
-            _show_user_already_exists_msg(request, master)
+            _show_user_account_pending_msg(request, master)
         else:
             _create_master_user_account(request, master)
 
     return redirect(
         "{url}?{query_params}".format(
             url=reverse('internships_masters',  kwargs={'cohort_id': cohort_id}),
-            query_params='hospital={}&specialty={}&name={}'.format(filter_hospital, filter_specialty, filter_name)
+            query_params=_get_request_filters_params(request)
         )
     )
-
-
-def _user_already_exists_for_master(master):
-    return master.user_account_status != UserAccountStatus.INACTIVE.name
 
 
 def _create_master_user_account(request, master):
@@ -137,19 +147,38 @@ def _display_creation_error_msg(master, request):
 def _update_user_account_status(master, request):
     if master.user_account_status == UserAccountStatus.INACTIVE.name:
         master.user_account_status = UserAccountStatus.PENDING.name
+        master.user_account_expiration_date = datetime.today() + timedelta(
+            days=INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS
+        )
         master.save()
         messages.add_message(
             request, messages.SUCCESS,
             _('An email for account creation was sent to {}').format(master.person), "alert-success"
         )
     else:
-        _show_user_already_exists_msg(request, master)
+        _show_user_account_pending_msg(request, master)
 
 
-def _show_user_already_exists_msg(request, master):
+def _show_user_account_pending_msg(request, master):
     messages.add_message(
         request, messages.WARNING,
         _('User account creation for {} is already pending, an email was sent again').format(master.person),
+        "alert-warning"
+    )
+
+
+def _show_user_account_active_msg(request, master):
+    messages.add_message(
+        request, messages.WARNING,
+        _('User account for {} is already active, nothing done').format(master.person),
+        "alert-warning"
+    )
+
+
+def _show_user_account_inactive_msg(request, master):
+    messages.add_message(
+        request, messages.WARNING,
+        _('User account for {} is inactive, nothing done').format(master.person),
         "alert-warning"
     )
 
@@ -167,6 +196,40 @@ def _create_ldap_user_account(master):
         url=settings.LDAP_ACCOUNT_CREATION_URL
     )
     return response
+
+
+def _extend_ldap_account_validity(request, master):
+    new_validity = datetime.today() + timedelta(days=INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS)
+    response = requests.post(
+        headers={'Content-Type': 'application/json'},
+        data=json.dumps({
+            "id": str(master.person.uuid),
+            "validite": new_validity.strftime('%Y%m%d')
+        }),
+        url=settings.LDAP_ACCOUNT_MODIFICATION_URL
+    )
+    if response.status_code == HttpResponse.status_code and response.json()['status'] != 'error':
+        master.user_account_expiration_date = datetime.today() + timedelta(
+            days=INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS
+        )
+        master.save()
+        _display_extension_success_msg(request, master)
+    else:
+        _display_extension_error_msg(request, master)
+
+
+def _display_extension_success_msg(request, master):
+    messages.add_message(
+        request, messages.SUCCESS,
+        _('User account validity extended for {}').format(master.person),
+    )
+
+
+def _display_extension_error_msg(request, master):
+    messages.add_message(
+        request, messages.ERROR,
+        _('An error occured while extending the user account validity for {}').format(master.person),
+    )
 
 
 def _send_creation_account_email(master, connected_user=None):
@@ -192,6 +255,27 @@ def _send_creation_account_email(master, connected_user=None):
             )
         ],
         connected_user=connected_user
+    )
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def extend_accounts_validity(request, cohort_id):
+    selected_masters = InternshipMaster.objects.filter(
+        pk__in=request.POST.getlist('selected_masters')
+    ).select_related('person')
+
+    for master in selected_masters:
+        if master.user_account_status == UserAccountStatus.ACTIVE.name:
+            _extend_ldap_account_validity(request, master)
+        else:
+            _show_user_account_inactive_msg(request, master)
+
+    return redirect(
+        "{url}?{query_params}".format(
+            url=reverse('internships_masters',  kwargs={'cohort_id': cohort_id}),
+            query_params=_get_request_filters_params(request)
+        )
     )
 
 
@@ -257,7 +341,7 @@ def master_delete(request, master_id, cohort_id):
         allocated_master.person.first_name
     ) if allocated_master.person else "{}".format(_('Master deleted'))
     messages.add_message(request, messages.SUCCESS, msg_content, "alert-success")
-    return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id,}))
+    return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id}))
 
 
 @login_required
@@ -377,3 +461,43 @@ def _validate_allocations(request):
     specialties = request.POST.getlist('specialty')
     roles = request.POST.getlist('role')
     return (hospitals[0] != '' or specialties[0] != '') and roles[0] != ''
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def transfer_master_allocation_to_cohort(request, cohort_id):
+    cohort_from = Cohort.objects.get(pk=cohort_id)
+    cohort_to = Cohort.objects.get(pk=request.POST.get('selected_cohort'))
+
+    selected_masters_allocations = MasterAllocation.objects.filter(
+        Q(organization__cohort=cohort_from) | Q(specialty__cohort=cohort_from),
+        master__pk__in=request.POST.getlist('selected_masters'),
+    )
+
+    copy_master_allocations(cohort_from, cohort_to, selected_masters_allocations)
+
+    messages.add_message(
+        request=request,
+        level=messages.SUCCESS,
+        message=mark_safe(
+            _("The following masters/delegates allocations have been transferred to cohort {}: ").format(cohort_to) +
+            "<ul>"+''.join(['<li>{}</li>'.format(allocation) for allocation in selected_masters_allocations])+"</ul>"
+        )
+    )
+
+    return redirect(
+        "{url}?{query_params}".format(
+            url=reverse('internships_masters', kwargs={'cohort_id': cohort_id}),
+            query_params=_get_request_filters_params(request)
+        )
+    )
+
+
+def _get_request_filters_params(request):
+    return "hospital={}&specialty={}&name={}&role={}&account={}".format(
+        int(request.GET.get('specialty', 0)),
+        int(request.GET.get('hospital', 0)),
+        request.GET.get('name', ''),
+        request.GET.get('role', ''),
+        request.GET.get('account', '')
+    )

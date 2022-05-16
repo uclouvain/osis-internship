@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-14 16:59+0100\n"
+"POT-Creation-Date: 2022-04-28 11:36+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,6 +24,15 @@ msgid ""
 "                            "
 msgstr ""
 
+msgid "< 1 month"
+msgstr ""
+
+msgid "< 3 months"
+msgstr ""
+
+msgid "> 3 months"
+msgstr ""
+
 msgid "A hospital with the same reference already exists in this cohort"
 msgstr ""
 
@@ -38,13 +47,21 @@ msgid ""
 "will be overwritten."
 msgstr ""
 
-msgid "APD Validation"
+msgid ""
+"A subspecialty must exclusively define a name and should not be mandatory "
+"nor selectable"
+msgstr ""
+
+msgid "EPA Validation"
 msgstr ""
 
 msgid "Accept"
 msgstr ""
 
 msgid "Account"
+msgstr ""
+
+msgid "Account expiry"
 msgstr ""
 
 msgid "Acronym"
@@ -77,7 +94,13 @@ msgstr ""
 msgid "Add internship modality"
 msgstr ""
 
+msgid "Add item"
+msgstr ""
+
 msgid "Add new master"
+msgstr ""
+
+msgid "Add option"
 msgstr ""
 
 msgid "Add period"
@@ -92,7 +115,7 @@ msgstr ""
 msgid "Affectation's result"
 msgstr ""
 
-msgid "All APDs validated"
+msgid "All EPAs validated"
 msgstr ""
 
 msgid "All grades submitted"
@@ -128,13 +151,22 @@ msgstr ""
 msgid "An error occured while creating a user account for {}"
 msgstr ""
 
+msgid "An error occured while extending the user account validity for {}"
+msgstr ""
+
 msgid "An error occured while sending reminders"
 msgstr ""
 
 msgid "An error occured while updating status"
 msgstr ""
 
-msgid "An evaluation should include minimum {} and maximum {} evaluated APDs"
+msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
+msgstr ""
+
+msgid "Aptitudes conditions fulfilled"
+msgstr ""
+
+msgid "Aptitudes conditions not fulfilled"
 msgstr ""
 
 msgid "Attention"
@@ -247,6 +279,9 @@ msgstr ""
 msgid "Current internship"
 msgstr ""
 
+msgid "Current period"
+msgstr ""
+
 msgid "Date format"
 msgstr ""
 
@@ -341,6 +376,12 @@ msgstr ""
 msgid "Evolution score will be exported"
 msgstr ""
 
+msgid "Expired"
+msgstr ""
+
+msgid "Expiry"
+msgstr ""
+
 msgid "Export"
 msgstr ""
 
@@ -354,6 +395,12 @@ msgid "Export scores"
 msgstr ""
 
 msgid "Export to XLSX"
+msgstr ""
+
+msgid "Extend"
+msgstr ""
+
+msgid "Extend user account validity"
 msgstr ""
 
 msgid "Female"
@@ -375,6 +422,9 @@ msgid "First name"
 msgstr ""
 
 msgid "Following modifications will be applied:"
+msgstr ""
+
+msgid "Form"
 msgstr ""
 
 msgid "Fourth choice"
@@ -461,6 +511,9 @@ msgstr ""
 msgid "Internship choice"
 msgstr ""
 
+msgid "Internship grades"
+msgstr ""
+
 msgid "Internship master"
 msgstr ""
 
@@ -480,6 +533,9 @@ msgid "Internship type"
 msgstr ""
 
 msgid "Internship's detail successfully edited for the following periods: {}"
+msgstr ""
+
+msgid "Internship's place evaluation"
 msgstr ""
 
 msgid "Internships"
@@ -502,6 +558,9 @@ msgstr ""
 
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
+msgstr ""
+
+msgid "Item"
 msgstr ""
 
 msgid "Language"
@@ -568,6 +627,12 @@ msgstr ""
 msgid "New internship"
 msgstr ""
 
+msgid "New internship's master"
+msgstr ""
+
+msgid "New item"
+msgstr ""
+
 msgid "New records"
 msgstr ""
 
@@ -583,16 +648,25 @@ msgstr ""
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 
+msgid "No evaluation items found for this cohort"
+msgstr ""
+
 msgid "No hospital"
 msgstr ""
 
 msgid "No internship"
 msgstr ""
 
+msgid "No organization"
+msgstr ""
+
 msgid "No reason"
 msgstr ""
 
 msgid "No result"
+msgstr ""
+
+msgid "No specialty"
 msgstr ""
 
 msgid "No user account created"
@@ -628,6 +702,15 @@ msgstr ""
 msgid "Number of students who chosed this organization"
 msgstr ""
 
+msgid "Open"
+msgstr ""
+
+msgid "Options"
+msgstr ""
+
+msgid "Order"
+msgstr ""
+
 msgid "Order position"
 msgstr ""
 
@@ -638,6 +721,9 @@ msgid "Other choice"
 msgstr ""
 
 msgid "Other reason"
+msgstr ""
+
+msgid "Parent specialty"
 msgstr ""
 
 msgid "Paste"
@@ -715,13 +801,19 @@ msgstr ""
 msgid "Reason"
 msgstr ""
 
-msgid "Received internship grades"
-msgstr ""
-
 msgid "Reference"
 msgstr ""
 
+msgid "Remedial"
+msgstr ""
+
 msgid "Report to the hospital"
+msgstr ""
+
+msgid "Response type"
+msgstr ""
+
+msgid "Results"
 msgstr ""
 
 msgid "Return"
@@ -790,7 +882,7 @@ msgstr ""
 msgid "Sequence"
 msgstr ""
 
-msgid "Show APD validation"
+msgid "Show EPA validation"
 msgstr ""
 
 msgid ""
@@ -831,6 +923,9 @@ msgstr ""
 msgid "Start date must be earlier than end date."
 msgstr ""
 
+msgid "Statement"
+msgstr ""
+
 msgid "Statistics"
 msgstr ""
 
@@ -867,10 +962,24 @@ msgstr ""
 msgid "Submit choices"
 msgstr ""
 
+msgid "Subspecialty"
+msgstr ""
+
+msgid "Successfully deleted item {}"
+msgstr ""
+
+msgid "Successfully saved item {}"
+msgstr ""
+
 msgid "Suggestions"
 msgstr ""
 
 msgid "Summaries have been sent successfully"
+msgstr ""
+
+msgid ""
+"The following masters/delegates allocations have been transferred to cohort "
+"{}: "
 msgstr ""
 
 msgid "Third choice"
@@ -889,12 +998,22 @@ msgid ""
 "original computed value."
 msgstr ""
 
+msgid ""
+"This action will extend all selected master's user account validity by 1 "
+"year."
+msgstr ""
+
 msgid "This action will send a summary by email to the following students:"
 msgstr ""
 
 msgid ""
 "This action will set an empty score for the student for this period which "
 "will be discarded from the evolution score computation."
+msgstr ""
+
+msgid ""
+"This action will transfer all selected master's allocations to the folowing "
+"cohort:"
 msgstr ""
 
 msgid "This may take several minutes"
@@ -904,6 +1023,15 @@ msgid "Total cost of solution"
 msgstr ""
 
 msgid "Total of internships"
+msgstr ""
+
+msgid "Transfer"
+msgstr ""
+
+msgid "Transfer master(s) to cohort"
+msgstr ""
+
+msgid "Transfer to cohort"
 msgstr ""
 
 msgid "Unable to create a user account for {}: no birth date set"
@@ -919,7 +1047,19 @@ msgid ""
 "User account creation for {} is already pending, an email was sent again"
 msgstr ""
 
+msgid "User account for {} is already active, nothing done"
+msgstr ""
+
+msgid "User account for {} is inactive, nothing done"
+msgstr ""
+
 msgid "User account is active"
+msgstr ""
+
+msgid "User account validity extended for {}"
+msgstr ""
+
+msgid "Validated by"
 msgstr ""
 
 msgid "Website"
@@ -956,4 +1096,7 @@ msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
 
 msgid "the allocation(s) for"
+msgstr ""
+
+msgid "{} day(s)"
 msgstr ""

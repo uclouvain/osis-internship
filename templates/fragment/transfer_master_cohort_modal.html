@@ -1,0 +1,31 @@
+{% load i18n bootstrap3 %}
+
+<form id="transfer_cohort_form" method="post" action="{% url 'transfer_allocation' cohort_id %}">
+
+{% csrf_token %}
+
+<div class="modal fade" id="transfer_cohort" tabindex="-1" role="dialog" aria-labelledby="transfer_cohort">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">{% trans "Transfer master(s) to cohort" %} ?</h4>
+            </div>
+            <div class="modal-body">
+                <p>{% trans "This action will transfer all selected master's allocations to the folowing cohort:" %}</p>
+                <select name="selected_cohort" class="form-control" id="selected_cohort">
+                    {% for cohort in available_cohorts %}
+                        <option value="{{ cohort.pk }}">{{ cohort }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
+                <button id="transfer_cohort_btn" type="button" class="btn btn-primary" data-dismiss="modal" onclick="transferAllocationCohort()">
+                    {% trans "Transfer" %}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+</form>

@@ -80,7 +80,7 @@ class PeriodTestCase(TestCase):
         self.assertTemplateUsed(response, 'period_create.html')
 
     def test_period_save_ok(self):
-        period = PeriodFactory(cohort=self.cohort, name='P24')
+        period = PeriodFactory(cohort=self.cohort, name='P24', remedial=False)
 
         queryset = Period.objects.filter(cohort=self.cohort, name='P24')
         self.assertEqual(queryset.count(), 1)
@@ -92,6 +92,7 @@ class PeriodTestCase(TestCase):
             'name': 'P243',
             'date_start': period.date_start.date(),
             'date_end': period.date_end.date(),
+            'remedial': True
         }
         response = self.client.post(url, data=data)
 
@@ -102,6 +103,7 @@ class PeriodTestCase(TestCase):
         self.assertEqual(period_db.id, period.id)
         self.assertEqual(period_db.date_start, period.date_start.date())
         self.assertEqual(period_db.date_end, period.date_end.date())
+        self.assertTrue(period_db.remedial)
 
         kwargs = {
             'cohort_id': self.cohort.id,

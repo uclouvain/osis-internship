@@ -162,7 +162,7 @@ def _add_header(cohort, periods, worksheet):
         column_titles.append(_("Evolution computed"))
         column_titles.append(_("Evolution edited"))
         column_titles.append(_("Reason"))
-    column_titles.append(_("APD Validation"))
+    column_titles.append(_("EPA Validation"))
     add_row(worksheet, column_titles)
     cells = worksheet.iter_rows("A1:AAA1")
     for col in cells:

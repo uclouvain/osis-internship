@@ -30,7 +30,7 @@ from unittest import mock, skipUnless
 
 from dateutil.relativedelta import relativedelta
 from django.contrib import messages
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
@@ -46,10 +46,13 @@ from base.tests.factories.student import StudentFactory
 from base.utils.cache import RequestCache
 from internship.models.internship_score import InternshipScore, APD_NUMBER
 from internship.models.internship_score_mapping import InternshipScoreMapping
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.organization import Organization
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_student_information import InternshipStudentInformationFactory
+from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.score import ScoreFactory, ScoreMappingFactory
 from internship.tests.factories.speciality import SpecialtyFactory
@@ -67,6 +70,7 @@ class ScoresEncodingTest(TestCase):
             date_end=date.today() - relativedelta(months=1),
             cohort=self.cohort,
         )
+
         self.xlsfile = SimpleUploadedFile(
             name='upload.xls',
             content=str.encode('test'),
@@ -90,18 +94,19 @@ class ScoresEncodingTest(TestCase):
         for student_info in self.students:
             student = StudentFactory(person=student_info.person)
             for index, internship in enumerate(internships):
-                StudentAffectationStatFactory(
+                affectation = StudentAffectationStatFactory(
                     student=student,
                     internship=internship,
-                    speciality=internship.speciality if internship.speciality else SpecialtyFactory(),
+                    speciality=internship.speciality if internship.speciality else SpecialtyFactory(cohort=self.cohort),
+                    organization=OrganizationFactory(cohort=self.cohort),
                     period=periods[index]
                 )
-            ScoreFactory(
-                student_affectation__student=student,
-                student_affectation__period=self.period,
-                APD_1='A',
-                validated=True
-            )
+                if affectation.period.name == 'P1':
+                    ScoreFactory(
+                        student_affectation=affectation,
+                        APD_1='A',
+                        validated=True
+                    )
         for apd in range(1, APD_NUMBER):
             ScoreMappingFactory(
                 period=self.period,
@@ -114,7 +119,7 @@ class ScoresEncodingTest(TestCase):
             cohort=self.cohort,
             date_end=date.today() + relativedelta(months=+2)
         )
-        self.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        self.user = PersonFactory().user
         permission = Permission.objects.get(codename='is_internship_manager')
         self.user.user_permissions.add(permission)
         self.all_apds_validated = {'APD_{}'.format(i): 'D' for i in range(1, APD_NUMBER + 1)}
@@ -227,6 +232,12 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         person = PersonFactory(last_name="Éçàüî")
         searched_student = InternshipStudentInformationFactory(person=person, cohort=self.cohort)
+        StudentAffectationStatFactory(
+            student=StudentFactory(person=person),
+            period__cohort=self.cohort,
+            organization__cohort=self.cohort,
+            speciality__cohort=self.cohort,
+        )
         data = {
             'free_text': searched_student.person.last_name,
         }
@@ -405,18 +416,24 @@ class ScoresEncodingTest(TestCase):
         student_info = InternshipStudentInformationFactory(person__last_name=student_name, cohort=self.cohort)
         student = StudentFactory(person=student_info.person)
         PeriodFactory(name='last_period', cohort=self.cohort)
+
         ScoreFactory(
             student_affectation__student=student,
             student_affectation__period=self.period,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='A',
             validated=True
         )
         ScoreFactory(
             student_affectation__student=student,
             student_affectation__period=self.other_period,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='C',
             validated=True
         )
+
         ScoreMappingFactory(
             period=self.other_period,
             cohort=self.cohort,
@@ -494,6 +511,8 @@ class ScoresEncodingTest(TestCase):
         ScoreFactory(
             student_affectation__student=student,
             student_affectation__period=self.period,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             excused=True,
             score=new_score,
             validated=True
@@ -503,7 +522,7 @@ class ScoresEncodingTest(TestCase):
         filtered_object_list = [obj for obj in response.context['students'].object_list if obj == student_info]
         numeric_scores = filtered_object_list[0].numeric_scores
         evolution_score = filtered_object_list[0].evolution_score
-        self.assertEqual(numeric_scores[self.period.name], {'excused': new_score})
+        self.assertEqual(numeric_scores[self.period.name], {'excused': new_score, 'reason': None})
         self.assertEqual(evolution_score, 0)
 
     @mock.patch('internship.utils.importing.import_eval.import_xlsx')
@@ -558,6 +577,8 @@ class ScoresEncodingTest(TestCase):
         ScoreFactory(
             student_affectation__period=self.period,
             student_affectation__student=student_with_no_validated_score,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='A',
             validated=False
         )
@@ -601,6 +622,23 @@ class ScoresEncodingTest(TestCase):
             'period_id': self.period.pk
         })
         response = self.client.get(url)
+        self.assertTemplateUsed(response, "score_form.html")
+
+    def test_form_edit_score_should_create_not_existing_score_and_affectation(self):
+        student = StudentFactory()
+        url = reverse('internship_edit_score', kwargs={
+            'cohort_id': self.cohort.pk,
+            'student_registration_id': student.registration_id,
+            'period_id': self.period.pk
+        })
+        response = self.client.get(url)
+
+        affectation = InternshipStudentAffectationStat.objects.get(student=student, period=self.period)
+        score = InternshipScore.objects.get(student_affectation=affectation)
+
+        self.assertEqual(score.student_affectation, affectation)
+        self.assertEqual(affectation.student, student)
+
         self.assertTemplateUsed(response, "score_form.html")
 
     def test_form_edit_score_post_invalid(self):
@@ -652,6 +690,8 @@ class ScoresEncodingTest(TestCase):
         ScoreFactory(
             student_affectation__period=self.period,
             student_affectation__student=student_with_comment,
+            student_affectation__organization__cohort=self.cohort,
+            student_affectation__speciality__cohort=self.cohort,
             APD_1='A',
             validated=True,
             comments={"impr_areas": comment_content}
@@ -660,3 +700,37 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url)
         student_with_comment = response.context['students'].object_list[0]
         self.assertEqual(student_with_comment.comments[self.period.name], {_("Improvement areas"): comment_content})
+
+    def test_should_filter_scores_by_organization(self):
+        organization = Organization.objects.first()
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'organization': organization.pk})
+        student = response.context['students'].object_list[0]
+        self.assertIn(organization.name, str(student.organizations))
+
+    def test_should_filter_scores_by_specialty(self):
+        specialty = InternshipSpeciality.objects.first()
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'specialty': specialty.pk})
+        student = response.context['students'].object_list[0]
+        self.assertIn(specialty.name, str(student.specialties))
+
+    def test_should_filter_scores_by_specialty_and_organization(self):
+        organization = Organization.objects.first()
+        specialty = InternshipSpeciality.objects.first()
+
+        student_info = InternshipStudentInformationFactory(cohort=self.cohort, person__last_name="A")
+        ScoreFactory(
+            student_affectation__student=StudentFactory(person=student_info.person),
+            student_affectation__period=self.period,
+            student_affectation__organization=organization,
+            student_affectation__speciality=specialty,
+            validated=True
+        )
+
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        response = self.client.get(url, data={'organization': organization.pk, 'specialty': specialty.pk})
+        student = response.context['students'].object_list[0]
+        self.assertIn(specialty.name, str(student.specialties))
+        self.assertIn(organization.name, str(student.organizations))
+        self.assertEqual(student.person, student_info.person)
