@@ -85,7 +85,7 @@ class ScoresFilterForm(Form):
         periods = self.data.getlist('period')
         qs = get_effective_periods(cohort.id)  # exclude last period without grade associated
         if periods:
-            qs = qs.filter(pk__in=[period for period in periods])
+            qs = qs.filter(pk__in=periods)
         return qs
 
     def get_specialties(self, cohort):
