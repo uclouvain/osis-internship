@@ -107,6 +107,9 @@ def scores_encoding(request, cohort_id):
 
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
+
+    assignable_periods = assignable_periods.filter(pk__in=periods.values_list('pk', flat=True))
+
     context = {
         'cohort': cohort, 'periods': periods, 'mandatory_periods': assignable_periods, 'all_periods': all_periods,
         'students': students, 'grades': grades, 'affectations_count': affectations_count, 'search_form': search_form,
