@@ -82,7 +82,7 @@ class ScoresFilterForm(Form):
         return qs.distinct()
 
     def get_periods(self, cohort):
-        periods = self.data.getlist('period')
+        periods = [pk for pk in self.data.getlist('period') if pk != '']
         qs = get_effective_periods(cohort.id)  # exclude last period without grade associated
         if periods:
             qs = qs.filter(pk__in=periods)
