@@ -32,11 +32,11 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 
 class OrganizationAdmin(SerializableModelAdmin):
-    list_display = ('reference', 'name', 'acronym', 'cohort', 'location', 'postal_code', 'city', 'country')
+    list_display = ('reference', 'name', 'acronym', 'cohort', 'location', 'postal_code', 'city', 'country', 'fake')
     fieldsets = ((None, {'fields': ('name', 'acronym', 'reference', 'website', 'phone', 'location', 'postal_code',
-                                    'city', 'country', 'cohort')}),)
+                                    'city', 'country', 'cohort', 'fake')}),)
     search_fields = ['acronym', 'name', 'reference']
-    list_filter = ('cohort',)
+    list_filter = ('cohort', 'fake')
 
 
 class Organization(SerializableModel):
@@ -65,6 +65,8 @@ class Organization(SerializableModel):
     report_address = models.IntegerField(default=12, blank=True, null=True)
     report_postal_code = models.IntegerField(default=13, blank=True, null=True)
     report_city = models.IntegerField(default=14, blank=True, null=True)
+
+    fake = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ("reference", "cohort")

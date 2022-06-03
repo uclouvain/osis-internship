@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-04-28 11:36+0200\n"
+"POT-Creation-Date: 2022-06-02 16:51+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -50,9 +50,6 @@ msgstr ""
 msgid ""
 "A subspecialty must exclusively define a name and should not be mandatory "
 "nor selectable"
-msgstr ""
-
-msgid "EPA Validation"
 msgstr ""
 
 msgid "Accept"
@@ -240,6 +237,9 @@ msgstr ""
 msgid "Cohorts"
 msgstr ""
 
+msgid "Comment (manager)"
+msgstr ""
+
 msgid "Compulsory"
 msgstr ""
 
@@ -304,6 +304,9 @@ msgid "Display students"
 msgstr ""
 
 msgid "Duplicated sequence in report"
+msgstr ""
+
+msgid "EPA Validation"
 msgstr ""
 
 msgid "Edit"
@@ -401,6 +404,9 @@ msgid "Extend"
 msgstr ""
 
 msgid "Extend user account validity"
+msgstr ""
+
+msgid "Fake hospital"
 msgstr ""
 
 msgid "Female"
