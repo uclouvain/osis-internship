@@ -8,7 +8,7 @@ from internship.models.period import get_effective_periods
 
 class ScoresFilterForm(Form):
 
-    YES_NO_CHOICES = (
+    EMPTY_YES_NO_CHOICES = (
         (None, '-'),
         (True, _('Yes')),
         (False, _('No')),
@@ -45,7 +45,7 @@ class ScoresFilterForm(Form):
     yes_no_typed_choice_field = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
         required=False,
-        choices=YES_NO_CHOICES,
+        choices=EMPTY_YES_NO_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"})
     )
 

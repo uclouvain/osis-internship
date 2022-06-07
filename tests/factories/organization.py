@@ -39,3 +39,4 @@ class OrganizationFactory(factory.django.DjangoModelFactory):
     reference = factory.Sequence(lambda n: '%d' % (n,))
     website = factory.Faker('url')
     cohort = factory.SubFactory(CohortFactory)
+    fake = False
