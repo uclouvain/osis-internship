@@ -272,7 +272,6 @@ def _retrieve_blank_periods_by_student(persons, to_exclude, periods, scores, rev
     for student, period in scores:
         students[student].append(period)
     for student in students:
-        print(student)
         blank_periods = [
             period for period in periods
             if period not in students[student] and not(student in to_exclude and period in to_exclude[student])
