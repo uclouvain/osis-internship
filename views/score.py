@@ -99,7 +99,7 @@ def scores_encoding(request, cohort_id):
         evals_filter = search_form.get_evaluations_submitted_filter()
         apds_filter = search_form.get_all_apds_validated_filter()
         students_list = _filter_students_with_specialty_organization(cohort, students_list, search_form)
-        students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
+        students_list = _filter_students_with_all_grades_submitted(students_list, periods, grades_filter)
         students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
         students_list = _filter_students_with_all_apds_validated(cohort, students_list, periods, apds_filter)
 
@@ -271,10 +271,11 @@ def _retrieve_blank_periods_by_student(persons, to_exclude, periods, scores, rev
     students_with_grades = {}
     for student, period in scores:
         students[student].append(period)
-    for student in students.keys():
+    for student in students:
+        print(student)
         blank_periods = [
             period for period in periods
-            if period not in students[student] and not(student in to_exclude.keys() and period in to_exclude[student])
+            if period not in students[student] and not(student in to_exclude and period in to_exclude[student])
         ]
         if blank_periods:
             students_without_grades[student] = blank_periods
@@ -789,7 +790,7 @@ def _append_student_registration_id(student, students_affectations):
             student.registration_id = affectation['student__registration_id']
 
 
-def _filter_students_with_all_grades_submitted(cohort, students, periods, filter):
+def _filter_students_with_all_grades_submitted(students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
         completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
