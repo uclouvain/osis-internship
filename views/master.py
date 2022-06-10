@@ -399,7 +399,7 @@ def master_save(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie
 def export_masters(request, cohort_id):
-    workbook = export_xls()
+    workbook = export_xls(cohort_id)
     response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=masters.xlsx'
     return response
