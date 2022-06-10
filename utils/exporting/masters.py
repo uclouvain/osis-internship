@@ -81,11 +81,11 @@ def _build_fields_names(fields):
     fields_names = []
     for field in fields:
         if field in InternshipMaster._meta.fields:
-            fields_names.append('master__{}'.format(field.name))
+            fields_names.append(f'master__{field.name}')
         elif field in Person._meta.fields:
-            fields_names.append('master__person__{}'.format(field.name))
+            fields_names.append(f'master__person__{field.name}')
         elif field in PersonAddress._meta.fields:
-            fields_names.append('master__person__personaddress__{}'.format(field.name))
+            fields_names.append(f'master__person__personaddress__{field.name}')
         else:
             fields_names.append(field.name)
     return fields_names
