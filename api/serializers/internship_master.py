@@ -23,7 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.conf import settings
+from django.utils.translation import gettext as _
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 from base.api.serializers.person import PersonDetailSerializer
 from base.models.enums.person_source_type import INTERNSHIP
@@ -60,3 +63,18 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
             master = InternshipMaster(person=person, civility=self.validated_data['civility'])
             master.save()
         return master
+
+    def is_valid(self, *args, **kwargs):
+        super().is_valid(self)
+
+        email = self.validated_data['person']['email']
+
+        for subdomain in settings.INTERNAL_EMAIL_SUBDOMAINS:
+            email_stripped_subdomain = email.replace(f"{subdomain}.", '')
+            if Person.objects.filter(email=email_stripped_subdomain).exists():
+                raise ValidationError(
+                    detail=_(
+                        "A similar person with the following email address has been found: "
+                        "<b>{}</b>. Please use this information instead."
+                    ).format(email_stripped_subdomain)
+                )
