@@ -65,16 +65,18 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
         return master
 
     def is_valid(self, *args, **kwargs):
-        super().is_valid(self)
+        is_valid = super().is_valid(self)
 
         email = self.validated_data['person']['email']
 
         for subdomain in settings.INTERNAL_EMAIL_SUBDOMAINS:
             email_stripped_subdomain = email.replace(f"{subdomain}.", '')
-            if Person.objects.filter(email=email_stripped_subdomain).exists():
+            if subdomain in email and Person.objects.filter(email=email_stripped_subdomain).exists():
                 raise ValidationError(
                     detail=_(
                         "A similar person with the following email address has been found: "
                         "<b>{}</b>. Please use this information instead."
                     ).format(email_stripped_subdomain)
                 )
+
+        return is_valid
