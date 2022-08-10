@@ -56,7 +56,8 @@
                 <div class="row">
                     {% bootstrap_field form.reference form_group_class="form-group col-md-1" label=_("Reference") %}
                     {% bootstrap_field form.name form_group_class="form-group col-md-5" label=_("Name") %}
-                    {% bootstrap_field form.website form_group_class="form-group col-md-6" label=_("Website") %}
+                    {% bootstrap_field form.website form_group_class="form-group col-md-4" label=_("Website") %}
+                    {% bootstrap_field form.fake form_group_class="form-group col-md-2" label=_("Fake hospital") %}
                 </div>
                 <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
                 <br>

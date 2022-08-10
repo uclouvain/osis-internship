@@ -276,6 +276,23 @@ class ScoresEncodingTest(TestCase):
         for student in response.context['students'].object_list:
             self.assertFalse(student.periods_scores)
 
+    def test_filter_not_all_grades_submitted_should_exclude_fake_hospitals(self):
+        fake_hospital = OrganizationFactory(cohort=self.cohort, fake=True)
+        student_without_score = Student.objects.first()
+        InternshipScore.objects.filter(student_affectation__student=student_without_score).delete()
+        ScoreFactory(
+            student_affectation__student=student_without_score,
+            student_affectation__organization=fake_hospital,
+            student_affectation__period=self.period,
+        )
+        url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
+        data = {
+            'period': self.period.pk,
+            'all_grades_submitted_filter': False,
+        }
+        response = self.client.get(url, data=data)
+        self.assertEqual(len(response.context['students'].object_list), 0)
+
     def test_filter_evaluations_submitted(self):
         student_affectations = InternshipStudentAffectationStat.objects.filter(student__person=self.students[0].person)
         student_affectations.update(internship_evaluated=True)
