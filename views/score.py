@@ -35,7 +35,7 @@ from dateutil.utils import today
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
-from django.db.models import OuterRef, Subquery
+from django.db.models import OuterRef, Subquery, F
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -99,7 +99,7 @@ def scores_encoding(request, cohort_id):
         evals_filter = search_form.get_evaluations_submitted_filter()
         apds_filter = search_form.get_all_apds_validated_filter()
         students_list = _filter_students_with_specialty_organization(cohort, students_list, search_form)
-        students_list = _filter_students_with_all_grades_submitted(cohort, students_list, periods, grades_filter)
+        students_list = _filter_students_with_all_grades_submitted(students_list, periods, grades_filter)
         students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
         students_list = _filter_students_with_all_apds_validated(cohort, students_list, periods, apds_filter)
 
@@ -107,6 +107,9 @@ def scores_encoding(request, cohort_id):
 
     mapping = _prepare_score_table(cohort, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
+
+    assignable_periods = assignable_periods.filter(pk__in=periods.values_list('pk', flat=True))
+
     context = {
         'cohort': cohort, 'periods': periods, 'mandatory_periods': assignable_periods, 'all_periods': all_periods,
         'students': students, 'grades': grades, 'affectations_count': affectations_count, 'search_form': search_form,
@@ -261,15 +264,18 @@ def generate_query_string(request):
     return query_string
 
 
-def _retrieve_blank_periods_by_student(persons, periods, scores, reverse=False):
+def _retrieve_blank_periods_by_student(persons, to_exclude, periods, scores, reverse=False):
     # get students with blank periods, students without blank periods if reverse set to true
     students = {person: [] for person in persons}
     students_without_grades = {}
     students_with_grades = {}
     for student, period in scores:
         students[student].append(period)
-    for student in students.keys():
-        blank_periods = [period for period in periods if period not in students[student]]
+    for student in students:
+        blank_periods = [
+            period for period in periods
+            if period not in students[student] and not(student in to_exclude and period in to_exclude[student])
+        ]
         if blank_periods:
             students_without_grades[student] = blank_periods
         else:
@@ -783,12 +789,12 @@ def _append_student_registration_id(student, students_affectations):
             student.registration_id = affectation['student__registration_id']
 
 
-def _filter_students_with_all_grades_submitted(cohort, students, periods, filter):
+def _filter_students_with_all_grades_submitted(students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
         completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
         students_with_affectations = InternshipStudentAffectationStat.objects.filter(
-            student__person__in=persons, period__in=completed_periods,
+            student__person__in=persons, period__in=completed_periods
         ).values_list('student', flat=True)
         scores = InternshipScore.objects.filter(
             student_affectation__student__in=students_with_affectations,
@@ -798,14 +804,27 @@ def _filter_students_with_all_grades_submitted(cohort, students, periods, filter
             'student_affectation__student', 'student_affectation__period'
         ).values_list(
             'student_affectation__student__person',
-            'student_affectation__period'
+            'student_affectation__period',
         )
+
         persons_with_affectations = students_with_affectations.values_list('student__person', flat=True)
+        affectations_to_exclude = students_with_affectations.filter(organization__fake=True).annotate(
+            person=F('student__person'),
+        ).values_list(
+            'person', 'period', named=True
+        )
+        # group affectations_to_exclude by person
+        to_exclude = {
+            person: [aff.period for aff in affectations]
+            for person, affectations in groupby(affectations_to_exclude, key=lambda x: x.person)
+        }
+
         periods_persons = _retrieve_blank_periods_by_student(
             persons_with_affectations,
+            to_exclude,
             completed_periods,
             scores,
-            filter
+            filter,
         )
         students = students.filter(person__pk__in=periods_persons.keys())
     return students
@@ -843,14 +862,13 @@ def _filter_students_with_specialty_organization(cohort, students, search_form):
     organization = search_form.get_organizations(cohort)
     specialty = search_form.get_specialties(cohort)
     periods = search_form.get_periods(cohort)
-
     if organization or specialty or periods:
         persons = students.values_list('person', flat=True)
         persons_with_affectations = InternshipStudentAffectationStat.objects.filter(
             organization__in=organization,
             speciality__in=specialty,
             period__in=periods,
-            student__person__in=persons
+            student__person__in=persons,
         ).values_list('student__person', flat=True)
         students = students.filter(person__pk__in=persons_with_affectations)
     return students

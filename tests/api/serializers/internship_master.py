@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,20 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory.fuzzy
-from django.utils.text import slugify
 
-from internship.tests.factories.cohort import CohortFactory
+from django.test import TestCase, override_settings
+from rest_framework.exceptions import ValidationError
+
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.user import UserFactory
+from internship.api.serializers.internship_master import InternshipMasterSerializer
 
 
-class OrganizationFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.Organization'
-        django_get_or_create = ('reference',)
+class InternshipMasterSerializerTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.client.force_login(self.user)
 
-    name = factory.Sequence(lambda n: 'Organization %d' % (n,))
-    acronym = factory.LazyAttribute(lambda o: slugify(o.name)[:15])
-    reference = factory.Sequence(lambda n: '%d' % (n,))
-    website = factory.Faker('url')
-    cohort = factory.SubFactory(CohortFactory)
-    fake = False
+    @override_settings(INTERNAL_EMAIL_SUBDOMAINS=['subdomain'])
+    def test_email_with_stripped_subdomain_already_exists(self):
+        existing_person = PersonFactory(email='test@osis.org')
+        serializer = InternshipMasterSerializer(data={'person': {'email': "test@subdomain.osis.org"}})
+        with self.assertRaises(ValidationError):
+            serializer.is_valid(raise_exception=True)
