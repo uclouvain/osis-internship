@@ -125,17 +125,17 @@
                                     <td>{{ item.1 }}</td>
                                     {% for period, places in item.2.items %}
                                         {% if places.before == places.after and places.before != 0 %}
-                                            <td style="border: 5px solid white; background-color:rgba(57,180,57,0.4); color:rgb(11,59,11); padding: 20px;">
+                                            <td style="border: 5px solid white; background-color:rgba(57,180,57,0.4); color:rgb(11,59,11); padding: 10px;">
                                         {% elif places.pc > 66 %}
-                                            <td style="border: 5px solid white; background-color:rgba(153,255,153,0.4); color:rgb(0,133,0); padding: 20px;">
+                                            <td style="border: 5px solid white; background-color:rgba(153,255,153,0.4); color:rgb(0,133,0); padding: 10px;">
                                         {% elif places.pc > 33 %}
-                                            <td style="border: 5px solid white; background-color:rgba(255,233,142,0.4); color:rgb(169,140,6); padding: 20px;">
+                                            <td style="border: 5px solid white; background-color:rgba(255,233,142,0.4); color:rgb(169,140,6); padding: 10px;">
                                         {% elif places.pc > 0 %}
-                                            <td style="border: 5px solid white; background-color:rgba(252,152,87,0.4); color:rgb(238,100,11); padding: 20px;">
+                                            <td style="border: 5px solid white; background-color:rgba(252,152,87,0.4); color:rgb(238,100,11); padding: 10px;">
                                         {% elif places.after < 0 %}
-                                            <td style="border: 5px solid white; background-color:rgba(122,121,121,0.8); color: white; padding: 20px;">
+                                            <td style="border: 5px solid white; background-color:rgba(122,121,121,0.8); color: white; padding: 10px;">
                                         {% elif places.pc == 0 %}
-                                            <td style="border: 5px solid white; background-color:rgba(255,105,105,0.4); color:rgb(154,2,2); padding: 20px;">
+                                            <td style="border: 5px solid white; background-color:rgba(255,105,105,0.4); color:rgb(154,2,2); padding: 10px;">
                                         {% elif places.before == 0 %}
                                             <td>
                                         {% else %}
