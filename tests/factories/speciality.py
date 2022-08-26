@@ -32,7 +32,7 @@ class SpecialtyFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = 'internship.InternshipSpeciality'
 
-    name = factory.Faker('job')
+    name = factory.Sequence(lambda n: f"specialty-{n}")
     mandatory = False
     cohort = factory.SubFactory(CohortFactory)
     sequence = None
