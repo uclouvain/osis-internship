@@ -41,7 +41,8 @@ PERIOD_COLUMN_WIDTH = 7
 MAX_COL_LENGTH = 25
 FIELDS = [
     'last_name', 'first_name', 'civility', 'gender', 'email', 'email_private', 'email_additional',
-    'location', 'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities', 'role'
+    'location', 'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities', 'role',
+    'user_account_status'
 ]
 
 
@@ -72,7 +73,9 @@ def _add_masters(worksheet, fields, cohort_id):
         Q(specialty__cohort_id=cohort_id) | Q(organization__cohort_id=cohort_id)
     ).values_list(
         *fields_names, 'specialty__name', 'organization__name', 'organization__reference', 'role'
-    ).distinct()
+    ).distinct(
+        "master__person__first_name", "master__person__last_name", "master__person__birth_date"
+    ).order_by('master__person__last_name')
     for master in masters:
         add_row(worksheet, master)
 
