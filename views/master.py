@@ -191,7 +191,8 @@ def _create_ldap_user_account(master):
             "datenaissance": master.person.birth_date.strftime('%Y%m%d%fZ'),
             "prenom": master.person.first_name,
             "nom": master.person.last_name,
-            "email": master.person.email
+            "email": master.person.email,
+            "active": True,
         }),
         url=settings.LDAP_ACCOUNT_CREATION_URL
     )
