@@ -26,12 +26,12 @@
 
 from openpyxl import load_workbook
 
-REGISTRATION_ID_COLUMN = 6
-PERIOD_COLUMN = 15
+REGISTRATION_ID_COLUMN = 7
+PERIOD_COLUMN = 16
 
 
 def import_xlsx(xlsxfile):
-    workbook = load_workbook(filename=xlsxfile, read_only=True)
+    workbook = load_workbook(filename=xlsxfile)
     worksheet = workbook.active
     evaluations = [
         {
