@@ -57,7 +57,7 @@ from internship.models.master_allocation import MasterAllocation
 from internship.models.period import get_effective_periods, get_assignable_periods
 from internship.templatetags.dictionary import is_edited, is_excused
 from internship.templatetags.student import has_remedial
-from internship.utils.exporting import score_encoding_xls
+from internship.utils.exporting import score_encoding_xls, score_summary_pdf
 from internship.utils.importing import import_scores, import_eval
 from internship.utils.mails import mails_management
 from internship.views.common import get_object_list, round_half_up
@@ -997,6 +997,31 @@ def download_scores(request, cohort_id):
     file_name = "encodage_notes_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+@set_download_cookie
+def download_summary(request, cohort_id, student_id):
+    cohort = get_object_or_404(
+        Cohort.objects.prefetch_related(
+            'internshipstudentinformation_set',
+            'internship_set',
+            'period_set'
+        ),
+        pk=cohort_id
+    )
+    selected_periods = request.POST.getlist('period')
+    periods = cohort.period_set.order_by('date_start')
+    student = cohort.internshipstudentinformation_set.get(id=student_id)
+    internships = cohort.internship_set.all().order_by('position')
+    internships = _list_internships_acronyms(internships)
+    mapping = _prepare_score_table(cohort, periods, [student])
+    file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping)
+    response = HttpResponse(file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    file_name = "score_summary_{}.pdf".format(cohort.name.strip().replace(' ', '_'))
+    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+    return response
+    # return render(request, template_name='internship_summary_template.html', context={**locals()})
 
 
 def _list_internships_acronyms(internships):
