@@ -49,7 +49,7 @@ def _add_header(worksheet, organization):
         column_titles.append(str(_(item)))
 
     add_row(worksheet, column_titles)
-    cells = worksheet.iter_rows("A1:N1")
+    cells = worksheet.iter_rows(min_row=1, max_row=1, min_col=1, max_col=14)
     for col in cells:
         for cell in col:
             cell.font = Font(bold=True)
