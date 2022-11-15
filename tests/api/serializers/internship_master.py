@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,20 +23,23 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import factory.django
 
-from internship.tests.factories.cohort import CohortFactory
+from django.test import TestCase, override_settings
+from rest_framework.exceptions import ValidationError
+
+from base.tests.factories.person import PersonFactory
+from base.tests.factories.user import UserFactory
+from internship.api.serializers.internship_master import InternshipMasterSerializer
 
 
-class SpecialtyFactory(factory.django.DjangoModelFactory):
-    class Meta:
-        model = 'internship.InternshipSpeciality'
+class InternshipMasterSerializerTest(TestCase):
+    def setUp(self):
+        self.user = UserFactory()
+        self.client.force_login(self.user)
 
-    name = factory.Sequence(lambda n: f"specialty-{n}")
-    mandatory = False
-    cohort = factory.SubFactory(CohortFactory)
-    sequence = None
-
-    @factory.lazy_attribute
-    def acronym(self):
-        return "".join(word[0] for word in self.name.split()).upper()
+    @override_settings(INTERNAL_EMAIL_SUBDOMAINS=['subdomain'])
+    def test_email_with_stripped_subdomain_already_exists(self):
+        existing_person = PersonFactory(email='test@osis.org')
+        serializer = InternshipMasterSerializer(data={'person': {'email': "test@subdomain.osis.org"}})
+        with self.assertRaises(ValidationError):
+            serializer.is_valid(raise_exception=True)

@@ -178,7 +178,16 @@
                 </tr>
             </thead>
             <tbody>
-                <form action="{% url 'create_accounts' cohort_id=current_cohort.id %}?{{ request.GET.urlencode }}" method="post" id="create_account_form">
+                    <tr>
+                        <div class="pagination-index-count" style="margin-top: 10px; margin-bottom: 10px;">
+                            <strong>
+                            {% blocktrans with start_index=allocations.start_index end_index=allocations.end_index total_counts=allocations.paginator.count %}
+                                {{ start_index }} to {{ end_index }} of {{ total_counts }} internship's masters
+                            {% endblocktrans %}
+                            </strong>
+                        </div>
+                    </tr>
+                    <form action="{% url 'create_accounts' cohort_id=current_cohort.id %}?{{ request.GET.urlencode }}" method="post" id="create_account_form">
                     {% csrf_token %}
                     {% for allocation in allocations %}
                         <tr>

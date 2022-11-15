@@ -100,7 +100,7 @@ def _retrieve_score(period_score):
     if _is_dict_with_key(period_score, 'edited'):
         if _is_dict_with_key(period_score['edited'], 'excused'):
             return period_score['edited']['excused'] or ''
-        return period_score['edited'] or ''
+        return period_score['edited']['score'] or ''
     else:
         return period_score
 
@@ -127,9 +127,9 @@ def _make_complete_list(periods, students, worksheet):
 
 
 def _append_evolution_score(columns, score):
-    columns.append(score['edited'] if is_edited(score) else score)
+    columns.append(score['edited']['score'] if is_edited(score) else score)
     columns.append(score['computed'] if is_edited(score) else score)
-    columns.append(score['edited'] if is_edited(score) else '')
+    columns.append(score['edited']['score'] if is_edited(score) else '')
 
 
 def _complete_student_row_for_all_internships(columns, periods, student):
@@ -144,7 +144,7 @@ def _complete_student_row_for_all_internships(columns, periods, student):
 def _add_sheet_header(worksheet):
     column_titles = [_("Name"), _("First name"), _("NOMA"), _("Hospital"), _("Grade")]
     add_row(worksheet, column_titles)
-    cells = worksheet.iter_rows("A1:AAA1")
+    cells = worksheet.iter_rows(min_row=1, max_row=1, min_col=1, max_col=27)
     for col in cells:
         for cell in col:
             cell.font = Font(bold=True)
@@ -164,7 +164,7 @@ def _add_header(cohort, periods, worksheet):
         column_titles.append(_("Reason"))
     column_titles.append(_("EPA Validation"))
     add_row(worksheet, column_titles)
-    cells = worksheet.iter_rows("A1:AAA1")
+    cells = worksheet.iter_rows(min_row=1, max_row=1, min_col=1, max_col=40)
     for col in cells:
         for cell in col:
             cell.font = Font(bold=True)

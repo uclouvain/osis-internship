@@ -33,6 +33,7 @@
 
 {% block style %}
     <link rel="stylesheet" href="{% static 'css/internship.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 {% endblock %}
 
 {% block breadcrumb %}
@@ -60,7 +61,7 @@
                             <label for="free_text_id">{% trans 'Search' %}</label>
                             {{ search_form.free_text }}
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-3">
                             <label for="period_id">{% trans 'Period' %}</label>
                             {{ search_form.period }}
                         </div>
@@ -193,11 +194,14 @@
                          <tr>
                              {% with rowspan_no_remedial=mandatory_periods|length|add:1 %}
                              {% with rowspan_remedial=student.remedial_periods_count %}
+
                               <td
-                                {% if has_remedial and periods.count != 1 %}
+                                {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
+                                {% elif has_remedial %}
+                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
                                 {% else %}
-                                    rowspan="{% if periods.count == 1 %}2{% else %}{{ rowspan_no_remedial }}{% endif %}"
+                                    rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
                                     <input type="checkbox" name="selected_student" class="selected_object"
                                         data-periods="{{ student.periods_scores }}"
@@ -206,10 +210,12 @@
                                     />
                               </td>
                               <td
-                                {% if has_remedial and periods.count != 1 %}
+                                {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
+                                {% elif has_remedial %}
+                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
                                 {% else %}
-                                    rowspan="{% if periods.count == 1 %}2{% else %}{{ rowspan_no_remedial }}{% endif %}"
+                                    rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
                                 {% if not student.fulfill_condition %}
                                     <icon title="{% trans 'Aptitudes conditions not fulfilled' %}"
@@ -221,10 +227,12 @@
                                   {% endif %}
                               </td>
                               <td style="max-width: 10vw;" class="overflow-cell"
-                                {% if has_remedial and periods.count != 1 %}
+                                {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
+                                {% elif has_remedial %}
+                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
                                 {% else %}
-                                    rowspan="{% if periods.count == 1 %}2{% else %}{{ rowspan_no_remedial }}{% endif %}"
+                                    rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
                                 {{ student }}
                               </td>
@@ -464,6 +472,7 @@
     <script type="text/javascript" src="{% static "js/internship_edit_delete_empty_score.js" %}?version={{ js }}"></script>
     <script type="text/javascript" src="{% static "js/internship_import_grades.js" %}?version={{ js }}"></script>
     <script type="text/javascript" src="{% static "js/internship_send_summary.js" %}?version={{ js }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 
     <script>
 
@@ -486,11 +495,11 @@
         });
     });
 
-    const all_periods_count = parseInt("{{ all_periods.count }}");
+    const all_periods_count = parseInt("{{ mandatory_periods.count }}");
     const completed_periods_count = parseInt("{{ completed_periods.count }}");
 
     function switchEvolutionScoreModalMsg(selected_periods_count) {
-        if (selected_periods_count === all_periods_count && all_periods_count === completed_periods_count) {
+        if (selected_periods_count >= all_periods_count && all_periods_count <= completed_periods_count) {
             $("#evolution_score_export_message").show();
             $("#no_evolution_score_export_message").hide();
         } else {
@@ -568,6 +577,10 @@
           );
         }
         commentsModalBody.html(commentsModalBodyContent);
+    });
+
+    $(document).ready(function() {
+        $('#id_period').select2();
     });
 
     </script>

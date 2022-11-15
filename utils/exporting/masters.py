@@ -24,7 +24,7 @@
 #
 ##############################################################################
 
-from django.db.models import OuterRef, Subquery
+from django.db.models import Q
 from django.utils.translation import gettext as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
@@ -41,11 +41,12 @@ PERIOD_COLUMN_WIDTH = 7
 MAX_COL_LENGTH = 25
 FIELDS = [
     'last_name', 'first_name', 'civility', 'gender', 'email', 'email_private', 'email_additional',
-    'location', 'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities', 'role'
+    'location', 'postal_code', 'city', 'country', 'phone', 'phone_mobile', 'birth_date', 'start_activities', 'role',
+    'user_account_status'
 ]
 
 
-def export_xls():
+def export_xls(cohort_id):
     workbook = Workbook()
     worksheet = workbook.active
     models_fields = set(InternshipMaster._meta.fields)
@@ -54,26 +55,27 @@ def export_xls():
     meta_fields = [field for field in models_fields if field.name in FIELDS]
     sorted_fields = sorted(meta_fields, key=lambda x: FIELDS.index(x.name))
     _add_header(worksheet, sorted_fields)
-    _add_masters(worksheet, sorted_fields)
+    _add_masters(worksheet, sorted_fields, cohort_id)
     _adjust_column_width(worksheet)
     return save_virtual_workbook(workbook)
 
 
 def _add_header(worksheet, fields):
     fields_verbose_names = [_(field.verbose_name.capitalize()) for field in fields]
-    fields_verbose_names.extend([_("Specialty"), _("Organization"), "Ref"])
+    fields_verbose_names.extend([_("Specialty"), _("Organization"), "Ref", "Role"])
     add_row(worksheet, fields_verbose_names)
     worksheet.row_dimensions[1].font = Font(bold=True)
 
 
-def _add_masters(worksheet, fields):
+def _add_masters(worksheet, fields, cohort_id):
     fields_names = _build_fields_names(fields)
-    master_allocation = MasterAllocation.objects.filter(master=OuterRef('pk'))
-    masters = InternshipMaster.objects.all().order_by('person__last_name', 'person__first_name').annotate(
-        specialty=Subquery(master_allocation.values('specialty__name')[:1]),
-        organization=Subquery(master_allocation.values('organization__name')[:1]),
-        organization_ref=Subquery(master_allocation.values('organization__reference')[:1])
-    ).values_list(*fields_names, 'specialty', 'organization', 'organization_ref').distinct()
+    masters = MasterAllocation.objects.filter(
+        Q(specialty__cohort_id=cohort_id) | Q(organization__cohort_id=cohort_id)
+    ).values_list(
+        *fields_names, 'specialty__name', 'organization__name', 'organization__reference', 'role'
+    ).distinct(
+        "master__person__first_name", "master__person__last_name", "master__person__birth_date"
+    ).order_by('master__person__last_name')
     for master in masters:
         add_row(worksheet, master)
 
@@ -81,10 +83,12 @@ def _add_masters(worksheet, fields):
 def _build_fields_names(fields):
     fields_names = []
     for field in fields:
-        if field in Person._meta.fields:
-            fields_names.append('person__{}'.format(field.name))
+        if field in InternshipMaster._meta.fields:
+            fields_names.append(f'master__{field.name}')
+        elif field in Person._meta.fields:
+            fields_names.append(f'master__person__{field.name}')
         elif field in PersonAddress._meta.fields:
-            fields_names.append('person__personaddress__{}'.format(field.name))
+            fields_names.append(f'master__person__personaddress__{field.name}')
         else:
             fields_names.append(field.name)
     return fields_names
@@ -94,4 +98,4 @@ def _adjust_column_width(worksheet):
     for column_cells in worksheet.columns:
         length = max(len(str(cell.value)) for cell in column_cells)
         length = length if length <= MAX_COL_LENGTH else MAX_COL_LENGTH
-        worksheet.column_dimensions[column_cells[0].column].width = length
+        worksheet.column_dimensions[column_cells[0].column_letter].width = length

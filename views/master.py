@@ -58,6 +58,7 @@ from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
 from osis_common.decorators.download import set_download_cookie
 from osis_common.messaging import message_config
+from osis_common.utils.logging import logger
 
 # user account is valid for 1 year
 INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS = 365
@@ -124,6 +125,7 @@ def _create_master_user_account(request, master):
             _update_user_account_status(master, request)
         else:
             _display_creation_error_msg(master, request)
+            logger.error(msg=str(response.json()))
     else:
         _display_no_birth_date_error_msg(master, request)
 
@@ -191,7 +193,8 @@ def _create_ldap_user_account(master):
             "datenaissance": master.person.birth_date.strftime('%Y%m%d%fZ'),
             "prenom": master.person.first_name,
             "nom": master.person.last_name,
-            "email": master.person.email
+            "email": master.person.email,
+            "active": True,
         }),
         url=settings.LDAP_ACCOUNT_CREATION_URL
     )
@@ -399,7 +402,7 @@ def master_save(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie
 def export_masters(request, cohort_id):
-    workbook = export_xls()
+    workbook = export_xls(cohort_id)
     response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     response['Content-Disposition'] = 'attachment; filename=masters.xlsx'
     return response

@@ -8,7 +8,7 @@ from internship.models.period import get_effective_periods
 
 class ScoresFilterForm(Form):
 
-    YES_NO_CHOICES = (
+    EMPTY_YES_NO_CHOICES = (
         (None, '-'),
         (True, _('Yes')),
         (False, _('No')),
@@ -24,8 +24,8 @@ class ScoresFilterForm(Form):
     period = forms.ModelChoiceField(
         queryset=None,
         required=False,
-        empty_label='-',
-        widget=forms.Select(attrs={"class": "form-control"})
+        empty_label=None,
+        widget=forms.SelectMultiple(attrs={"class": "form-control", "multiple": "multiple"})
     )
 
     specialty = forms.ModelChoiceField(
@@ -45,7 +45,7 @@ class ScoresFilterForm(Form):
     yes_no_typed_choice_field = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
         required=False,
-        choices=YES_NO_CHOICES,
+        choices=EMPTY_YES_NO_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"})
     )
 
@@ -62,6 +62,10 @@ class ScoresFilterForm(Form):
         cohort = kwargs.pop('cohort')
         super(ScoresFilterForm, self).__init__(*args, **kwargs)
         self.fields['period'].queryset = cohort.period_set.all().order_by('date_start')
+
+        # disable clean on periods to retrieve periods pk
+        self.fields['period'].clean = lambda x: x
+
         self.fields['specialty'].queryset = cohort.internshipspeciality_set.order_by('name')
         self.fields['organization'].queryset = cohort.organization_set.order_by('reference')
 
@@ -78,10 +82,10 @@ class ScoresFilterForm(Form):
         return qs.distinct()
 
     def get_periods(self, cohort):
-        period = self.cleaned_data.get('period')
+        periods = [pk for pk in self.data.getlist('period') if pk != '']
         qs = get_effective_periods(cohort.id)  # exclude last period without grade associated
-        if period:
-            qs = qs.filter(pk=period.pk)
+        if periods:
+            qs = qs.filter(pk__in=periods)
         return qs
 
     def get_specialties(self, cohort):
