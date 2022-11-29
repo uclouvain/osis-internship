@@ -98,4 +98,4 @@ def _adjust_column_width(worksheet):
     for column_cells in worksheet.columns:
         length = max(len(str(cell.value)) for cell in column_cells)
         length = length if length <= MAX_COL_LENGTH else MAX_COL_LENGTH
-        worksheet.column_dimensions.worksheet.width = length
+        worksheet.column_dimensions[column_cells[0].column_letter].width = length

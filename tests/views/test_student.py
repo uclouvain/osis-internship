@@ -184,7 +184,7 @@ class StudentsListImport(TestCase):
             student = StudentFactory()
             cls.worksheet.append(generate_record(registration_id=student.registration_id))
         cls.file_content = save_virtual_workbook(cls.workbook)
-        list(cls.worksheet.rows)[1][15].value = "Edited_Location"
+        cls.worksheet.cell(row=2, column=16).value = "Edited_Location"
         cls.edited_file_content = save_virtual_workbook(cls.workbook)
 
         cls.import_url = reverse(import_students, kwargs={
