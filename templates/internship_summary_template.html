@@ -1,5 +1,8 @@
 {% load static %}
 {% load i18n %}
+{% load dictionary %}
+{% load master %}
+{% load mapping %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -29,9 +32,16 @@
 <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}"/>
 
 <style>
-    @page{
+    @page {
         margin: 10mm;
         size: A4 landscape;
+    }
+
+    @media print {
+      .container {
+        page-break-before: always;
+          font-size: 12px;
+      }
     }
 
     th, td {
@@ -97,8 +107,17 @@
         font-size: 20px;
     }
 
+    h5{
+        font-size: 12px;
+        text-decoration: underline;
+    }
+
     table{
         font-size: 12px;
+    }
+
+    tbody{
+        font-size: 10px;
     }
 
     .apd{
@@ -107,35 +126,93 @@
         padding-left: 4px !important;
         padding-right: 4px !important;
     }
+    .legend, .legend td, .legend th{
+        font-size: 10px;
+        line-height: 1.5;
+    }
+    .legend .title{
+        margin-bottom: 10px;
+    }
+
+    .detail-period-line{
+        display: block;
+        height: 30px;
+    }
+
+    .detail-period{
+        border-right: 1px solid darkgrey;
+        margin-right: 5px;
+        font-size: 16px;
+        font-weight: bold;
+    }
+
+    .panel.panel-horizontal {
+        display:table;
+        width:100%;
+    }
+    .panel.panel-horizontal > .panel-heading, .panel.panel-horizontal > .panel-body, .panel.panel-horizontal > .panel-footer {
+        display:table-cell;
+    }
+    .panel.panel-horizontal > .panel-heading, .panel.panel-horizontal > .panel-footer {
+        width: 35%;
+        border:0;
+        vertical-align: top;
+    }
+    .panel.panel-horizontal > .panel-heading {
+        border-right: 1px solid #ddd;
+        border-top-right-radius: 0;
+        border-bottom-left-radius: 4px;
+    }
+    .panel.panel-horizontal > .panel-footer {
+        border-left: 1px solid #ddd;
+        border-top-left-radius: 0;
+        border-bottom-right-radius: 4px;
+    }
 </style>
 
 {% block content %}
-    <div class="container">
+    <div class="container table-page">
         <h2>{% trans 'Internships evaluations summary' %}</h2>
         <div class="logo">
             <img src="{% static 'img/logo_uclouvain.png' %}"/>
         </div>
         <div class="legend">
-        <table>
+        <table style="text-align: center;">
+            <div class="title">{% trans 'Autonomy Level (% according to periods)' %}</div>
             <tr>
                 <th>{% trans 'Grade' %}</th>
                 <th>{% trans 'Description' %}</th>
+                <th>{% trans 'P1 to P2' %}</th>
+                <th>{% trans 'P3 to P5' %}</th>
+                <th>{% trans 'P6 to P7' %}</th>
             </tr>
             <tr>
                 <td>A</td>
                 <td>{% trans 'not achieving' %}</td>
+                <td>15%</td>
+                <td>5%</td>
+                <td>0%</td>
             </tr>
             <tr>
                 <td>B</td>
                 <td>{% trans 'achieves with help' %}</td>
+                <td>70%</td>
+                <td>30%</td>
+                <td>10%</td>
             </tr>
             <tr>
                 <td>C</td>
                 <td>{% trans 'achieves without help' %}</td>
+                <td>15%</td>
+                <td>60%</td>
+                <td>80%</td>
             </tr>
             <tr>
                 <td>D</td>
                 <td>{% trans 'tremendously achieving' %}</td>
+                <td>0%</td>
+                <td>5%</td>
+                <td>10%</td>
             </tr>
             <tr>
                 <td>- / E</td>
@@ -144,7 +221,7 @@
         </table>
     </div>
     <div class="page-header">
-        <h3>
+        <h3 class="text-bold">
             <span class="user-icon fa-solid fa-user-doctor"></span>
             {{ student }}
         </h3>
@@ -154,7 +231,7 @@
           <table class="table table-fix-header table-hover">
             <tr class="text-center">
                 <td colspan="3"></td>
-                <td colspan="15">Activités Professionnelles délégables (APD) </td>
+                <td colspan="15" class="text-bold">Activités Professionnelles délégables (APD)</td>
                 <td colspan="3"></td>
             </tr>
               <tr class="header-row">
@@ -164,23 +241,30 @@
                   {% for i in i|rjust:15 %}
                     <th class="apd text-center">{{forloop.counter}}</th>
                   {% endfor %}
-                <th>{% trans 'Score' %}</th>
+                <th class="text-center">{% trans 'Score' %}</th>
                 <th class="text-center">{% trans 'Internship master' %}</th>
                 <th class="text-center">{% trans 'Assessor' %}</th>
               </tr>
 
-              {% for period in periods %}
+            <tbody>
 
-                {% with student.specialties|get_item:period.name as specialty %}
-                {% with student.organizations|get_item:period.name as organization %}
+              {% for score in internships_scores %}
+
+                {% with student.specialties|get_item:score.period.name as specialty %}
+                {% with student.organizations|get_item:score.period.name as organization %}
 
                 {% if organization %}
                 <tr>
-                    <td style="text-align: center;">{{ period }}</td>
+                    <td style="text-align: center;">{{ score.period.name }}</td>
                     <td>{{ specialty.name }}</td>
                     <td>{{ organization.name }}</td>
+                    {% if not student.scores|has_substr:score.period %}
+                        {% for i in i|rjust:15 %}
+                            <td class="hidden-sm hidden-xs text-center">-</td>
+                        {% endfor %}
+                    {% endif %}
                     {% for key, scores in student.scores %}
-                        {% if key|slugify == period|slugify %}
+                        {% if key|slugify == score.period|slugify %}
                             {% for score in scores %}
                                 {% if score %}
                                     <td class="apd text-center
@@ -195,9 +279,18 @@
                             {% endfor %}
                         {% endif %}
                     {% endfor %}
-                    <td style="text-align: center;">0</td>
-                    <td class="text-center">D. Ntmals</td>
-                    <td class="text-center">D. Ntmals</td>
+                    <td class="text-center">
+                        {% with student.periods_scores|get_item:score.period.name as computed_score %}
+                            {% if not computed_score|is_edited %}
+                                {{ computed_score }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        {% endwith %}
+                    </td>
+                    {% get_master_name specialty organization cohort as master_name %}
+                    <td class="text-center">{{ master_name|display_short_person_name }}</td>
+                    <td class="text-center">{{ score.validated_by|display_short_person_name }}</td>
                 <tr/>
                 {% endif %}
 
@@ -205,7 +298,63 @@
               {% endwith %}
 
               {% endfor %}
+            </tbody>
           </table>
     </div>
+    </div>
+
+    <div class="container detail-page">
+            <h2>{% trans 'Internships evaluations detail' %}</h2>
+            <div class="logo">
+                <img src="{% static 'img/logo_uclouvain.png' %}"/>
+            </div>
+            <div class="page-header">
+                <h3 class="pull-left text-bold">
+                    <span class="user-icon fa-solid fa-user-doctor"></span>
+                    {{ student }}
+                </h3>
+                <h4 class="pull-right cohort-info">{{ cohort }}</h4>
+            </div>
+
+            {% for score in internships_scores %}
+
+            {% with student.specialties|get_item:score.period.name as specialty %}
+            {% with student.organizations|get_item:score.period.name as organization %}
+                <div class="panel panel-default panel-horizontal">
+                    <div class="panel-heading">
+                        <div class="detail-period-line">
+                            <span class="detail-period">
+                                {{ score.period }}
+                            </span>
+                            {{ score.period.date_start }} - {{ score.period.date_end }}
+                        </div>
+                        {{ specialty.name }} - {{ organization.name }}
+                        <div>
+                            <span style="text-decoration: underline;">Maître de stage</span>:
+                            {% get_master_name specialty organization cohort %}
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        {% with score.comments|keys_to_labels as comments %}
+                            {% for key, comment in comments.items %}
+                                <div class="{% if forloop.counter|divisibleby:2 %} row {% endif %}">
+                                <div class="col-xs-6">
+                                    <h5>{{ key }}</h5>
+                                    <p>{{ comment|default:'-'}}</p>
+                                </div>
+                                </div>
+                            {% empty %}
+                                <div class="col-xs-12">
+                                    <p>{% trans "No comments provided by the internship's master" %}</p>
+                                </div>
+                            {% endfor %}
+                        {% endwith %}
+                    </div>
+                </div>
+
+            {% endwith %}
+            {% endwith %}
+
+            {% endfor %}
     </div>
 {% endblock %}

@@ -106,6 +106,9 @@ msgstr "Activation en attente"
 msgid "Active"
 msgstr "Actif"
 
+msgid "Activits Professionnelles dlgables (APD)"
+msgstr ""
+
 msgid "Add"
 msgstr "Ajouter"
 
@@ -201,8 +204,15 @@ msgstr "Conditions d'aptitudes remplies"
 msgid "Aptitudes conditions not fulfilled"
 msgstr "Conditions d'aptitudes non remplies"
 
+msgid "Assessor"
+msgstr "Évaluateur"
+
 msgid "Attention"
 msgstr "Attention"
+
+#, python-format
+msgid "Autonomy Level (%% according to periods)"
+msgstr "Niveau d'autonomie (%% fonction des périodes)"
 
 msgid "Birth date"
 msgstr "Date de naissance"
@@ -592,6 +602,12 @@ msgstr "Évaluation du lieu de stage"
 msgid "Internships"
 msgstr "Stages"
 
+msgid "Internships evaluations detail"
+msgstr "Détail des évaluations de stage"
+
+msgid "Internships evaluations summary"
+msgstr "Récapitulatif des évaluations de stage"
+
 msgid "Internships injection"
 msgstr "Injection des stages"
 
@@ -698,6 +714,9 @@ msgstr "Aucune allocation trouvée pour le maître."
 msgid "No assignment available"
 msgstr "Pas d'affectation disponible"
 
+msgid "No comments provided by the internship's master"
+msgstr "Pas de commentaire fourni par le maître de stage"
+
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 "Aucune donnée ne correspond aux filtres ci-dessus. Faites un choix, s'il "
@@ -777,6 +796,15 @@ msgstr "Autre choix"
 
 msgid "Other reason"
 msgstr "Autre motif"
+
+msgid "P1 to P2"
+msgstr "P1 à P2"
+
+msgid "P3 to P5"
+msgstr "P3 à P5"
+
+msgid "P6 to P7"
+msgstr "P6 à P7"
 
 msgid "Parent specialty"
 msgstr "Spécialité parente"
@@ -1158,6 +1186,12 @@ msgstr ""
 "Vous pouvez fournir un motif de modification de la note en choisissant parmi "
 "les justifications suivantes."
 
+msgid "achieves with help"
+msgstr "réalise avec aide"
+
+msgid "achieves without help"
+msgstr "réalise sans aide"
+
 msgid "delegate(s) without user account"
 msgstr "délégué(s) sans compte utilisateur"
 
@@ -1166,6 +1200,12 @@ msgstr "en"
 
 msgid "items per page"
 msgstr "éléments par page"
+
+msgid "not achieving"
+msgstr "ne réalise pas"
+
+msgid "not observed"
+msgstr "non observé"
 
 #, python-format
 msgid "row %(row_id)s"
@@ -1177,6 +1217,9 @@ msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
 
 msgid "the allocation(s) for"
 msgstr "les affectations pour"
+
+msgid "tremendously achieving"
+msgstr "réalise parfaitement"
 
 msgid "{} day(s)"
 msgstr "{} jour(s)"

@@ -179,7 +179,14 @@ msgstr ""
 msgid "Aptitudes conditions not fulfilled"
 msgstr ""
 
+msgid "Assessor"
+msgstr ""
+
 msgid "Attention"
+msgstr ""
+
+#, python-format
+msgid "Autonomy Level (%% according to periods)"
 msgstr ""
 
 msgid "Birth date"
@@ -560,6 +567,12 @@ msgstr ""
 msgid "Internships"
 msgstr ""
 
+msgid "Internships evaluations detail"
+msgstr ""
+
+msgid "Internships evaluations summary"
+msgstr ""
+
 msgid "Internships injection"
 msgstr ""
 
@@ -664,6 +677,9 @@ msgstr ""
 msgid "No assignment available"
 msgstr ""
 
+msgid "No comments provided by the internship's master"
+msgstr ""
+
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 
@@ -740,6 +756,15 @@ msgid "Other choice"
 msgstr ""
 
 msgid "Other reason"
+msgstr ""
+
+msgid "P1 to P2"
+msgstr ""
+
+msgid "P3 to P5"
+msgstr ""
+
+msgid "P6 to P7"
 msgstr ""
 
 msgid "Parent specialty"
@@ -1097,6 +1122,12 @@ msgid ""
 "the list below."
 msgstr ""
 
+msgid "achieves with help"
+msgstr ""
+
+msgid "achieves without help"
+msgstr ""
+
 msgid "delegate(s) without user account"
 msgstr ""
 
@@ -1104,6 +1135,12 @@ msgid "in"
 msgstr ""
 
 msgid "items per page"
+msgstr ""
+
+msgid "not achieving"
+msgstr ""
+
+msgid "not observed"
 msgstr ""
 
 #, python-format
@@ -1115,6 +1152,9 @@ msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
 
 msgid "the allocation(s) for"
+msgstr ""
+
+msgid "tremendously achieving"
 msgstr ""
 
 msgid "{} day(s)"

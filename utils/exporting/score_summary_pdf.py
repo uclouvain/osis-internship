@@ -31,22 +31,12 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
-def generate_pdf(cohort, periods, student, internships, mapping):
-    print(cohort)
-    print(periods)
-    print(student)
-    print(internships)
-    print(mapping)
-
-    scores = InternshipScore.objects.filter(
+def generate_pdf(request, cohort, periods, student, internships, mapping):
+    internships_scores = InternshipScore.objects.filter(
         student_affectation__student__person=student.person, validated=True
     ).select_related(
         'student_affectation__student__person', 'student_affectation__period__cohort'
-    ).order_by('student_affectation__student__person')
-
-    print(scores)
-
-    # mapping = cohort.internshipscoremapping_set.all().select_related('period')
+    ).order_by('student_affectation__period')
 
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person=student.person,

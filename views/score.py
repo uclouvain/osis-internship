@@ -137,7 +137,7 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
     ).get_or_create(
         student_affectation=student_affectation
     )
-    master = _get_main_internship_master(score)
+    master = get_main_internship_master(score)
     apds = range(1, APD_NUMBER + 1)
 
     if request.POST:
@@ -171,7 +171,7 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
     return render(request, "score_form.html", context=context)
 
 
-def _get_main_internship_master(score):
+def get_main_internship_master(score):
     main_master_allocation = MasterAllocation.objects.filter(
         specialty=score.student_affectation.speciality,
         organization=score.student_affectation.organization
@@ -526,13 +526,7 @@ def empty_score(request, cohort_id):
 
 
 def _prepare_score_table(cohort, periods, students):
-    persons = [student.person.pk for student in students]
-
-    scores = InternshipScore.objects.filter(
-        student_affectation__student__person_id__in=persons, validated=True,
-    ).select_related(
-        'student_affectation__student__person', 'student_affectation__period__cohort'
-    ).order_by('student_affectation__student__person')
+    persons, scores = _get_persons_scores(students)
     mapping = cohort.internshipscoremapping_set.all().select_related('period')
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person_id__in=list(persons),
@@ -558,6 +552,16 @@ def _prepare_score_table(cohort, periods, students):
     _append_remedials_count(students, students_affectations)
     _compute_evolution_score(students, cohort.id)
     return mapping
+
+
+def _get_persons_scores(students):
+    persons = [student.person.pk for student in students]
+    scores = InternshipScore.objects.filter(
+        student_affectation__student__person_id__in=persons, validated=True,
+    ).select_related(
+        'student_affectation__student__person', 'student_affectation__period__cohort'
+    ).order_by('student_affectation__student__person')
+    return persons, scores
 
 
 def _group_by_students_and_periods(scores):
@@ -698,7 +702,7 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
         scores = student_scores[0].get_scores()
         comments = student_scores[0].comments
         student.scores += (period.name, scores),
-        student.comments.update({period.name: _replace_comments_keys_with_translations(comments)})
+        student.comments.update({period.name: replace_comments_keys_with_translations(comments)})
         _retrieve_scores_entered_manually(period, student, student_scores)
 
 
@@ -1010,18 +1014,16 @@ def download_summary(request, cohort_id, student_id):
         ),
         pk=cohort_id
     )
-    selected_periods = request.POST.getlist('period')
     periods = cohort.period_set.order_by('date_start')
     student = cohort.internshipstudentinformation_set.get(id=student_id)
     internships = cohort.internship_set.all().order_by('position')
     internships = _list_internships_acronyms(internships)
     mapping = _prepare_score_table(cohort, periods, [student])
-    file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping)
+    file = score_summary_pdf.generate_pdf(request, cohort, periods, student, internships, mapping)
     response = HttpResponse(file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     file_name = "score_summary_{}.pdf".format(cohort.name.strip().replace(' ', '_'))
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
-    # return render(request, template_name='internship_summary_template.html', context={**locals()})
 
 
 def _list_internships_acronyms(internships):
@@ -1083,7 +1085,7 @@ def _update_or_create_apd_mapping(cohort, grade, period, enum_item):
         mapping.save()
 
 
-def _replace_comments_keys_with_translations(comments):
+def replace_comments_keys_with_translations(comments):
     comments_keys_mapping = {
         'impr_areas': _('Improvement areas'),
         'suggestions': _('Suggestions'),
