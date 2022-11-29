@@ -144,7 +144,7 @@ def _complete_student_row_for_all_internships(columns, periods, student):
 def _add_sheet_header(worksheet):
     column_titles = [_("Name"), _("First name"), _("NOMA"), _("Hospital"), _("Grade")]
     add_row(worksheet, column_titles)
-    cells = worksheet.iter_rows("A1:AAA1")
+    cells = worksheet.iter_rows()
     for col in cells:
         for cell in col:
             cell.font = Font(bold=True)
@@ -164,7 +164,7 @@ def _add_header(cohort, periods, worksheet):
         column_titles.append(_("Reason"))
     column_titles.append(_("EPA Validation"))
     add_row(worksheet, column_titles)
-    cells = worksheet.iter_rows("A1:AAA1")
+    cells = worksheet.iter_rows()
     for col in cells:
         for cell in col:
             cell.font = Font(bold=True)
