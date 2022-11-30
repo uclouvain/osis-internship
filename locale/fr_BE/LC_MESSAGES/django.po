@@ -82,6 +82,9 @@ msgstr ""
 "Une sous-specialité doit exclusivement définir un nom et ne doit ni être "
 "obligatoire ni sélectionnable"
 
+msgid "APD description"
+msgstr "Description des APD"
+
 msgid "Accept"
 msgstr "Accepter"
 
@@ -105,9 +108,6 @@ msgstr "Activation en attente"
 
 msgid "Active"
 msgstr "Actif"
-
-msgid "Activits Professionnelles dlgables (APD)"
-msgstr ""
 
 msgid "Add"
 msgstr "Ajouter"
@@ -198,6 +198,9 @@ msgstr "Une erreur s'est produite lors de la mise à jour des statuts"
 msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
 msgstr "Une évaluation doit inclure au minimum {} et au maximum {} APD évalués"
 
+msgid "Appreciate medical emergency"
+msgstr "Reconnaitre l’urgence médicale"
+
 msgid "Aptitudes conditions fulfilled"
 msgstr "Conditions d'aptitudes remplies"
 
@@ -287,11 +290,23 @@ msgstr "Cohortes"
 msgid "Comment (manager)"
 msgstr "Commentaire (gestionnaire)"
 
+msgid "Communicate (broad sense)"
+msgstr "Communiquer au sens large"
+
+msgid "Complement patient record"
+msgstr "Compléter le dossier patient"
+
 msgid "Compulsory"
 msgstr "Obligatoire"
 
+msgid "Conduct clinical examination"
+msgstr "Réaliser l’examen clinique"
+
 msgid "Contest"
 msgstr "Concours"
+
+msgid "Contribute to quality of care and patient safety"
+msgstr "Contribuer à la qualité des soins et la sécurité du patient"
 
 msgid "Copy"
 msgstr "Copier"
@@ -395,6 +410,9 @@ msgstr "Étudiants Erasmus"
 msgid "Errors"
 msgstr "Erreurs"
 
+msgid "Establish a diagnosis"
+msgstr "Établir un diagnostic de travail"
+
 #, python-format
 msgid ""
 "Evaluation status importation aborted. Following registration ids do not "
@@ -482,6 +500,9 @@ msgstr "Les modifications suivantes seront appliquées:"
 
 msgid "Form"
 msgstr "Formulaire"
+
+msgid "Formulate clinical questions"
+msgstr "Formuler des questions cliniques"
 
 msgid "Fourth choice"
 msgstr "4ème choix"
@@ -651,6 +672,9 @@ msgstr "Liste de tous les hôpitaux"
 msgid "Locality"
 msgstr "Localité"
 
+msgid "Make/receive transmission report"
+msgstr "Faire/recevoir le rapport de transmission"
+
 msgid "Male"
 msgstr "Homme"
 
@@ -776,11 +800,17 @@ msgstr "Nombre d'étudiants"
 msgid "Number of students who chosed this organization"
 msgstr "Nombre total d'étudiants ayant choisi cet hôpital"
 
+msgid "Obtain informed consent"
+msgstr "Obtenir le consentement éclairé"
+
 msgid "Open"
 msgstr "Ouverte"
 
 msgid "Options"
 msgstr "Options"
+
+msgid "Oral presentation of a clinical situation"
+msgstr ""
 
 msgid "Order"
 msgstr "Ordre"
@@ -817,6 +847,9 @@ msgstr "Coller Période"
 
 msgid "Pending"
 msgstr "En attente"
+
+msgid "Perform technical procedures"
+msgstr "Effectuer les procédures techniques"
 
 msgid "Period"
 msgstr "Période"
@@ -957,6 +990,9 @@ msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des stages."
 msgid "Select a xlsx file that contains the list of students."
 msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des étudiants."
 
+msgid "Select diagnostic tests"
+msgstr "Sélectionner des tests diagnostics"
+
 msgid "Selectable by the student"
 msgstr "Sélectionnable par l'étudiant"
 
@@ -1066,6 +1102,9 @@ msgstr "Méthodes d'apprentissage suggérées"
 msgid "Summaries have been sent successfully"
 msgstr "Les emails récapitulatifs ont bien été envoyés"
 
+msgid "Take a history (anamnesis)"
+msgstr "Prendre l'anamnèse"
+
 msgid ""
 "The following masters/delegates allocations have been transferred to cohort "
 "{}: "
@@ -1168,6 +1207,12 @@ msgstr "Validé par"
 
 msgid "Website"
 msgstr "Site web"
+
+msgid "Work as a team"
+msgstr "Travailler en équipe"
+
+msgid "Write medical prescriptions"
+msgstr "Rédiger les prescriptions"
 
 msgid "Yes"
 msgstr "Oui"

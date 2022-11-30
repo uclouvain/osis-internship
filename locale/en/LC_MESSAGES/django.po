@@ -65,6 +65,9 @@ msgid ""
 "nor selectable"
 msgstr ""
 
+msgid "APD description"
+msgstr ""
+
 msgid "Accept"
 msgstr ""
 
@@ -173,6 +176,9 @@ msgstr ""
 msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
 msgstr ""
 
+msgid "Appreciate medical emergency"
+msgstr ""
+
 msgid "Aptitudes conditions fulfilled"
 msgstr ""
 
@@ -260,10 +266,22 @@ msgstr ""
 msgid "Comment (manager)"
 msgstr ""
 
+msgid "Communicate (broad sense)"
+msgstr ""
+
+msgid "Complement patient record"
+msgstr ""
+
 msgid "Compulsory"
 msgstr ""
 
+msgid "Conduct clinical examination"
+msgstr ""
+
 msgid "Contest"
+msgstr ""
+
+msgid "Contribute to quality of care and patient safety"
 msgstr ""
 
 msgid "Copy"
@@ -368,6 +386,9 @@ msgstr ""
 msgid "Errors"
 msgstr ""
 
+msgid "Establish a diagnosis"
+msgstr ""
+
 #, python-format
 msgid ""
 "Evaluation status importation aborted. Following registration ids do not "
@@ -451,6 +472,9 @@ msgid "Following modifications will be applied:"
 msgstr ""
 
 msgid "Form"
+msgstr ""
+
+msgid "Formulate clinical questions"
 msgstr ""
 
 msgid "Fourth choice"
@@ -616,6 +640,9 @@ msgstr ""
 msgid "Locality"
 msgstr ""
 
+msgid "Make/receive transmission report"
+msgstr ""
+
 msgid "Male"
 msgstr ""
 
@@ -737,10 +764,16 @@ msgstr ""
 msgid "Number of students who chosed this organization"
 msgstr ""
 
+msgid "Obtain informed consent"
+msgstr ""
+
 msgid "Open"
 msgstr ""
 
 msgid "Options"
+msgstr ""
+
+msgid "Oral presentation of a clinical situation"
 msgstr ""
 
 msgid "Order"
@@ -777,6 +810,9 @@ msgid "Paste Period"
 msgstr ""
 
 msgid "Pending"
+msgstr ""
+
+msgid "Perform technical procedures"
 msgstr ""
 
 msgid "Period"
@@ -914,6 +950,9 @@ msgstr ""
 msgid "Select a xlsx file that contains the list of students."
 msgstr ""
 
+msgid "Select diagnostic tests"
+msgstr ""
+
 msgid "Selectable by the student"
 msgstr ""
 
@@ -1021,6 +1060,9 @@ msgstr ""
 msgid "Summaries have been sent successfully"
 msgstr ""
 
+msgid "Take a history (anamnesis)"
+msgstr ""
+
 msgid ""
 "The following masters/delegates allocations have been transferred to cohort "
 "{}: "
@@ -1107,6 +1149,12 @@ msgid "Validated by"
 msgstr ""
 
 msgid "Website"
+msgstr ""
+
+msgid "Work as a team"
+msgstr ""
+
+msgid "Write medical prescriptions"
 msgstr ""
 
 msgid "Yes"

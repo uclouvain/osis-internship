@@ -168,6 +168,9 @@
         border-top-left-radius: 0;
         border-bottom-right-radius: 4px;
     }
+    .list-group-item{
+        max-height: 30px;
+    }
 </style>
 
 {% block content %}
@@ -356,5 +359,174 @@
             {% endwith %}
 
             {% endfor %}
+    </div>
+
+    <div class="container apd-description-page">
+            <h2>{% trans 'APD description' %}</h2>
+            <div class="logo">
+                <img src="{% static 'img/logo_uclouvain.png' %}"/>
+            </div>
+            <div class="page-header">
+                <h3 class="pull-left text-bold">
+                    <span class="user-icon fa-solid fa-suitcase-medical"></span>
+                    Activités professionnelles délégables
+                </h3>
+            </div>
+            <div class="panel-default">
+                <div class="panel-heading">
+                    <ol class="list-group">
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 1
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Take a history (anamnesis)' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 2
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Conduct clinical examination' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 3
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Appreciate medical emergency' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 4
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Establish a diagnosis' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 5
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Complement patient record' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 6
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Oral presentation of a clinical situation' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 7
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Select diagnostic tests' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 8
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Write medical prescriptions' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 9
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Perform technical procedures' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 10
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Formulate clinical questions' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 11
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Communicate (broad sense)' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 12
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Work as a team' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 13
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Make/receive transmission report' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 14
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Obtain informed consent' %}
+                                </div>
+                            </div>
+                        </li>
+                        <li class="list-group-item">
+                            <div class="row list-row">
+                                <div class="col-xs-3 order-divider">
+                                    APD 15
+                                </div>
+                                <div class="col-xs-9">
+                                    {% trans 'Contribute to quality of care and patient safety' %}
+                                </div>
+                            </div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
     </div>
 {% endblock %}
