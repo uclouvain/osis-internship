@@ -1002,6 +1002,7 @@ def download_scores(request, cohort_id):
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
 
+
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie

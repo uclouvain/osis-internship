@@ -52,4 +52,3 @@ def generate_pdf(request, cohort, periods, student, internships, mapping):
     html_string = render_to_string('internship_summary_template.html', {**locals()})
     html = HTML(string=html_string, url_fetcher=django_url_fetcher, base_url="file:")
     return html.write_pdf(presentational_hints=True)
-
