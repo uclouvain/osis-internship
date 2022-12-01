@@ -10,9 +10,11 @@ def get_master_name(specialty, organization, cohort):
         organization__name=organization['name'],
         specialty__cohort__name=cohort,
     ).first()
-    return main_master_allocation.master.person if main_master_allocation else "-"
+    return main_master_allocation.master.person if main_master_allocation else None
 
 
 @register.filter
 def display_short_person_name(person):
+    if not person:
+        return '-'
     return f"{person.last_name.upper()}, {person.first_name.upper()[0]}"
