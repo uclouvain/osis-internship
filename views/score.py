@@ -1020,7 +1020,7 @@ def download_summary(request, cohort_id, student_id):
     internships = cohort.internship_set.all().order_by('position')
     internships = _list_internships_acronyms(internships)
     mapping = _prepare_score_table(cohort, periods, [student])
-    file = score_summary_pdf.generate_pdf(request, cohort, periods, student, internships, mapping)
+    file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping)
 
     response = HttpResponse(file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     file_name = "score_summary_{}.pdf".format(cohort.name.strip().replace(' ', '_'))
