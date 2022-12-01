@@ -19,10 +19,10 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
-                ('civility', models.CharField(blank=True, choices=[('PROFESSOR', 'PROFESSOR'), ('DOCTOR', 'DOCTOR')], max_length=50, null=True)),
+                ('civility', models.CharField(blank=True, choices=[('PROFESSOR', 'PROFESSOR'), ('DOCTOR', 'DOCTOR')], max_length=50, null=True)),  # noqa
                 ('role', models.CharField(blank=True, max_length=100, null=True)),
                 ('signature_b64', models.BinaryField(blank=True, null=True)),
-                ('person', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.person')),
+                ('person', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.person')),  # noqa
             ],
             options={
                 'abstract': False,
