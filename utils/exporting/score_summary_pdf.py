@@ -31,7 +31,7 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
-def generate_pdf(request, cohort, periods, student, internships, mapping):
+def generate_pdf(cohort, periods, student, internships, mapping):
     internships_scores = InternshipScore.objects.filter(
         student_affectation__student__person=student.person, validated=True
     ).select_related(

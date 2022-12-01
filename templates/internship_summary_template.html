@@ -3,6 +3,7 @@
 {% load dictionary %}
 {% load master %}
 {% load mapping %}
+{% load certification %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -35,11 +36,18 @@
     @page {
         margin: 10mm;
         size: A4 landscape;
+        @bottom-center{
+            vertical-align: top;
+            content: counter(page) ' / ' counter(pages);
+        }
     }
+
+
 
     @media print {
       .container {
-        page-break-before: always;
+          counter-reset: container;
+          page-break-before: always;
           font-size: 12px;
       }
     }
@@ -304,6 +312,9 @@
             </tbody>
           </table>
     </div>
+    <div>
+        {% get_certification %}
+    </div>
     </div>
 
     <div class="container detail-page">
@@ -359,6 +370,10 @@
             {% endwith %}
 
             {% endfor %}
+
+    <div>
+        {% get_certification %}
+    </div>
     </div>
 
     <div class="container apd-description-page">

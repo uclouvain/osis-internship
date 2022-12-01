@@ -215,6 +215,9 @@ msgstr ""
 msgid "Capacity"
 msgstr ""
 
+msgid "Certified conform to registered evaluations. Brussels, {}"
+msgstr ""
+
 msgid "Check All"
 msgstr ""
 

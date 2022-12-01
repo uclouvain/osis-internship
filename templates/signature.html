@@ -1,0 +1,43 @@
+<style>
+    .certifiers{
+        display: flex;
+    }
+    .certifier{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin-left: 20px;
+    }
+    .certification-text{
+        margin-bottom: 20px;
+    }
+    .empty {
+        flex: 1;
+    }
+    .name, .role{
+        font-size: 11px;
+    }
+    .signature img{
+        width: 80px;
+    }
+</style>
+
+
+<div class="certification-text text-right">{{ certification_text }}</div>
+
+<div class="certifiers">
+
+    <div class="empty"></div>
+
+{% for certifier in certifiers %}
+
+    <div class="certifier">
+        <div class="signature"><img src="data:image/svg+xml;base64,{{ certifier.signature_b64 }}"/></div>
+        <div class="name">{{ certifier.civility_acronym }} {{ certifier.person }}</div>
+        <div class="role">{{ certifier.role }}</div>
+    </div>
+
+{% endfor %}
+
+
+</div>

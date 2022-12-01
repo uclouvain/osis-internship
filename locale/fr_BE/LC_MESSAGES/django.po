@@ -239,6 +239,9 @@ msgstr "Impossible de sélectionner la même offre"
 msgid "Capacity"
 msgstr "Capacité maximale"
 
+msgid "Certified in conformity with registered evaluations. Brussels, {}."
+msgstr "Certifié conforme aux évaluations encodées. Bruxelles, le {}."
+
 msgid "Check All"
 msgstr "Cocher tout"
 
