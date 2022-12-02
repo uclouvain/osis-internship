@@ -1007,6 +1007,12 @@ def download_scores(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie
 def download_summary(request, cohort_id, student_id):
+    selected_periods = request.POST.getlist('period')
+    extra_data = {
+        'with_scores': request.POST.get('with_scores'),
+        'with_apds': request.POST.get('with_apds')
+    }
+
     cohort = get_object_or_404(
         Cohort.objects.prefetch_related(
             'internshipstudentinformation_set',
@@ -1015,12 +1021,12 @@ def download_summary(request, cohort_id, student_id):
         ),
         pk=cohort_id
     )
-    periods = cohort.period_set.order_by('date_start')
+    periods = cohort.period_set.filter(name__in=selected_periods).order_by('date_start')
     student = cohort.internshipstudentinformation_set.get(id=student_id)
     internships = cohort.internship_set.all().order_by('position')
     internships = _list_internships_acronyms(internships)
     mapping = _prepare_score_table(cohort, periods, [student])
-    file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping)
+    file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping, extra_data)
 
     response = HttpResponse(file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     file_name = "score_summary_{}.pdf".format(cohort.name.strip().replace(' ', '_'))

@@ -242,16 +242,28 @@
           <table class="table table-fix-header table-hover">
             <tr class="text-center">
                 <td colspan="3"></td>
-                <td colspan="15" class="text-bold">Activités Professionnelles délégables (APD)</td>
+
+                {% if extra_data.with_apds %}
+
+                    <td colspan="15" class="text-bold">Activités Professionnelles délégables (APD)</td>
+
+                {% endif %}
+
                 <td colspan="3"></td>
             </tr>
               <tr class="header-row">
                 <th>{% trans 'Period' %}</th>
                 <th style="text-align: left;">{% trans 'Specialty' %}</th>
                 <th style="text-align: left;">{% trans 'Hospital' %}</th>
+
+                {% if extra_data.with_apds %}
+
                   {% for i in i|rjust:15 %}
                     <th class="apd text-center">{{forloop.counter}}</th>
                   {% endfor %}
+
+                {% endif %}
+
                 <th class="text-center">{% trans 'Score' %}</th>
                 <th class="text-center">{% trans 'Internship master' %}</th>
                 <th class="text-center">{% trans 'Assessor' %}</th>
@@ -269,33 +281,43 @@
                     <td style="text-align: center;">{{ score.period.name }}</td>
                     <td>{{ specialty.name }}</td>
                     <td>{{ organization.name }}</td>
-                    {% if not student.scores|has_substr:score.period %}
-                        {% for i in i|rjust:15 %}
-                            <td class="hidden-sm hidden-xs text-center">-</td>
-                        {% endfor %}
-                    {% endif %}
-                    {% for key, scores in student.scores %}
-                        {% if key|slugify == score.period|slugify %}
-                            {% for score in scores %}
-                                {% if score %}
-                                    <td class="apd text-center
-                                        {% if not score|is_valid:forloop.counter0 %}
-                                         text-bold text-danger
-                                        {% endif %}">
-                                        {{ score }}
-                                    </td>
-                                {% else %}
-                                    <td class="text-center">-</td>
-                                {% endif %}
+
+                    {% if extra_data.with_apds %}
+
+                        {% if not student.scores|has_substr:score.period %}
+                            {% for i in i|rjust:15 %}
+                                <td class="hidden-sm hidden-xs text-center">-</td>
                             {% endfor %}
                         {% endif %}
-                    {% endfor %}
+                        {% for key, scores in student.scores %}
+                            {% if key|slugify == score.period|slugify %}
+                                {% for score in scores %}
+                                    {% if score %}
+                                        <td class="apd text-center
+                                            {% if not score|is_valid:forloop.counter0 %}
+                                             text-bold text-danger
+                                            {% endif %}">
+                                            {{ score }}
+                                        </td>
+                                    {% else %}
+                                        <td class="text-center">-</td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                        {% endfor %}
+
+                    {% endif %}
+
                     <td class="text-center">
                         {% with student.periods_scores|get_item:score.period.name as computed_score %}
-                            {% if not computed_score|is_edited %}
-                                {{ computed_score }}
+                            {% if extra_data.with_scores %}
+                                {% if not computed_score|is_edited %}
+                                    {{ computed_score }}
+                                {% else %}
+                                    -
+                                {% endif %}
                             {% else %}
-                                -
+                                {% trans 'Pending' %}
                             {% endif %}
                         {% endwith %}
                     </td>
