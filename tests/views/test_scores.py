@@ -751,3 +751,15 @@ class ScoresEncodingTest(TestCase):
         self.assertIn(specialty.name, str(student.specialties))
         self.assertIn(organization.name, str(student.organizations))
         self.assertEqual(student.person, student_info.person)
+
+    def test_should_download_summary(self):
+        url = reverse('internship_download_summary', kwargs={
+            'cohort_id': self.cohort.pk,
+            'student_id': self.students[0].pk
+        })
+        response = self.client.get(url)
+        cohort_slug = self.cohort.name.strip().replace(' ', '_')
+        self.assertEqual(
+            response.headers['Content-Disposition'],
+            f"attachment; filename=score_summary_{cohort_slug}.pdf"
+        )

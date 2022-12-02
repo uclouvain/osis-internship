@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,25 +24,35 @@
 #
 ##############################################################################
 
-from openpyxl import load_workbook
+from django.db import models
 
-REGISTRATION_ID_COLUMN = 7
-PERIOD_COLUMN = 16
-
-
-def import_xlsx(xlsxfile):
-    workbook = load_workbook(filename=xlsxfile)
-    worksheet = workbook.active
-    evaluations = [
-        {
-            "registration_id": _get_only_digits(str(row[REGISTRATION_ID_COLUMN].value)),
-            "period": str(row[PERIOD_COLUMN].value)
-        }
-        for row in list(worksheet.rows)[1:worksheet.max_row] if row[PERIOD_COLUMN].value
-    ]
-    xlsxfile.close()
-    return evaluations
+from internship.models.enums.civility import Civility
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-def _get_only_digits(value):
-    return ''.join([c for c in value if c.isdigit()])
+class InternshipCertifierAdmin(SerializableModelAdmin):
+    list_display = ('person', 'civility', 'role')
+    search_fields = ['person__last_name', 'person__first_name']
+    fieldsets = (
+        (
+            None, {
+                'fields': (
+                    'person', 'civility', 'role', 'signature_b64'
+                )
+            }
+        ),
+    )
+
+
+class InternshipCertifier(SerializableModel):
+    person = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.CASCADE)
+    civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
+    role = models.CharField(max_length=100, blank=True, null=True)
+
+    signature_b64 = models.TextField(blank=True, null=True)
+
+    def civility_acronym(self):
+        if self.civility:
+            return Civility.get_acronym(self.civility)
+        else:
+            return ""

@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,26 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from rest_framework import serializers
 
-from openpyxl import load_workbook
-
-REGISTRATION_ID_COLUMN = 7
-PERIOD_COLUMN = 16
+from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
 
 
-def import_xlsx(xlsxfile):
-    workbook = load_workbook(filename=xlsxfile)
-    worksheet = workbook.active
-    evaluations = [
-        {
-            "registration_id": _get_only_digits(str(row[REGISTRATION_ID_COLUMN].value)),
-            "period": str(row[PERIOD_COLUMN].value)
-        }
-        for row in list(worksheet.rows)[1:worksheet.max_row] if row[PERIOD_COLUMN].value
-    ]
-    xlsxfile.close()
-    return evaluations
-
-
-def _get_only_digits(value):
-    return ''.join([c for c in value if c.isdigit()])
+class InternshipPlaceEvaluationItemSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = PlaceEvaluationItem
+        fields = (
+            'uuid',
+            'order',
+            'statement',
+            'type',
+            'options',
+            'active',
+        )

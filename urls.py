@@ -161,6 +161,11 @@ urlpatterns = [
                 url(r'^upload_scores/$', score.upload_scores, name='internship_upload_scores'),
                 url(r'^upload_eval/$', score.upload_eval, name='internship_upload_eval'),
                 url(r'^download/$', score.download_scores, name='internship_download_scores'),
+                url(
+                    r'^download_summary/(?P<student_id>[0-9]+)$',
+                    score.download_summary,
+                    name='internship_download_summary'
+                ),
                 url(r'^mapping/save$', score.save_mapping, name='save_internship_score_mapping'),
                 url(r'^ajax/save_score/$', score.save_edited_score, name='save_edited_score'),
                 url(r'^ajax/delete_score/$', score.delete_edited_score, name='delete_edited_score'),

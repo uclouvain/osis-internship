@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-19 14:23+0200\n"
+"POT-Creation-Date: 2022-08-19 14:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -81,6 +81,9 @@ msgid ""
 msgstr ""
 "Une sous-specialité doit exclusivement définir un nom et ne doit ni être "
 "obligatoire ni sélectionnable"
+
+msgid "APD description"
+msgstr "Description des APD"
 
 msgid "Accept"
 msgstr "Accepter"
@@ -195,14 +198,24 @@ msgstr "Une erreur s'est produite lors de la mise à jour des statuts"
 msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
 msgstr "Une évaluation doit inclure au minimum {} et au maximum {} APD évalués"
 
+msgid "Appreciate medical emergency"
+msgstr "Reconnaitre l’urgence médicale"
+
 msgid "Aptitudes conditions fulfilled"
 msgstr "Conditions d'aptitudes remplies"
 
 msgid "Aptitudes conditions not fulfilled"
 msgstr "Conditions d'aptitudes non remplies"
 
+msgid "Assessor"
+msgstr "Évaluateur"
+
 msgid "Attention"
 msgstr "Attention"
+
+#, python-format
+msgid "Autonomy Level (%% according to periods)"
+msgstr "Niveau d'autonomie (%% fonction des périodes)"
 
 msgid "Birth date"
 msgstr "Date de naissance"
@@ -225,6 +238,9 @@ msgstr "Impossible de sélectionner la même offre"
 
 msgid "Capacity"
 msgstr "Capacité maximale"
+
+msgid "Certified in conformity with registered evaluations. Brussels, {}."
+msgstr "Certifié conforme aux évaluations encodées. Bruxelles, le {}."
 
 msgid "Check All"
 msgstr "Cocher tout"
@@ -277,11 +293,23 @@ msgstr "Cohortes"
 msgid "Comment (manager)"
 msgstr "Commentaire (gestionnaire)"
 
+msgid "Communicate (broad sense)"
+msgstr "Communiquer au sens large"
+
+msgid "Complement patient record"
+msgstr "Compléter le dossier patient"
+
 msgid "Compulsory"
 msgstr "Obligatoire"
 
+msgid "Conduct clinical examination"
+msgstr "Réaliser l’examen clinique"
+
 msgid "Contest"
 msgstr "Concours"
+
+msgid "Contribute to quality of care and patient safety"
+msgstr "Contribuer à la qualité des soins et la sécurité du patient"
 
 msgid "Copy"
 msgstr "Copier"
@@ -385,6 +413,9 @@ msgstr "Étudiants Erasmus"
 msgid "Errors"
 msgstr "Erreurs"
 
+msgid "Establish a diagnosis"
+msgstr "Établir un diagnostic de travail"
+
 #, python-format
 msgid ""
 "Evaluation status importation aborted. Following registration ids do not "
@@ -472,6 +503,9 @@ msgstr "Les modifications suivantes seront appliquées:"
 
 msgid "Form"
 msgstr "Formulaire"
+
+msgid "Formulate clinical questions"
+msgstr "Formuler des questions cliniques"
 
 msgid "Fourth choice"
 msgstr "4ème choix"
@@ -592,6 +626,12 @@ msgstr "Évaluation du lieu de stage"
 msgid "Internships"
 msgstr "Stages"
 
+msgid "Internships evaluations detail"
+msgstr "Détail des évaluations de stage"
+
+msgid "Internships evaluations summary"
+msgstr "Récapitulatif des évaluations de stage"
+
 msgid "Internships injection"
 msgstr "Injection des stages"
 
@@ -634,6 +674,9 @@ msgstr "Liste de tous les hôpitaux"
 
 msgid "Locality"
 msgstr "Localité"
+
+msgid "Make/receive transmission report"
+msgstr "Faire/recevoir le rapport de transmission"
 
 msgid "Male"
 msgstr "Homme"
@@ -698,6 +741,9 @@ msgstr "Aucune allocation trouvée pour le maître."
 msgid "No assignment available"
 msgstr "Pas d'affectation disponible"
 
+msgid "No comments provided by the internship's master"
+msgstr "Pas de commentaire fourni par le maître de stage"
+
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 "Aucune donnée ne correspond aux filtres ci-dessus. Faites un choix, s'il "
@@ -757,11 +803,17 @@ msgstr "Nombre d'étudiants"
 msgid "Number of students who chosed this organization"
 msgstr "Nombre total d'étudiants ayant choisi cet hôpital"
 
+msgid "Obtain informed consent"
+msgstr "Obtenir le consentement éclairé"
+
 msgid "Open"
 msgstr "Ouverte"
 
 msgid "Options"
 msgstr "Options"
+
+msgid "Oral presentation of a clinical situation"
+msgstr ""
 
 msgid "Order"
 msgstr "Ordre"
@@ -778,6 +830,15 @@ msgstr "Autre choix"
 msgid "Other reason"
 msgstr "Autre motif"
 
+msgid "P1 to P2"
+msgstr "P1 à P2"
+
+msgid "P3 to P5"
+msgstr "P3 à P5"
+
+msgid "P6 to P7"
+msgstr "P6 à P7"
+
 msgid "Parent specialty"
 msgstr "Spécialité parente"
 
@@ -789,6 +850,9 @@ msgstr "Coller Période"
 
 msgid "Pending"
 msgstr "En attente"
+
+msgid "Perform technical procedures"
+msgstr "Effectuer les procédures techniques"
 
 msgid "Period"
 msgstr "Période"
@@ -929,6 +993,9 @@ msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des stages."
 msgid "Select a xlsx file that contains the list of students."
 msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des étudiants."
 
+msgid "Select diagnostic tests"
+msgstr "Sélectionner des tests diagnostics"
+
 msgid "Selectable by the student"
 msgstr "Sélectionnable par l'étudiant"
 
@@ -1038,6 +1105,9 @@ msgstr "Méthodes d'apprentissage suggérées"
 msgid "Summaries have been sent successfully"
 msgstr "Les emails récapitulatifs ont bien été envoyés"
 
+msgid "Take a history (anamnesis)"
+msgstr "Prendre l'anamnèse"
+
 msgid ""
 "The following masters/delegates allocations have been transferred to cohort "
 "{}: "
@@ -1141,6 +1211,12 @@ msgstr "Validé par"
 msgid "Website"
 msgstr "Site web"
 
+msgid "Work as a team"
+msgstr "Travailler en équipe"
+
+msgid "Write medical prescriptions"
+msgstr "Rédiger les prescriptions"
+
 msgid "Yes"
 msgstr "Oui"
 
@@ -1158,6 +1234,12 @@ msgstr ""
 "Vous pouvez fournir un motif de modification de la note en choisissant parmi "
 "les justifications suivantes."
 
+msgid "achieves with help"
+msgstr "réalise avec aide"
+
+msgid "achieves without help"
+msgstr "réalise sans aide"
+
 msgid "delegate(s) without user account"
 msgstr "délégué(s) sans compte utilisateur"
 
@@ -1166,6 +1248,12 @@ msgstr "en"
 
 msgid "items per page"
 msgstr "éléments par page"
+
+msgid "not achieving"
+msgstr "ne réalise pas"
+
+msgid "not observed"
+msgstr "non observé"
 
 #, python-format
 msgid "row %(row_id)s"
@@ -1177,6 +1265,9 @@ msgstr "étudiant avec NOMA '%(reg_id)s' introuvable"
 
 msgid "the allocation(s) for"
 msgstr "les affectations pour"
+
+msgid "tremendously achieving"
+msgstr "réalise parfaitement"
 
 msgid "{} day(s)"
 msgstr "{} jour(s)"
