@@ -215,7 +215,7 @@ msgstr ""
 msgid "Capacity"
 msgstr ""
 
-msgid "Certified conform to registered evaluations. Brussels, {}"
+msgid "Certified in conformity with registered evaluations. Brussels, {}."
 msgstr ""
 
 msgid "Check All"
@@ -246,6 +246,9 @@ msgid "Choose a specialty"
 msgstr ""
 
 msgid "Choose which periods you want to include in the file"
+msgstr ""
+
+msgid "Choose which periods you want to include in the summary"
 msgstr ""
 
 msgid "City"
@@ -441,7 +444,16 @@ msgstr ""
 msgid "Export scores"
 msgstr ""
 
+msgid "Export summary"
+msgstr ""
+
 msgid "Export to XLSX"
+msgstr ""
+
+msgid "Export with APD details"
+msgstr ""
+
+msgid "Export with scores"
 msgstr ""
 
 msgid "Extend"

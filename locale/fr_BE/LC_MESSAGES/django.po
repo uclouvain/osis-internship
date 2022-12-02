@@ -272,6 +272,9 @@ msgstr "Choisissez une spécialité"
 msgid "Choose which periods you want to include in the file"
 msgstr "Choisissez les périodes que vous souhaitez inclure dans le fichier"
 
+msgid "Choose which periods you want to include in the summary"
+msgstr "Choisissez les périodes que vous souhaitez inclure dans le fichier"
+
 msgid "City"
 msgstr "Ville"
 
@@ -468,8 +471,17 @@ msgstr "Fichier Excel pour le maitre de stage"
 msgid "Export scores"
 msgstr "Exporter les notes"
 
+msgid "Export summary"
+msgstr "Exporter attestation"
+
 msgid "Export to XLSX"
 msgstr "Exporter vers XLSX"
+
+msgid "Export with APD details"
+msgstr "Exporter le détail des APD"
+
+msgid "Export with scores"
+msgstr "Exporter les notes"
 
 msgid "Extend"
 msgstr "Prolonger"
