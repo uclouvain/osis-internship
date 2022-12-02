@@ -825,7 +825,7 @@ msgid "Options"
 msgstr "Options"
 
 msgid "Oral presentation of a clinical situation"
-msgstr ""
+msgstr "Présentation orale d'une situation clinique"
 
 msgid "Order"
 msgstr "Ordre"
