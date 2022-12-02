@@ -31,9 +31,11 @@ from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
-def generate_pdf(cohort, periods, student, internships, mapping):
+def generate_pdf(cohort, periods, student, internships, mapping, extra_data):  # pylint: disable=too-many-arguments
     internships_scores = InternshipScore.objects.filter(
         student_affectation__student__person=student.person, validated=True
+    ).filter(
+        student_affectation__period__in=periods,
     ).select_related(
         'student_affectation__student__person', 'student_affectation__period__cohort'
     ).order_by('student_affectation__period')

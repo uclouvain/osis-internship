@@ -245,7 +245,7 @@
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
-                                <a href="{% url 'internship_download_summary' cohort.pk student.pk %}" type="button"
+                                <a data-toggle="modal" data-target="#download-summary" data-url="{% url 'internship_download_summary' cohort.pk student.pk %}" type="button"
                                 class="btn btn-xs btn-default btn-download-summary download" id="btn-summary-{{ student.pk }}"
                                 {% if not student.scores %} disabled {% endif %}
                                 >
@@ -470,6 +470,8 @@
     {% include 'fragment/upload_eval_modal.html' %}
 
     {% include 'fragment/download_scores_modal.html' %}
+
+    {% include 'fragment/download_summary_modal.html' %}
 
     {% include 'fragment/delete_score_modal.html' %}
 
