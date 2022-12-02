@@ -9,7 +9,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('base', '0641_alter_programmanager_cohort'),
+        ('base', '0644_remove_person_curriculum'),
         ('internship', '0018_organization_fake'),
     ]
 
