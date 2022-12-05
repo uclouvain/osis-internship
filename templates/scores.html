@@ -499,6 +499,10 @@
       $("#download_scores").modal("hide");
     });
 
+    $("#export_summary_btn").on('click', function(){
+      $("#download-summary").modal("hide");
+    });
+
     //send ajax post request on evaluation button toggle
     $('.switch input').click(function(){
         let status = $(this).prop('checked');

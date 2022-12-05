@@ -314,7 +314,7 @@
                                 {% if not computed_score|is_edited %}
                                     {{ computed_score }}
                                 {% else %}
-                                    -
+                                    {{ computed_score.edited.score }}
                                 {% endif %}
                             {% else %}
                                 {% trans 'Pending' %}
