@@ -46,22 +46,25 @@
     }
 </style>
 
+<div style="break-inside: avoid;">
 
-<div class="certification-text text-right">{{ certification_text }}</div>
+    <div class="certification-text text-right">{{ certification_text }}</div>
 
-<div class="certifiers">
+    <div class="certifiers">
 
-    <div class="empty"></div>
+        <div class="empty"></div>
 
-{% for certifier in certifiers %}
+    {% for certifier in certifiers %}
 
-    <div class="certifier">
-        <div class="signature"><img src="data:image/svg+xml;base64,{{ certifier.signature_b64 }}"/></div>
-        <div class="name">{{ certifier.civility_acronym }} {{ certifier.person }}</div>
-        <div class="role">{{ certifier.role }}</div>
+        <div class="certifier">
+            <div class="signature"><img src="data:image/svg+xml;base64,{{ certifier.signature_b64 }}"/></div>
+            <div class="name">{{ certifier.civility_acronym }} {{ certifier.person }}</div>
+            <div class="role">{{ certifier.role }}</div>
+        </div>
+
+    {% endfor %}
+
+
     </div>
-
-{% endfor %}
-
 
 </div>
