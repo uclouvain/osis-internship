@@ -17,4 +17,4 @@ def get_master_name(specialty, organization, cohort):
 def display_short_person_name(person):
     if not person:
         return '-'
-    return f"{person.last_name.upper()}, {person.first_name.upper()[0]}"
+    return f"{person.last_name.upper()}, {person.first_name and person.first_name.upper()[0]}"
