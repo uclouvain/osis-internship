@@ -759,7 +759,8 @@ class ScoresEncodingTest(TestCase):
         })
         response = self.client.get(url)
         cohort_slug = self.cohort.name.strip().replace(' ', '_')
+        student_name = self.students[0].person.last_name
         self.assertEqual(
             response.headers['Content-Disposition'],
-            f"attachment; filename=score_summary_{cohort_slug}.pdf"
+            f"attachment; filename=score_summary_{cohort_slug}_{student_name}.pdf"
         )

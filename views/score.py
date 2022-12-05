@@ -1029,7 +1029,7 @@ def download_summary(request, cohort_id, student_id):
     file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping, extra_data)
 
     response = HttpResponse(file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    file_name = "score_summary_{}.pdf".format(cohort.name.strip().replace(' ', '_'))
+    file_name = "score_summary_{}_{}.pdf".format(cohort.name.strip().replace(' ', '_'), student.person.last_name)
     response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
     return response
 
