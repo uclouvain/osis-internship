@@ -61,7 +61,7 @@
     }
     .legend{
         float: right;
-        margin-top: 40px;
+        margin-top: 20px;
         border: 1px solid lightgray;
         padding: 10px;
         border-radius: 5px;
@@ -70,7 +70,7 @@
         font-size: 11px;
     }
     .page-header{
-        padding-bottom: 50px;
+        padding-bottom: 20px;
         border: none;
     }
 
@@ -239,7 +239,7 @@
         <h4 class="cohort-info">{{ cohort }}</h4>
     </div>
         <div class="table-responsive">
-          <table class="table table-fix-header table-hover">
+          <table class="table table-fix-header table-hover table-condensed">
             <tr class="text-center">
                 <td colspan="3"></td>
 
@@ -334,7 +334,7 @@
             </tbody>
           </table>
     </div>
-    <div>
+    <div style="break-before: avoid;">
         {% get_certification %}
     </div>
     </div>
@@ -356,7 +356,7 @@
 
             {% with student.specialties|get_item:score.period.name as specialty %}
             {% with student.organizations|get_item:score.period.name as organization %}
-                <div class="panel panel-default panel-horizontal">
+                <div class="panel panel-default panel-horizontal" style="break-inside: avoid;">
                     <div class="panel-heading">
                         <div class="detail-period-line">
                             <span class="detail-period">
@@ -366,7 +366,7 @@
                         </div>
                         {{ specialty.name }} - {{ organization.name }}
                         <div>
-                            <span style="text-decoration: underline;">Maître de stage</span>:
+                            <span style="text-decoration: underline;">{% trans "Internship master" %}</span>:
                             {% get_master_name specialty organization cohort %}
                         </div>
                     </div>
@@ -393,7 +393,7 @@
 
             {% endfor %}
 
-    <div>
+    <div style="break-before: avoid;">
         {% get_certification %}
     </div>
     </div>
@@ -403,7 +403,7 @@
             <div class="logo">
                 <img src="{% static 'img/logo_uclouvain.png' %}"/>
             </div>
-            <div class="page-header">
+            <div class="page-header" style="padding-bottom: 40px;">
                 <h3 class="pull-left text-bold">
                     <span class="user-icon fa-solid fa-suitcase-medical"></span>
                     Activités professionnelles délégables
