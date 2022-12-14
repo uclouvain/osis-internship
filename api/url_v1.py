@@ -33,7 +33,7 @@ from internship.api.views.internship_place_evaluation_item import InternshipPlac
 from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate, ValidateInternshipScore
 from internship.api.views.internship_specialty import InternshipSpecialtyList, InternshipSpecialtyDetail
 from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList, \
-    InternshipStudentAffectationDetail, InternshipStudentAffectationStats
+    InternshipStudentAffectationDetail, InternshipStudentAffectationStats, InternshipPersonAffectationList
 from internship.api.views.internship_student_information import InternshipStudentInformationList, \
     InternshipStudentInformationDetail
 from internship.api.views.master_allocation import MasterAllocationUpdateDeleteDetail, MasterAllocationListCreate
@@ -79,6 +79,8 @@ urlpatterns = [
          InternshipStudentAffectationStats.as_view(), name=InternshipStudentAffectationStats.name),
     path('students_affectations/<uuid:uuid>/', InternshipStudentAffectationDetail.as_view(),
          name=InternshipStudentAffectationDetail.name),
+    path('person_affectations/<str:cohort_name>/<uuid:person_uuid>/', InternshipPersonAffectationList.as_view(),
+         name=InternshipPersonAffectationList.name),
 
     path('scores/<uuid:affectation_uuid>/', InternshipScoreCreateRetrieveUpdate.as_view(),
          name=InternshipScoreCreateRetrieveUpdate.name),

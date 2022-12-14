@@ -23,12 +23,15 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-
+from django.db.models import Subquery, OuterRef, CharField, F, Value
+from django.db.models.functions import Concat, Substr, Upper
 from django.http import JsonResponse
 from rest_framework import generics
 
-from internship.api.serializers.internship_student_affectation_stat import InternshipStudentAffectationSerializer
+from internship.api.serializers.internship_student_affectation_stat import InternshipStudentAffectationSerializer, \
+    InternshipPersonAffectationSerializer
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.master_allocation import MasterAllocation
 
 
 class InternshipStudentAffectationList(generics.ListAPIView):
@@ -92,3 +95,39 @@ class InternshipStudentAffectationStats(generics.RetrieveAPIView):
         validated_scores_count = qs.filter(score__validated=True).count()
 
         return JsonResponse({'total_count': total_affectations_count, 'validated_count': validated_scores_count})
+
+
+class InternshipPersonAffectationList(generics.ListAPIView):
+    """
+       Return a list of internship affectations for a given person
+    """
+    name = 'internship-person-affectations-list'
+    serializer_class = InternshipPersonAffectationSerializer
+    queryset = InternshipStudentAffectationStat.objects.all()
+    ordering_fields = {
+        'period__date_start'
+    }
+    ordering = {
+        'period__date_start'
+    }
+
+    def get_queryset(self):
+        cohort_name = self.kwargs['cohort_name']
+        person_uuid = self.kwargs['person_uuid']
+        return self.queryset.filter(
+            student__person__uuid=person_uuid,
+            organization__cohort__name=cohort_name,
+        ).annotate(
+            master=Subquery(
+                MasterAllocation.objects.filter(
+                    specialty_id=OuterRef('speciality__pk'),
+                    organization_id=OuterRef('organization__pk'),
+                ).annotate(
+                    master_short_name=Concat(
+                        Substr(F('master__person__first_name'), 1, 1),
+                        Value('. '),
+                        Upper(F('master__person__last_name')),
+                    )
+                ).values('master_short_name'), output_field=CharField()
+            )
+        )
