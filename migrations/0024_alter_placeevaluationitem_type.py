@@ -13,6 +13,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='placeevaluationitem',
             name='type',
-            field=models.CharField(choices=[('CHOICE', 'Choice'), ('OPEN', 'Open'), ('NUMBER', 'Number')], default='Open', max_length=10),
+            field=models.CharField(choices=[('CHOICE', 'Choice'), ('OPEN', 'Open'), ('NUMBER', 'Number')],
+                                   default='Open', max_length=10),
         ),
     ]

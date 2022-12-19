@@ -20,7 +20,8 @@ class Migration(migrations.Migration):
                 ('order', models.PositiveIntegerField(db_index=True, editable=False, verbose_name='order')),
                 ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
                 ('evaluation', models.JSONField()),
-                ('affectation', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipstudentaffectationstat')),
+                ('affectation', models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                                  to='internship.internshipstudentaffectationstat')),
             ],
             options={
                 'ordering': ('order',),
