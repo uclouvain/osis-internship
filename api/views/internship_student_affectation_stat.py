@@ -128,6 +128,6 @@ class InternshipPersonAffectationList(generics.ListAPIView):
                         Value('. '),
                         Upper(F('master__person__last_name')),
                     )
-                ).values('master_short_name'), output_field=CharField()
+                ).values('master_short_name')[:1], output_field=CharField()
             )
         )

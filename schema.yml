@@ -735,6 +735,63 @@ paths:
       tags:
         - internship
 
+  /place_evaluation/{affectation_uuid}/:
+    get:
+      description: Get place evaluation for a given affectation
+      parameters:
+        - in: path
+          name: affectation_uuid
+          required: true
+          description: Uuid to retrieve affectation
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successfully retrieved the place evaluation for a given affectation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceEvaluationGet'
+        404:
+          description: Affectation not found
+      tags:
+        - internship
+    put:
+      description: Update a place evaluation for a given affectation
+      parameters:
+        - in: path
+          name: affectation_uuid
+          required: true
+          description: Uuid to retrieve affectation
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceEvaluationGet'
+      responses:
+        200:
+          description: Successfully updated the place evaluation for a given affectation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceEvaluationGet'
+        404:
+          description: Affectation not found
+      tags:
+        - internship
 components:
   securitySchemes:
     Token:
@@ -1422,5 +1479,10 @@ components:
           type: array
           items:
             type: string
+    PlaceEvaluationGet:
+      type: object
+      properties:
+        evaluation:
+          type: object
 security:
   - Token: []
