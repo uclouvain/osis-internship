@@ -38,8 +38,8 @@
       <h2>{% trans "Internship's place evaluation"  %}</h2>
   </div>
     <ul id="tabs" class="nav nav-tabs">
-      <li role="form" class="active"><a data-toggle="tab" href="#form">{% trans 'Form' %}</a></li>
-      <li role="results"><a data-toggle="tab" href="#results">{% trans 'Results' %}</a></li>
+        <li role="form" class="active"><a href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans 'Form' %}</a></li>
+      <li role="results"><a href="{% url 'place_evaluation_results' cohort_id=cohort.id %}">{% trans 'Results' %}</a></li>
     </ul>
     <div class="tab-content">
         <div id="form" class="tab-pane fade in active">
@@ -111,9 +111,6 @@
                   </table>
                 </div>
             </div>
-        </div>
-        <div id="results" class="tab-pane fade in">
-
         </div>
     </div>
 

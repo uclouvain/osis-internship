@@ -32,7 +32,11 @@ from django.utils.translation import gettext_lazy as _
 
 from internship.forms.form_place_evaluation_item import PlaceEvaluationItemForm
 from internship.models.cohort import Cohort
+from internship.models.internship_place_evaluation import PlaceEvaluation
 from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.organization import Organization
+from internship.models.period import get_effective_periods
 
 
 @login_required
@@ -46,6 +50,40 @@ def internship_place_evaluation(request, cohort_id):
         pk=cohort_id
     )
     return render(request, "place_evaluation.html", context={'cohort': cohort})
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_place_evaluation_results(request, cohort_id):
+    cohort = Cohort.objects.get(pk=cohort_id)
+    affectations = InternshipStudentAffectationStat.objects.filter(organization__cohort=cohort)
+    evaluations = PlaceEvaluation.objects.filter(affectation__in=affectations)
+
+    periods = get_effective_periods(cohort_id).order_by('date_start')
+    periods_items = {
+        period.name: {
+            'affectations': affectations.filter(period=period),
+            'evaluations': evaluations.filter(affectation__period=period),
+        } for period in periods
+    }
+
+    places = Organization.objects.filter(cohort=cohort, fake=False).order_by('reference')
+    places_items = {
+        place.reference: {
+            'affectations': affectations.filter(organization=place),
+            'evaluations': evaluations.filter(affectation__organization=place),
+        } for place in places
+    }
+
+    return render(request, "place_evaluation_results.html", context={
+        'cohort': cohort,
+        'evaluations': evaluations,
+        'affectations': affectations,
+        'periods_items': periods_items,
+        'periods': periods,
+        'places_items': places_items,
+        'places': places,
+    })
 
 
 @login_required

@@ -179,6 +179,7 @@ urlpatterns = [
 
             url(r'^internship_evaluation/', include([
                 url(r'^$', place_evaluation.internship_place_evaluation, name='place_evaluation'),
+                url(r'^results/$', place_evaluation.internship_place_evaluation_results, name='place_evaluation_results'),
                 url(r'^new/$', place_evaluation.internship_place_evaluation_item_new,
                     name='place_evaluation_new'),
                 url(r'^edit/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_edit,
