@@ -27,6 +27,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
 from django.db.models import Prefetch
+from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.utils.translation import gettext_lazy as _
 
@@ -37,6 +38,8 @@ from internship.models.internship_place_evaluation_item import PlaceEvaluationIt
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.organization import Organization
 from internship.models.period import get_effective_periods
+from internship.utils.exporting import places_evaluations_xls
+from osis_common.decorators.download import set_download_cookie
 
 
 @login_required
@@ -84,6 +87,26 @@ def internship_place_evaluation_results(request, cohort_id):
         'places_items': places_items,
         'places': places,
     })
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+@set_download_cookie
+def export_place_evaluation_results(request, cohort_id):
+    cohort = get_object_or_404(
+        Cohort.objects.prefetch_related(Prefetch(
+            'placeevaluationitem_set',
+            to_attr='evaluation_items'
+        )),
+        pk=cohort_id
+    )
+    affectations = InternshipStudentAffectationStat.objects.filter(organization__cohort=cohort)
+    evaluations = PlaceEvaluation.objects.filter(affectation__in=affectations)
+    workbook = places_evaluations_xls.export_xls_with_places_evaluations(cohort, evaluations)
+    response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    file_name = "places_evaluations_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
+    response['Content-Disposition'] = 'attachment; filename={}'.format(file_name)
+    return response
 
 
 @login_required
