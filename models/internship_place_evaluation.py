@@ -29,7 +29,7 @@ from django.db import models
 from django.db.models import Model
 
 
-class PlaceEvaluationItemAdmin(ModelAdmin):
+class PlaceEvaluationAdmin(ModelAdmin):
     list_display = ("student", "organization", "specialty", "period", "evaluation", "cohort")
     list_filter = ("affectation__organization__cohort",)
     search_fields = [

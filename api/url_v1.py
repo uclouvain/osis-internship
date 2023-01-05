@@ -78,7 +78,7 @@ urlpatterns = [
          InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
     path('students_affectations/<uuid:specialty_uuid>/<uuid:organization_uuid>/stats/',
          InternshipStudentAffectationStats.as_view(), name=InternshipStudentAffectationStats.name),
-    path('students_affectations/<uuid:uuid>/', InternshipStudentAffectationDetail.as_view(),
+    path('students_affectations/<uuid:affectation_uuid>/', InternshipStudentAffectationDetail.as_view(),
          name=InternshipStudentAffectationDetail.name),
     path('person_affectations/<str:cohort_name>/<uuid:person_uuid>/', InternshipPersonAffectationList.as_view(),
          name=InternshipPersonAffectationList.name),

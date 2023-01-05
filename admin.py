@@ -77,4 +77,4 @@ admin.site.register(internship_certifier.InternshipCertifier,
                     internship_certifier.InternshipCertifierAdmin)
 
 admin.site.register(internship_place_evaluation.PlaceEvaluation,
-                    internship_place_evaluation.PlaceEvaluationItemAdmin)
+                    internship_place_evaluation.PlaceEvaluationAdmin)
