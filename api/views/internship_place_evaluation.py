@@ -25,7 +25,6 @@
 ##############################################################################
 from django.http import HttpResponseNotFound
 from rest_framework import generics
-from rest_framework.exceptions import PermissionDenied
 
 from internship.api.serializers.internship_place_evaluation import InternshipStudentPlaceEvaluationSerializer
 from internship.models.internship_place_evaluation import PlaceEvaluation
@@ -43,14 +42,17 @@ class InternshipStudentPlaceEvaluation(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         try:
-            affectation = self._get_affectation()
-            return affectation
-        except PlaceEvaluation.DoesNotExist:
-            try:
-                affectation = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs['affectation_uuid'])
-                return self.queryset.create(affectation=affectation, evaluation={})
-            except InternshipStudentAffectationStat.DoesNotExist:
-                return HttpResponseNotFound()
+            affectation = InternshipStudentAffectationStat.objects.get(
+                uuid=self.kwargs['affectation_uuid'],
+                student__person__user=self.request.user,
+            )
+            place_evaluation, _ = self.queryset.get_or_create(
+                affectation=affectation,
+                defaults={'evaluation': {}}
+            )
+            return place_evaluation
+        except InternshipStudentAffectationStat.DoesNotExist:
+            return HttpResponseNotFound()
 
     def perform_update(self, serializer):
         if self._all_required_fields_completed(serializer):
@@ -58,12 +60,6 @@ class InternshipStudentPlaceEvaluation(generics.RetrieveUpdateAPIView):
                 uuid=self.kwargs['affectation_uuid']
             ).update(internship_evaluated=True)
         serializer.save()
-
-    def _get_affectation(self):
-        affectation = self.queryset.get(affectation__uuid=self.kwargs['affectation_uuid'])
-        if affectation.student.person.user != self.request.user:
-            raise PermissionDenied
-        return affectation
 
     def _all_required_fields_completed(self, serializer):
         cohort = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs['affectation_uuid']).organization.cohort

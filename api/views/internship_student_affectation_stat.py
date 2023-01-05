@@ -75,6 +75,7 @@ class InternshipStudentAffectationDetail(generics.RetrieveAPIView):
     serializer_class = InternshipStudentAffectationSerializer
     queryset = InternshipStudentAffectationStat.objects.all()
     lookup_field = 'uuid'
+    lookup_url_kwarg = 'affectation_uuid'
 
 
 class InternshipStudentAffectationStats(generics.RetrieveAPIView):

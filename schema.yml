@@ -577,7 +577,7 @@ paths:
                     type: integer
       tags:
         - internship
-  /students_affectations/{uuid}/:
+  /students_affectations/{affectation_uuid}/:
     get:
       description: Obtain information about a specific student's affectation
       parameters:
