@@ -46,6 +46,10 @@ msgstr "Nombre d'évaluations"
 msgid "# of Evaluations for "
 msgstr "Nombre d'évaluations pour "
 
+
+msgid "(Optional)"
+msgstr "(Optionnel)"
+
 msgid "< 1 month"
 msgstr "< 1 mois"
 

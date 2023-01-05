@@ -67,7 +67,7 @@
                       <tr>
                         <td>{{ item.order }}</td>
                         <td>{{ item.statement }}</td>
-                        <td>{{ item.type|get_evaluation_item_type }}</td>
+                        <td>{{ item.type|get_evaluation_item_type }} {% if not item.required %}{% trans '(Optional)' %}{% endif %}</td>
                         <td>
                             {% if item.type == "CHOICE" %}
                             <ul>

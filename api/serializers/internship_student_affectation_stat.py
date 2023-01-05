@@ -56,7 +56,8 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
             'speciality',
             'period',
             'internship',
-            'score'
+            'score',
+            'internship_evaluated',
         )
 
 

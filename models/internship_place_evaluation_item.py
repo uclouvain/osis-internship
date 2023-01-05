@@ -49,6 +49,7 @@ class PlaceEvaluationItem(OrderedModel):
     options = JSONField(default=list)
 
     active = models.BooleanField(default=True)
+    required = models.BooleanField(default=True)
 
     order_with_respect_to = 'cohort'
 

@@ -38,4 +38,5 @@ class InternshipPlaceEvaluationItemSerializer(serializers.HyperlinkedModelSerial
             'type',
             'options',
             'active',
+            'required',
         )

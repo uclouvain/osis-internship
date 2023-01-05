@@ -25,9 +25,11 @@
 ##############################################################################
 from django.http import HttpResponseNotFound
 from rest_framework import generics
+from rest_framework.exceptions import PermissionDenied
 
 from internship.api.serializers.internship_place_evaluation import InternshipStudentPlaceEvaluationSerializer
 from internship.models.internship_place_evaluation import PlaceEvaluation
+from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
@@ -41,10 +43,35 @@ class InternshipStudentPlaceEvaluation(generics.RetrieveUpdateAPIView):
 
     def get_object(self):
         try:
-            return self.queryset.get(affectation__uuid=self.kwargs['affectation_uuid'])
+            affectation = self._get_affectation()
+            return affectation
         except PlaceEvaluation.DoesNotExist:
             try:
                 affectation = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs['affectation_uuid'])
                 return self.queryset.create(affectation=affectation, evaluation={})
             except InternshipStudentAffectationStat.DoesNotExist:
                 return HttpResponseNotFound()
+
+    def perform_update(self, serializer):
+        if self._all_required_fields_completed(serializer):
+            InternshipStudentAffectationStat.objects.filter(
+                uuid=self.kwargs['affectation_uuid']
+            ).update(internship_evaluated=True)
+        serializer.save()
+
+    def _get_affectation(self):
+        affectation = self.queryset.get(affectation__uuid=self.kwargs['affectation_uuid'])
+        if affectation.student.person.user != self.request.user:
+            raise PermissionDenied
+        return affectation
+
+    def _all_required_fields_completed(self, serializer):
+        cohort = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs['affectation_uuid']).organization.cohort
+        required_item_uuids = PlaceEvaluationItem.objects.filter(cohort=cohort).values_list('uuid', flat=True)
+
+        all_required_fields_completed = True
+        for item_uuid in required_item_uuids:
+            if not serializer.validated_data['evaluation'][str(item_uuid)]:
+                all_required_fields_completed = False
+
+        return all_required_fields_completed
