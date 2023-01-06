@@ -109,26 +109,44 @@
                     <div class="col-md-4">
                         <h4>{% trans 'Place statistics' %}</h4>
                         <div class="form-group">
-                            <label for="period-select">{% trans 'Select a place:' %}</label>
+                            <label for="place-select">{% trans 'Select a place:' %}</label>
                             <select class="form-control" name="places" id="place-select">
+                                <option value="">-</option>
                                 {% for place in places %}
                                     <option value="{{ place.reference }}">{{ place.reference }} - {{ place.name }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         {% for place in places %}
-                            {% with places_stats=places_items|get_item:place.reference %}
-                            <div class="evaluation-stats-place {% if forloop.counter0 == 0 %} show {% endif %}" id="evaluation-stats-{{ place.reference }}">
-                                <label>{% trans '# of Evaluations for ' %} {{ place.name }}</label>
-                                <div class="progress">
-                                    <span class="progress-value text-center">{{ places_stats.evaluations|length }} / {{ places_stats.affectations|length }}</span>
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ places_stats.evaluations|length }}"
-                                    aria-valuemin="0" aria-valuemax="{{ places_stats.affectations|length }}"
-                                    style="width: {% widthratio places_stats.evaluations|length places_stats.affectations|length 100 %}%;">
+                        <div class="form-group place-specialties-select" id="place-specialties-select-{{ place.reference }}">
+                            <label for="specialty-select">{% trans 'Select a specialty for ' %} {{ place.name }} :</label>
+                            <select class="form-control" name="specialties" class="specialty-select" id="specialty-select-{{ place.reference }}">
+                                <option value="">-</option>
+                                {% for specialty in specialties %}
+                                    {% if specialty.acronym in specialties_available_by_hospital|get_item:place.reference %}
+                                        <option value="{{ specialty.acronym }}">{{ specialty.name }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                        </div>
+                        {% endfor %}
+                        {% for place in places %}
+                            {% for specialty in specialties %}
+                                {% with place_specialty_item_ref=place.reference|add:specialty.acronym %}
+                                {% with places_stats=places_items|get_item:place_specialty_item_ref %}
+                                <div class="evaluation-stats-place" id="evaluation-stats-{{ place.reference }}-{{ specialty.acronym }}">
+                                    <label>{% trans '# of Evaluations for ' %} {{ specialty.name }} - {{ place.name }}</label>
+                                    <div class="progress">
+                                        <span class="progress-value text-center">{{ places_stats.evaluations|length }} / {{ places_stats.affectations|length }}</span>
+                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ places_stats.evaluations|length }}"
+                                        aria-valuemin="0" aria-valuemax="{{ places_stats.affectations|length }}"
+                                        style="width: {% widthratio places_stats.evaluations|length places_stats.affectations|length 100 %}%;">
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            {% endwith %}
+                                {% endwith %}
+                                {% endwith %}
+                            {% endfor %}
                         {% endfor %}
                     </div>
                 </div>
@@ -152,8 +170,19 @@
         });
 
         document.querySelector('#place-select').addEventListener('change', (e) => {
-            document.querySelector('.evaluation-stats-place.show').classList.remove('show');
-            document.querySelector(`#evaluation-stats-${e.target.value}`).classList.add('show');
+            const placeRef = e.target.value;
+
+            document.querySelector('.evaluation-stats-place.show')?.classList.remove('show');
+            document.querySelector('.place-specialties-select.show')?.classList.remove('show');
+            document.querySelector(`#place-specialties-select-${placeRef}`).classList.add('show');
+
+            document.querySelector(`#specialty-select-${placeRef}`).addEventListener('change', (e) => {
+                const specialtyAcronym = e.target.value;
+
+                document.querySelector('.evaluation-stats-place.show')?.classList.remove('show');
+                document.querySelector(`#evaluation-stats-${placeRef}-${specialtyAcronym}`).classList.add('show');
+            });
         });
+
     </script>
 {% endblock %}

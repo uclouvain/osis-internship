@@ -35,6 +35,7 @@ from internship.forms.form_place_evaluation_item import PlaceEvaluationItemForm
 from internship.models.cohort import Cohort
 from internship.models.internship_place_evaluation import PlaceEvaluation
 from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.organization import Organization
 from internship.models.period import get_effective_periods
@@ -59,24 +60,44 @@ def internship_place_evaluation(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_results(request, cohort_id):
     cohort = Cohort.objects.get(pk=cohort_id)
-    affectations = InternshipStudentAffectationStat.objects.filter(organization__cohort=cohort)
-    evaluations = PlaceEvaluation.objects.filter(affectation__in=affectations)
+    affectations = InternshipStudentAffectationStat.objects.filter(organization__cohort=cohort).values_list(
+        'pk', 'period_id', 'organization_id', 'speciality_id',
+        'speciality__acronym', 'organization__reference', named=True
+    )
+    evaluations = PlaceEvaluation.objects.filter(
+        affectation_id__in=[affectation.pk for affectation in affectations]
+    ).values_list(
+        'affectation__period_id', 'affectation__organization_id', 'affectation__speciality_id', named=True
+    )
 
     periods = get_effective_periods(cohort_id).order_by('date_start')
     periods_items = {
         period.name: {
-            'affectations': affectations.filter(period=period),
-            'evaluations': evaluations.filter(affectation__period=period),
+            'affectations': [affectation for affectation in affectations if affectation.period_id == period.pk],
+            'evaluations': [
+                evaluation for evaluation in evaluations if evaluation.affectation__period_id == period.pk
+            ],
         } for period in periods
     }
 
     places = Organization.objects.filter(cohort=cohort, fake=False).order_by('reference')
+    specialties = InternshipSpeciality.objects.filter(cohort=cohort).order_by('name')
     places_items = {
-        place.reference: {
-            'affectations': affectations.filter(organization=place),
-            'evaluations': evaluations.filter(affectation__organization=place),
-        } for place in places
+        f"{place.reference}{specialty.acronym}": {
+            'affectations': [
+                affectation for affectation in affectations
+                if affectation.organization_id == place.pk
+                if affectation.speciality_id == specialty.pk
+            ],
+            'evaluations': [
+                evaluation for evaluation in evaluations
+                if evaluation.affectation__organization_id == place.pk
+                if evaluation.affectation__speciality_id == specialty.pk
+            ],
+        } for place in places for specialty in specialties
     }
+
+    places_items = _filter_places_items_with_affectations(places_items)
 
     return render(request, "place_evaluation_results.html", context={
         'cohort': cohort,
@@ -86,7 +107,21 @@ def internship_place_evaluation_results(request, cohort_id):
         'periods': periods,
         'places_items': places_items,
         'places': places,
+        'specialties': specialties,
+        'specialties_available_by_hospital': _get_specialties_available_by_hospital(affectations)
     })
+
+
+def _filter_places_items_with_affectations(places_items):
+    return {key: value for key, value in places_items.items() if value['affectations']}
+
+
+def _get_specialties_available_by_hospital(affectations):
+    organizations = affectations.values_list('organization__reference', flat=True).distinct('organization')
+    return {
+        organization: set(a.speciality__acronym for a in affectations if a.organization__reference == organization)
+        for organization in organizations
+    }
 
 
 @login_required
