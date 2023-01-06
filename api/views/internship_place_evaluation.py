@@ -55,19 +55,18 @@ class InternshipStudentPlaceEvaluation(generics.RetrieveUpdateAPIView):
             return HttpResponseNotFound()
 
     def perform_update(self, serializer):
-        if self._all_required_fields_completed(serializer):
-            InternshipStudentAffectationStat.objects.filter(
-                uuid=self.kwargs['affectation_uuid']
-            ).update(internship_evaluated=True)
+        to_update = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs['affectation_uuid'])
+
+        if self._all_required_fields_completed(serializer, to_update):
+            to_update.internship_evaluated = True
+            to_update.save()
+
         serializer.save()
 
-    def _all_required_fields_completed(self, serializer):
-        cohort = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs['affectation_uuid']).organization.cohort
-        required_item_uuids = PlaceEvaluationItem.objects.filter(cohort=cohort).values_list('uuid', flat=True)
+    @staticmethod
+    def _all_required_fields_completed(serializer, to_update):
+        required_item_uuids = PlaceEvaluationItem.objects.filter(
+            cohort=to_update.organization.cohort
+        ).values_list('uuid', flat=True)
 
-        all_required_fields_completed = True
-        for item_uuid in required_item_uuids:
-            if not serializer.validated_data['evaluation'][str(item_uuid)]:
-                all_required_fields_completed = False
-
-        return all_required_fields_completed
+        return all(serializer.validated_data['evaluation'][str(item_uuid)] for item_uuid in required_item_uuids)
