@@ -46,8 +46,8 @@ class PlaceEvaluationManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().select_related(
             'affectation__organization__cohort',
-            'affectation__student__cohort',
-            'affectation__specialty',
+            'affectation__student',
+            'affectation__speciality',
             'affectation__period'
         )
 
