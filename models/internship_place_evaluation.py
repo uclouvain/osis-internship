@@ -42,10 +42,22 @@ class PlaceEvaluationAdmin(ModelAdmin):
     raw_id_fields = ("affectation",)
 
 
+class PlaceEvaluationManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().select_related(
+            'affectation__organization__cohort',
+            'affectation__student__cohort',
+            'affectation__specialty',
+            'affectation__period'
+        )
+
+
 class PlaceEvaluation(Model):
 
     affectation = models.ForeignKey('internship.InternshipStudentAffectationStat', on_delete=models.CASCADE, null=True)
     evaluation = models.JSONField(null=True)
+
+    objects = PlaceEvaluationManager()
 
     @property
     def student(self):
