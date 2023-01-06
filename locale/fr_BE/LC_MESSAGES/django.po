@@ -46,7 +46,6 @@ msgstr "Nombre d'évaluations"
 msgid "# of Evaluations for "
 msgstr "Nombre d'évaluations pour "
 
-
 msgid "(Optional)"
 msgstr "(Optionnel)"
 
@@ -1023,6 +1022,9 @@ msgstr "Sélectionner une période:"
 
 msgid "Select a place:"
 msgstr "Sélectionner un lieu:"
+
+msgid "Select a specialty for "
+msgstr "Créer une spécialité pour "
 
 msgid ""
 "Select a xls file that contains a list of students who have assesed their "

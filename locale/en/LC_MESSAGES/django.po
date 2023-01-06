@@ -987,6 +987,9 @@ msgstr ""
 msgid "Select a place:"
 msgstr ""
 
+msgid "Select a specialty for "
+msgstr ""
+
 msgid ""
 "Select a xls file that contains a list of students who have assesed their "
 "internship."
