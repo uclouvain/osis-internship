@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.9"
+  version: "1.1.10"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
