@@ -320,6 +320,9 @@ msgstr "Obligatoire"
 msgid "Conduct clinical examination"
 msgstr "Réaliser l’examen clinique"
 
+msgid "Configuration"
+msgstr "Configuration"
+
 msgid "Contest"
 msgstr "Concours"
 
@@ -1047,6 +1050,9 @@ msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des étudiants."
 msgid "Select diagnostic tests"
 msgstr "Sélectionner des tests diagnostics"
 
+msgid "Select the periods for which evaluations are open"
+msgstr "Sélectionnez les périodes pour lesquelles les évaluations des lieux de stage sont ouvertes"
+
 msgid "Selectable by the student"
 msgstr "Sélectionnable par l'étudiant"
 
@@ -1149,6 +1155,9 @@ msgstr "Question {} supprimée avec succès"
 
 msgid "Successfully saved item {}"
 msgstr "Question {} enregistrée avec succès"
+
+msgid "Successfully saved place evaluations configuration"
+msgstr "Configuration des évaluations des lieux de stage enregistrée"
 
 msgid "Suggestions"
 msgstr "Méthodes d'apprentissage suggérées"

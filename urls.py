@@ -181,6 +181,8 @@ urlpatterns = [
                 url(r'^$', place_evaluation.internship_place_evaluation, name='place_evaluation'),
                 url(r'^results/$', place_evaluation.internship_place_evaluation_results,
                     name='place_evaluation_results'),
+                url(r'^config/$', place_evaluation.internship_place_evaluation_config,
+                    name='place_evaluation_config'),
                 url(r'^export/$', place_evaluation.export_place_evaluation_results,
                     name='export_place_evaluation_results'),
                 url(r'^new/$', place_evaluation.internship_place_evaluation_item_new,

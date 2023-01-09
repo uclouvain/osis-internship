@@ -25,6 +25,7 @@
 ##############################################################################
 from django.http import HttpResponseNotFound
 from rest_framework import generics
+from rest_framework.exceptions import PermissionDenied
 
 from internship.api.serializers.internship_place_evaluation import InternshipStudentPlaceEvaluationSerializer
 from internship.models.internship_place_evaluation import PlaceEvaluation
@@ -57,6 +58,8 @@ class InternshipStudentPlaceEvaluation(generics.RetrieveUpdateAPIView):
     def perform_update(self, serializer):
         to_update = InternshipStudentAffectationStat.objects.get(uuid=self.kwargs['affectation_uuid'])
 
+        self._validate_period_open_for_evaluation(to_update)
+
         if self._all_required_fields_completed(serializer, to_update):
             to_update.internship_evaluated = True
             to_update.save()
@@ -70,3 +73,8 @@ class InternshipStudentPlaceEvaluation(generics.RetrieveUpdateAPIView):
         ).values_list('uuid', flat=True)
 
         return all(serializer.validated_data['evaluation'][str(item_uuid)] for item_uuid in required_item_uuids)
+
+    @staticmethod
+    def _validate_period_open_for_evaluation(to_update):
+        if not to_update.period.place_evaluation_active:
+            raise PermissionDenied
