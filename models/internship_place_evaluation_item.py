@@ -34,9 +34,10 @@ from internship.models.enums.response_type import ResponseType
 
 
 class PlaceEvaluationItemAdmin(ModelAdmin):
-    list_display = ("order", "statement", "type",)
-    list_filter = ("type",)
+    list_display = ("order", "statement", "type", "cohort")
+    list_filter = ("type", "cohort")
     search_fields = ["statement"]
+    ordering = ("cohort", "order")
 
 
 class PlaceEvaluationItem(OrderedModel):
