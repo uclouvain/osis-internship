@@ -48,6 +48,7 @@ from base.views.common import display_error_messages, display_success_messages
 from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
+from internship.models.enums.role import Role
 from internship.models.internship_score import InternshipScore, APD_NUMBER, MIN_APDS, MAX_APDS
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_score_reason import InternshipScoreReason
@@ -174,7 +175,8 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
 def get_main_internship_master(score):
     main_master_allocation = MasterAllocation.objects.filter(
         specialty=score.student_affectation.speciality,
-        organization=score.student_affectation.organization
+        organization=score.student_affectation.organization,
+        role=Role.DELEGATE.name,
     ).first()
     return main_master_allocation.master if main_master_allocation else None
 

@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.8"
+  version: "1.1.10"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -577,7 +577,7 @@ paths:
                     type: integer
       tags:
         - internship
-  /students_affectations/{uuid}/:
+  /students_affectations/{affectation_uuid}/:
     get:
       description: Obtain information about a specific student's affectation
       parameters:
@@ -669,9 +669,127 @@ paths:
         - $ref: '#/components/parameters/X-User-GlobalID'
       responses:
         204:
-          description: Successfully validated an internship score
+          description: Successful retrieved or create of a student's score for a given period.
         404:
           description: Affectation or score not found, validation aborted
+      tags:
+        - internship
+
+  /person_affectations/{cohort}/{person_uuid}/:
+    get:
+      description: Get person internship affectations for specified cohort
+      parameters:
+        - in: path
+          name: cohort
+          required: true
+          description: The name of the cohort
+          schema:
+            type: string
+        - in: path
+          name: person_uuid
+          required: true
+          description: The UUID of the person
+          schema:
+            $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successfully retrieved the list of affectations for a person for a given cohort
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PersonAffectationPaging'
+        404:
+          description: Affectations not found
+      tags:
+        - internship
+
+  /place_evaluation_items/{cohort}/:
+    get:
+      description: Get place evaluation items for a cohort
+      parameters:
+        - in: path
+          name: cohort
+          required: true
+          description: The name of a cohort
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successfully retrieved the list of evaluation items a given cohort
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceEvaluationItemPaging'
+        404:
+          description: Evaluation items not found
+      tags:
+        - internship
+
+  /place_evaluation/{affectation_uuid}/:
+    get:
+      description: Get place evaluation for a given affectation
+      parameters:
+        - in: path
+          name: affectation_uuid
+          required: true
+          description: Uuid to retrieve affectation
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successfully retrieved the place evaluation for a given affectation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceEvaluationGet'
+        404:
+          description: Affectation not found
+      tags:
+        - internship
+    put:
+      description: Update a place evaluation for a given affectation
+      parameters:
+        - in: path
+          name: affectation_uuid
+          required: true
+          description: Uuid to retrieve affectation
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceEvaluationGet'
+      responses:
+        200:
+          description: Successfully updated the place evaluation for a given affectation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlaceEvaluationGet'
+        404:
+          description: Affectation not found
       tags:
         - internship
 components:
@@ -1139,6 +1257,7 @@ components:
           example: "1989-01-01"
     Country:
       type: object
+      nullable: true
       properties:
         url:
           type: string
@@ -1303,5 +1422,71 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/ScoreGet'
+    PersonAffectationPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PersonAffectationGet'
+    PersonAffectationGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        organization:
+          $ref: '#/components/schemas/OrganizationGet'
+        speciality:
+          $ref: '#/components/schemas/SpecialtyGet'
+        period:
+          $ref: '#/components/schemas/PeriodGet'
+        master:
+          type: string
+          nullable: true
+        internship_evaluated:
+          type: boolean
+    PlaceEvaluationItemPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlaceEvaluationItemGet'
+    PlaceEvaluationItemGet:
+      type: object
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        order:
+          type: number
+        statement:
+          type: string
+        type:
+          type: string
+        options:
+          type: array
+          items:
+            type: string
+        required:
+          type: boolean
+    PlaceEvaluationGet:
+      type: object
+      properties:
+        evaluation:
+          type: object
 security:
   - Token: []

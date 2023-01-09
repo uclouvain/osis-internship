@@ -40,6 +40,15 @@ msgstr ""
 "%(total_counts)s étudiants\n"
 "                            "
 
+msgid "# of Evaluations"
+msgstr "Nombre d'évaluations"
+
+msgid "# of Evaluations for "
+msgstr "Nombre d'évaluations pour "
+
+msgid "(Optional)"
+msgstr "(Optionnel)"
+
 msgid "< 1 month"
 msgstr "< 1 mois"
 
@@ -216,6 +225,9 @@ msgstr "Attention"
 #, python-format
 msgid "Autonomy Level (%% according to periods)"
 msgstr "Niveau d'autonomie (%% fonction des périodes)"
+
+msgid "Birth Date"
+msgstr "Date de naissance"
 
 msgid "Birth date"
 msgstr "Date de naissance"
@@ -468,6 +480,9 @@ msgstr "Fichier Excel pour l'hôpital"
 msgid "Export master affectations"
 msgstr "Fichier Excel pour le maitre de stage"
 
+msgid "Export results"
+msgstr "Exporter les résultats"
+
 msgid "Export scores"
 msgstr "Exporter les notes"
 
@@ -533,6 +548,9 @@ msgstr "Généraliste"
 
 msgid "Generate solution"
 msgstr "Générer la solution"
+
+msgid "Global statistics"
+msgstr "Statistiques globales"
 
 msgid "Good performance example"
 msgstr "Exemples de bonnes performances"
@@ -797,6 +815,9 @@ msgstr "Stages au choix"
 msgid "Normal students"
 msgstr "Etudiants Normaux"
 
+msgid "Number"
+msgstr "Nombre"
+
 msgid "Number of enrollments"
 msgstr "Nombre d'inscriptions"
 
@@ -878,6 +899,9 @@ msgstr "Période supprimée"
 msgid "Period edited"
 msgstr "Période modifiée"
 
+msgid "Period statistics"
+msgstr "Statistiques par période"
+
 msgid "Periods"
 msgstr "Périodes"
 
@@ -892,6 +916,12 @@ msgstr "Téléphone"
 
 msgid "Phone Number / Mobile Number"
 msgstr "Numéro de Téléphone / Numéro de portable"
+
+msgid "Place"
+msgstr "Lieu"
+
+msgid "Place statistics"
+msgstr "Statistiques par lieu"
 
 msgid "Please wait"
 msgstr "Merci de patienter"
@@ -986,6 +1016,15 @@ msgstr "Rechercher"
 
 msgid "Second choice"
 msgstr "2ème choix"
+
+msgid "Select a period:"
+msgstr "Sélectionner une période:"
+
+msgid "Select a place:"
+msgstr "Sélectionner un lieu:"
+
+msgid "Select a specialty for "
+msgstr "Créer une spécialité pour "
 
 msgid ""
 "Select a xls file that contains a list of students who have assesed their "

@@ -32,6 +32,15 @@ msgid ""
 "                            "
 msgstr ""
 
+msgid "# of Evaluations"
+msgstr ""
+
+msgid "# of Evaluations for "
+msgstr ""
+
+msgid "(Optional)"
+msgstr ""
+
 msgid "< 1 month"
 msgstr ""
 
@@ -193,6 +202,9 @@ msgstr ""
 
 #, python-format
 msgid "Autonomy Level (%% according to periods)"
+msgstr ""
+
+msgid "Birth Date"
 msgstr ""
 
 msgid "Birth date"
@@ -441,6 +453,9 @@ msgstr ""
 msgid "Export master affectations"
 msgstr ""
 
+msgid "Export results"
+msgstr ""
+
 msgid "Export scores"
 msgstr ""
 
@@ -505,6 +520,9 @@ msgid "Generalist"
 msgstr ""
 
 msgid "Generate solution"
+msgstr ""
+
+msgid "Global statistics"
 msgstr ""
 
 msgid "Good performance example"
@@ -761,6 +779,9 @@ msgstr ""
 msgid "Normal students"
 msgstr ""
 
+msgid "Number"
+msgstr ""
+
 msgid "Number of enrollments"
 msgstr ""
 
@@ -842,6 +863,9 @@ msgstr ""
 msgid "Period edited"
 msgstr ""
 
+msgid "Period statistics"
+msgstr ""
+
 msgid "Periods"
 msgstr ""
 
@@ -855,6 +879,12 @@ msgid "Phone"
 msgstr ""
 
 msgid "Phone Number / Mobile Number"
+msgstr ""
+
+msgid "Place"
+msgstr ""
+
+msgid "Place statistics"
 msgstr ""
 
 msgid "Please wait"
@@ -949,6 +979,15 @@ msgid "Search"
 msgstr ""
 
 msgid "Second choice"
+msgstr ""
+
+msgid "Select a period:"
+msgstr ""
+
+msgid "Select a place:"
+msgstr ""
+
+msgid "Select a specialty for "
 msgstr ""
 
 msgid ""

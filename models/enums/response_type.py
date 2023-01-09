@@ -31,6 +31,7 @@ from osis_common.utils.enumerations import ChoiceEnum
 class ResponseType(ChoiceEnum):
     CHOICE = _("Choice")
     OPEN = _("Open")
+    NUMBER = _("Number")
 
     @classmethod
     def choices(cls):
