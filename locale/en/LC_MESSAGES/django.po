@@ -296,6 +296,9 @@ msgstr ""
 msgid "Conduct clinical examination"
 msgstr ""
 
+msgid "Configuration"
+msgstr ""
+
 msgid "Contest"
 msgstr ""
 
@@ -1007,6 +1010,9 @@ msgstr ""
 msgid "Select diagnostic tests"
 msgstr ""
 
+msgid "Select the periods for which evaluations are open"
+msgstr ""
+
 msgid "Selectable by the student"
 msgstr ""
 
@@ -1106,6 +1112,9 @@ msgid "Successfully deleted item {}"
 msgstr ""
 
 msgid "Successfully saved item {}"
+msgstr ""
+
+msgid "Successfully saved place evaluations configuration"
 msgstr ""
 
 msgid "Suggestions"

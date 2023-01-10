@@ -58,6 +58,31 @@ def internship_place_evaluation(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
+def internship_place_evaluation_config(request, cohort_id):
+    cohort = get_object_or_404(
+        Cohort.objects.prefetch_related(Prefetch(
+            'placeevaluationitem_set',
+            to_attr='evaluation_items'
+        )),
+        pk=cohort_id
+    )
+
+    periods = get_effective_periods(cohort_id)
+
+    if request.POST:
+        for period in periods:
+            period.place_evaluation_active = period.name in request.POST.getlist('active_period')
+            period.save()
+        messages.add_message(request, messages.SUCCESS, _('Successfully saved place evaluations configuration'))
+
+    return render(request, "place_evaluation_config.html", context={
+        'cohort': cohort,
+        'periods': periods,
+    })
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_results(request, cohort_id):
     cohort = Cohort.objects.get(pk=cohort_id)
     affectations = InternshipStudentAffectationStat.objects.filter(organization__cohort=cohort).values_list(
