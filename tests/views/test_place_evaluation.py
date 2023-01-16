@@ -23,14 +23,20 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import timedelta
+
+from dateutil.utils import today
 from django.contrib.auth.models import Permission, User
+from django.http import HttpResponse
 from django.test import TestCase
 from django.urls import reverse
 
 from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.place_evaluation_item import PlaceEvaluationItemFactory
+from osis_common.document.xls_build import CONTENT_TYPE_XLS
 
 
 class PlaceEvaluationTestCase(TestCase):
@@ -41,6 +47,9 @@ class PlaceEvaluationTestCase(TestCase):
         cls.user.user_permissions.add(permission)
         cls.cohort = CohortFactory()
         cls.organization = OrganizationFactory(cohort=cls.cohort)
+        cls.periods = [
+            PeriodFactory(name=f"P{_}", date_end=today()+timedelta(days=_), cohort=cls.cohort) for _ in [1, 2, 3]
+        ]
 
     def setUp(self):
         self.client.force_login(self.user)
@@ -96,3 +105,35 @@ class PlaceEvaluationTestCase(TestCase):
         self.assertRedirects(response, reverse('place_evaluation', kwargs={'cohort_id': self.cohort.id}))
         self.item.refresh_from_db()
         self.assertEqual(self.item.order, original_order+1)
+
+    def test_place_evaluation_results(self):
+        kwargs = {'cohort_id': self.cohort.id, }
+        url = reverse('place_evaluation_results', kwargs=kwargs)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'place_evaluation_results.html')
+
+    def test_export_place_evaluation_results(self):
+        kwargs = {'cohort_id': self.cohort.id, }
+        url = reverse('export_place_evaluation_results', kwargs=kwargs)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
+        self.assertEqual(response['content-type'], CONTENT_TYPE_XLS.split(';')[0])
+
+    def test_place_evaluation_config(self):
+        kwargs = {'cohort_id': self.cohort.id, }
+        url = reverse('place_evaluation_config', kwargs=kwargs)
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, HttpResponse.status_code)
+        self.assertTemplateUsed(response, 'place_evaluation_config.html')
+
+    def test_save_place_evaluation_config(self):
+        kwargs = {'cohort_id': self.cohort.id, }
+        url = reverse('place_evaluation_config', kwargs=kwargs)
+        self.client.post(url, data={'active_period': ['P1']})
+
+        for period in self.periods:
+            period.refresh_from_db()
+
+        self.assertTrue(self.periods[0].place_evaluation_active)
+        self.assertFalse(self.periods[1].place_evaluation_active)

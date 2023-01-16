@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,16 +23,29 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
-from django.utils.translation import gettext_lazy as _
 
+from rest_framework import generics
+
+from internship.api.serializers.internship_place_evaluation_item import InternshipPlaceEvaluationItemSerializer
 from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
 
 
-class PlaceEvaluationItemForm(forms.ModelForm):
-    statement = forms.CharField(label=_('Statement'), widget=forms.Textarea(attrs={'rows': 5}))
-    options = forms.CharField(label=_('Options'), required=False)
+class InternshipPlaceEvaluationItemList(generics.ListAPIView):
+    """
+       Return a list of internship place evaluation items with optional filtering.
+    """
+    name = 'student-place-evaluation-item-list'
+    serializer_class = InternshipPlaceEvaluationItemSerializer
+    queryset = PlaceEvaluationItem.objects.all()
+    search_fields = (
+        'cohort'
+    )
+    ordering_fields = (
+        'order',
+    )
+    ordering = (
+        'order',
+    )  # Default ordering
 
-    class Meta:
-        model = PlaceEvaluationItem
-        fields = ['statement', 'type', 'options', 'active', 'required']
+    def get_queryset(self):
+        return PlaceEvaluationItem.objects.all().filter(cohort__name=self.kwargs.get('cohort'))
