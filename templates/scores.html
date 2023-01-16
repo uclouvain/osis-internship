@@ -171,7 +171,6 @@
                         {% endif %}
                         <th></th>
                         <th>{% trans 'Student' %}</th>
-                        <th></th>
                         <th>{% trans 'Edit' %}</th>
                         <th  class="overflow-cell" style="max-width:7vw;">{% trans 'Period' %}</th>
                         <th>{% trans 'Internship' %}</th>
@@ -236,21 +235,6 @@
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
                                 {{ student }}
-                              </td>
-                              <td
-                                {% if has_remedial and periods.count < mandatory_periods.count %}
-                                    rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
-                                {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
-                                {% else %}
-                                    rowspan="{{ rowspan_no_remedial }}"
-                                {% endif %}>
-                                <a data-toggle="modal" data-target="#download-summary" data-url="{% url 'internship_download_summary' cohort.pk student.pk %}" type="button"
-                                class="btn btn-xs btn-default btn-download-summary download" id="btn-summary-{{ student.pk }}"
-                                {% if not student.scores %} disabled {% endif %}
-                                >
-                                    <icon class="far fa-file"></icon>
-                                </a>
                               </td>
                               {% endwith %}
                               {% endwith %}
@@ -360,7 +344,7 @@
 
                             {% if search_form.show_apds_validation.value %}
                             <tr>
-                                <td colspan="9" style="text-align: right;">{% trans 'EPA Validation' %}</td>
+                                <td colspan="8" style="text-align: right;">{% trans 'EPA Validation' %}</td>
                                 {% for apd in apd_range %}
                                     <td class="hidden-sm hidden-xs text-center">
                                         {% is_apd_validated cohort student apd as success %}
@@ -471,8 +455,6 @@
 
     {% include 'fragment/download_scores_modal.html' %}
 
-    {% include 'fragment/download_summary_modal.html' %}
-
     {% include 'fragment/delete_score_modal.html' %}
 
     {% include 'fragment/send_summary_modal.html' %}
@@ -497,10 +479,6 @@
     //close modal on export button click
     $("#export_score_btn").on('click', function(){
       $("#download_scores").modal("hide");
-    });
-
-    $("#export_summary_btn").on('click', function(){
-      $("#download-summary").modal("hide");
     });
 
     //send ajax post request on evaluation button toggle

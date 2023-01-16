@@ -45,5 +45,4 @@ class PeriodSerializer(serializers.HyperlinkedModelSerializer):
             'date_start',
             'date_end',
             'cohort',
-            'place_evaluation_active',
         )
