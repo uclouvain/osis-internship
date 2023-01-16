@@ -216,3 +216,7 @@ li.disabled a {
     background-color: white;
     box-shadow: inset 0 -3px 0 lightgrey;
 }
+
+.evaluation-stats-period, .evaluation-stats-place, .place-specialties-select {
+    display: none;
+}
