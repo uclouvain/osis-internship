@@ -26,9 +26,9 @@
 from django.template.loader import render_to_string
 from weasyprint import HTML
 
-from admission.exports.utils import django_url_fetcher
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from osis_common.utils.url_fetcher import django_url_fetcher
 
 
 def generate_pdf(cohort, periods, student, internships, mapping, extra_data):  # pylint: disable=too-many-arguments
