@@ -25,6 +25,8 @@
 ##############################################################################
 from django.template.defaulttags import register
 
+from internship.views.score import replace_comments_keys_with_translations
+
 
 @register.simple_tag
 def get_mapping_value(mapping, period, apd, score):
@@ -36,3 +38,8 @@ def get_mapping_value(mapping, period, apd, score):
 
 def _get_mapping(period, apd):
     return lambda x: period.name == x.period.name and x.apd == apd
+
+
+@register.filter()
+def keys_to_labels(comments):
+    return replace_comments_keys_with_translations(comments)

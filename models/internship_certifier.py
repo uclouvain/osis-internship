@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2021 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,16 +23,36 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
-from django.utils.translation import gettext_lazy as _
 
-from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
+from django.db import models
+
+from internship.models.enums.civility import Civility
+from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
 
-class PlaceEvaluationItemForm(forms.ModelForm):
-    statement = forms.CharField(label=_('Statement'), widget=forms.Textarea(attrs={'rows': 5}))
-    options = forms.CharField(label=_('Options'), required=False)
+class InternshipCertifierAdmin(SerializableModelAdmin):
+    list_display = ('person', 'civility', 'role')
+    search_fields = ['person__last_name', 'person__first_name']
+    fieldsets = (
+        (
+            None, {
+                'fields': (
+                    'person', 'civility', 'role', 'signature_b64'
+                )
+            }
+        ),
+    )
 
-    class Meta:
-        model = PlaceEvaluationItem
-        fields = ['statement', 'type', 'options', 'active', 'required']
+
+class InternshipCertifier(SerializableModel):
+    person = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.CASCADE)
+    civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
+    role = models.CharField(max_length=100, blank=True, null=True)
+
+    signature_b64 = models.TextField(blank=True, null=True)
+
+    def civility_acronym(self):
+        if self.civility:
+            return Civility.get_acronym(self.civility)
+        else:
+            return ""
