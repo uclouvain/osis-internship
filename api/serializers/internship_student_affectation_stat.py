@@ -24,12 +24,10 @@
 #
 ##############################################################################
 from rest_framework import serializers
-from rest_framework.fields import UUIDField, CharField
+from rest_framework.fields import UUIDField
 
 from internship.api.serializers.internship_score import InternshipScoreListSerializer
-from internship.api.serializers.internship_specialty import InternshipSpecialtySerializer
 from internship.api.serializers.internship_student import InternshipStudentSerializer
-from internship.api.serializers.organization import OrganizationSerializer
 from internship.api.serializers.period import PeriodSerializer
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
@@ -37,8 +35,7 @@ from internship.models.internship_student_affectation_stat import InternshipStud
 class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='internship_api_v1:student-affectation-detail',
-        lookup_field='uuid',
-        lookup_url_kwarg='affectation_uuid'
+        lookup_field='uuid'
     )
     student = InternshipStudentSerializer(read_only=True)
     organization = UUIDField(source='organization.uuid', read_only=True)
@@ -57,29 +54,5 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
             'speciality',
             'period',
             'internship',
-            'score',
-        )
-
-
-class InternshipPersonAffectationSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:student-affectation-detail',
-        lookup_field='uuid',
-        lookup_url_kwarg='affectation_uuid'
-    )
-    organization = OrganizationSerializer(read_only=True)
-    speciality = InternshipSpecialtySerializer(read_only=True)
-    period = PeriodSerializer(read_only=True)
-    master = CharField()
-
-    class Meta:
-        model = InternshipStudentAffectationStat
-        fields = (
-            'url',
-            'uuid',
-            'organization',
-            'speciality',
-            'period',
-            'master',
-            'internship_evaluated',
+            'score'
         )

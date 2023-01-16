@@ -41,7 +41,7 @@ class InternshipScoreAdmin(ModelAdmin):
         'student', 'period', 'cohort',
         *score_fields, 'score', 'excused', 'reason', 'validated',
     )
-    raw_id_fields = ('student_affectation', 'validated_by')
+    raw_id_fields = ('student_affectation',)
     list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
     search_fields = [
         'student_affectation__student__person__first_name',

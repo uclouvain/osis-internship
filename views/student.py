@@ -43,7 +43,6 @@ from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
 from base import models as mdl
-from base.models.enums.person_address_type import PersonAddressType
 from base.models.person_address import PersonAddress
 from base.models.student import Student
 from internship import models as mdl_int
@@ -61,7 +60,6 @@ from internship.models.organization import Organization
 from internship.models.period import Period, get_effective_periods
 from internship.utils.importing.import_students import import_xlsx
 from internship.views.common import display_errors, get_object_list
-from osis_common.utils.models import get_object_or_none
 from reference.models.country import Country
 
 
@@ -151,7 +149,7 @@ def student_save(request, cohort_id):
 def internships_student_read(request, cohort_id, student_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
     student = Student.objects.get(id=student_id)
-    student.address = get_object_or_none(PersonAddress, person=student.person, label=PersonAddressType.RESIDENTIAL.name)
+    student.address = PersonAddress.objects.get(person=student.person)
 
     if not request.user.has_perm('internship.is_internship_manager'):
         person_who_read = mdl.person.find_by_user(request.user)

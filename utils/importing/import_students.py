@@ -62,12 +62,12 @@ def _import_row(cohort, row, diff):
 
 def _update_information(information, cohort, row):
     old_data = copy(information)
-    information.location = row[14].value
-    information.postal_code = str(row[15].value)
-    information.city = row[16].value
-    information.country = row[17].value
-    information.email = row[18].value
-    information.phone_mobile = str(row[13].value)
+    information.location = row[15].value
+    information.postal_code = str(row[16].value)
+    information.city = row[17].value
+    information.country = row[18].value
+    information.email = row[19].value
+    information.phone_mobile = str(row[14].value)
     information.cohort = cohort
     return _get_data_differences(old_data, information)
 

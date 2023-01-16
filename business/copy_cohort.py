@@ -4,7 +4,6 @@ from internship.models import internship
 from internship.models import internship_speciality
 from internship.models import master_allocation
 from internship.models import organization
-from internship.models.internship_place_evaluation_item import PlaceEvaluationItem
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.period import Period
 
@@ -16,7 +15,6 @@ def copy_from_origin(cohort):
         _copy_periods(cohort.originated_from, cohort)
         _copy_internships(cohort.originated_from, cohort)
         copy_master_allocations(cohort.originated_from, cohort)
-        _copy_place_evaluation_items(cohort.originated_from, cohort)
 
 
 def _copy_organizations(cohort_from, cohort_to):
@@ -84,12 +82,3 @@ def _get_new_cohort_hospital(previous_hospital, cohort_to):
         if organizations:
             return organizations.first()
     return None
-
-
-def _copy_place_evaluation_items(cohort_from, cohort_to):
-    items = PlaceEvaluationItem.objects.filter(cohort=cohort_from)
-    for item in items:
-        item.pk = None
-        item.cohort = cohort_to
-        item.uuid = uuid.uuid4()
-        item.save()

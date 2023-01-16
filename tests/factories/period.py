@@ -40,4 +40,3 @@ class PeriodFactory(factory.django.DjangoModelFactory):
     cohort = factory.SubFactory(CohortFactory)
     reminder_mail_sent = False
     remedial = False
-    place_evaluation_active = False

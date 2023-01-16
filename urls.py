@@ -161,11 +161,6 @@ urlpatterns = [
                 url(r'^upload_scores/$', score.upload_scores, name='internship_upload_scores'),
                 url(r'^upload_eval/$', score.upload_eval, name='internship_upload_eval'),
                 url(r'^download/$', score.download_scores, name='internship_download_scores'),
-                url(
-                    r'^download_summary/(?P<student_id>[0-9]+)$',
-                    score.download_summary,
-                    name='internship_download_summary'
-                ),
                 url(r'^mapping/save$', score.save_mapping, name='save_internship_score_mapping'),
                 url(r'^ajax/save_score/$', score.save_edited_score, name='save_edited_score'),
                 url(r'^ajax/delete_score/$', score.delete_edited_score, name='delete_edited_score'),
@@ -179,12 +174,6 @@ urlpatterns = [
 
             url(r'^internship_evaluation/', include([
                 url(r'^$', place_evaluation.internship_place_evaluation, name='place_evaluation'),
-                url(r'^results/$', place_evaluation.internship_place_evaluation_results,
-                    name='place_evaluation_results'),
-                url(r'^config/$', place_evaluation.internship_place_evaluation_config,
-                    name='place_evaluation_config'),
-                url(r'^export/$', place_evaluation.export_place_evaluation_results,
-                    name='export_place_evaluation_results'),
                 url(r'^new/$', place_evaluation.internship_place_evaluation_item_new,
                     name='place_evaluation_new'),
                 url(r'^edit/(?P<item_id>[0-9]+)$', place_evaluation.internship_place_evaluation_item_edit,

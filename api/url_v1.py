@@ -29,12 +29,10 @@ from internship.api.views.cohort import CohortList, CohortDetail
 from internship.api.views.internship import InternshipList, InternshipDetail
 from internship.api.views.internship_master import InternshipMasterActivateAccount, InternshipMasterUpdateDetail, \
     InternshipMasterAllocationListCreate, InternshipMasterListCreate
-from internship.api.views.internship_place_evaluation import InternshipStudentPlaceEvaluation
-from internship.api.views.internship_place_evaluation_item import InternshipPlaceEvaluationItemList
 from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate, ValidateInternshipScore
 from internship.api.views.internship_specialty import InternshipSpecialtyList, InternshipSpecialtyDetail
 from internship.api.views.internship_student_affectation_stat import InternshipStudentAffectationList, \
-    InternshipStudentAffectationDetail, InternshipStudentAffectationStats, InternshipPersonAffectationList
+    InternshipStudentAffectationDetail, InternshipStudentAffectationStats
 from internship.api.views.internship_student_information import InternshipStudentInformationList, \
     InternshipStudentInformationDetail
 from internship.api.views.master_allocation import MasterAllocationUpdateDeleteDetail, MasterAllocationListCreate
@@ -78,17 +76,11 @@ urlpatterns = [
          InternshipStudentAffectationList.as_view(), name=InternshipStudentAffectationList.name),
     path('students_affectations/<uuid:specialty_uuid>/<uuid:organization_uuid>/stats/',
          InternshipStudentAffectationStats.as_view(), name=InternshipStudentAffectationStats.name),
-    path('students_affectations/<uuid:affectation_uuid>/', InternshipStudentAffectationDetail.as_view(),
+    path('students_affectations/<uuid:uuid>/', InternshipStudentAffectationDetail.as_view(),
          name=InternshipStudentAffectationDetail.name),
-    path('person_affectations/<str:cohort_name>/<uuid:person_uuid>/', InternshipPersonAffectationList.as_view(),
-         name=InternshipPersonAffectationList.name),
 
     path('scores/<uuid:affectation_uuid>/', InternshipScoreCreateRetrieveUpdate.as_view(),
          name=InternshipScoreCreateRetrieveUpdate.name),
     path('scores/<uuid:affectation>/validate/', ValidateInternshipScore.as_view(),
          name=ValidateInternshipScore.name),
-    path('place_evaluation_items/<str:cohort>/', InternshipPlaceEvaluationItemList.as_view(),
-         name=InternshipPlaceEvaluationItemList.name),
-    path('place_evaluation/<uuid:affectation_uuid>/', InternshipStudentPlaceEvaluation.as_view(),
-         name=InternshipStudentPlaceEvaluation.name)
 ]
