@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.11"
+  version: "1.1.12"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -582,7 +582,7 @@ paths:
       description: Obtain information about a specific student's affectation
       parameters:
         - in: path
-          name: uuid
+          name: affectation_uuid
           required: true
           description: The UUID of the student's affectation
           schema:
