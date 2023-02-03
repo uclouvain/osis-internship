@@ -1087,6 +1087,9 @@ msgstr ""
 msgid "Student does not exist"
 msgstr ""
 
+msgid "Student path"
+msgstr ""
+
 msgid "Student sumup"
 msgstr ""
 
@@ -1097,9 +1100,6 @@ msgid "Students"
 msgstr ""
 
 msgid "Students list"
-msgstr ""
-
-msgid "Studies"
 msgstr ""
 
 msgid "Submit choices"
