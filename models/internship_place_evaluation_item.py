@@ -26,8 +26,8 @@
 import uuid as uuid
 
 from django.contrib.admin import ModelAdmin
-from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import JSONField
 from ordered_model.models import OrderedModel
 
 from internship.models.enums.response_type import ResponseType
@@ -55,4 +55,4 @@ class PlaceEvaluationItem(OrderedModel):
     order_with_respect_to = 'cohort'
 
     def __str__(self):
-        return '({}) {}'.format(self.order, self.statement)
+        return f'({self.order}) {self.statement}'
