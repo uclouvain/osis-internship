@@ -1051,7 +1051,9 @@ msgid "Select diagnostic tests"
 msgstr "Sélectionner des tests diagnostics"
 
 msgid "Select the periods for which evaluations are open"
-msgstr "Sélectionnez les périodes pour lesquelles les évaluations des lieux de stage sont ouvertes"
+msgstr ""
+"Sélectionnez les périodes pour lesquelles les évaluations des lieux de stage "
+"sont ouvertes"
 
 msgid "Selectable by the student"
 msgstr "Sélectionnable par l'étudiant"
@@ -1129,6 +1131,9 @@ msgstr "L'étudiant existe déjà."
 msgid "Student does not exist"
 msgstr "L'étudiant n'existe pas."
 
+msgid "Student path"
+msgstr "Parcours étudiant"
+
 msgid "Student sumup"
 msgstr "Bilan des étudiants"
 
@@ -1140,9 +1145,6 @@ msgstr "Étudiants"
 
 msgid "Students list"
 msgstr "Liste des étudiants"
-
-msgid "Studies"
-msgstr "Études"
 
 msgid "Submit choices"
 msgstr "Soumettre les choix"
