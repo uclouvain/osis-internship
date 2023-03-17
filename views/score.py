@@ -176,7 +176,7 @@ def get_main_internship_master(score):
     main_master_allocation = MasterAllocation.objects.filter(
         specialty=score.student_affectation.speciality,
         organization=score.student_affectation.organization,
-        role=Role.DELEGATE.name,
+        role=Role.MASTER.name,
     ).first()
     return main_master_allocation.master if main_master_allocation else None
 
