@@ -531,8 +531,8 @@
         }
     }
 
-    $('input:checkbox[name="period"]').click(()=>{
-        const selected_periods_count = $('input:checkbox[name="period"]:checked').length;
+    $('#form_export_scores input:checkbox[name="period"]').click(()=>{
+        const selected_periods_count = $('#form_export_scores input:checkbox[name="period"]:checked').length;
         switchEvolutionScoreModalMsg(selected_periods_count);
     });
 
