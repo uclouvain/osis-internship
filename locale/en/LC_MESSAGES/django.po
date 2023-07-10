@@ -281,6 +281,9 @@ msgstr ""
 msgid "Cohorts"
 msgstr ""
 
+msgid "Cohorts management"
+msgstr ""
+
 msgid "Comment (manager)"
 msgstr ""
 
