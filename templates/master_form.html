@@ -28,7 +28,8 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
     <li><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>

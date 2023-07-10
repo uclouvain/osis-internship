@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-19 14:23+0200\n"
+"POT-Creation-Date: 2022-08-19 14:54+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,6 +30,15 @@ msgid ""
 "                                %(start_index)s to %(end_index)s of "
 "%(total_counts)s students\n"
 "                            "
+msgstr ""
+
+msgid "# of Evaluations"
+msgstr ""
+
+msgid "# of Evaluations for "
+msgstr ""
+
+msgid "(Optional)"
 msgstr ""
 
 msgid "< 1 month"
@@ -63,6 +72,9 @@ msgstr ""
 msgid ""
 "A subspecialty must exclusively define a name and should not be mandatory "
 "nor selectable"
+msgstr ""
+
+msgid "APD description"
 msgstr ""
 
 msgid "Accept"
@@ -173,13 +185,26 @@ msgstr ""
 msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
 msgstr ""
 
+msgid "Appreciate medical emergency"
+msgstr ""
+
 msgid "Aptitudes conditions fulfilled"
 msgstr ""
 
 msgid "Aptitudes conditions not fulfilled"
 msgstr ""
 
+msgid "Assessor"
+msgstr ""
+
 msgid "Attention"
+msgstr ""
+
+#, python-format
+msgid "Autonomy Level (%% according to periods)"
+msgstr ""
+
+msgid "Birth Date"
 msgstr ""
 
 msgid "Birth date"
@@ -200,6 +225,9 @@ msgid "Cannot select same offer"
 msgstr ""
 
 msgid "Capacity"
+msgstr ""
+
+msgid "Certified in conformity with registered evaluations. Brussels, {}."
 msgstr ""
 
 msgid "Check All"
@@ -232,6 +260,9 @@ msgstr ""
 msgid "Choose which periods you want to include in the file"
 msgstr ""
 
+msgid "Choose which periods you want to include in the summary"
+msgstr ""
+
 msgid "City"
 msgstr ""
 
@@ -250,13 +281,31 @@ msgstr ""
 msgid "Cohorts"
 msgstr ""
 
+msgid "Cohorts management"
+msgstr ""
+
 msgid "Comment (manager)"
+msgstr ""
+
+msgid "Communicate (broad sense)"
+msgstr ""
+
+msgid "Complement patient record"
 msgstr ""
 
 msgid "Compulsory"
 msgstr ""
 
+msgid "Conduct clinical examination"
+msgstr ""
+
+msgid "Configuration"
+msgstr ""
+
 msgid "Contest"
+msgstr ""
+
+msgid "Contribute to quality of care and patient safety"
 msgstr ""
 
 msgid "Copy"
@@ -361,6 +410,9 @@ msgstr ""
 msgid "Errors"
 msgstr ""
 
+msgid "Establish a diagnosis"
+msgstr ""
+
 #, python-format
 msgid ""
 "Evaluation status importation aborted. Following registration ids do not "
@@ -407,10 +459,22 @@ msgstr ""
 msgid "Export master affectations"
 msgstr ""
 
+msgid "Export results"
+msgstr ""
+
 msgid "Export scores"
 msgstr ""
 
+msgid "Export summary"
+msgstr ""
+
 msgid "Export to XLSX"
+msgstr ""
+
+msgid "Export with APD details"
+msgstr ""
+
+msgid "Export with scores"
 msgstr ""
 
 msgid "Extend"
@@ -446,6 +510,9 @@ msgstr ""
 msgid "Form"
 msgstr ""
 
+msgid "Formulate clinical questions"
+msgstr ""
+
 msgid "Fourth choice"
 msgstr ""
 
@@ -459,6 +526,9 @@ msgid "Generalist"
 msgstr ""
 
 msgid "Generate solution"
+msgstr ""
+
+msgid "Global statistics"
 msgstr ""
 
 msgid "Good performance example"
@@ -560,6 +630,12 @@ msgstr ""
 msgid "Internships"
 msgstr ""
 
+msgid "Internships evaluations detail"
+msgstr ""
+
+msgid "Internships evaluations summary"
+msgstr ""
+
 msgid "Internships injection"
 msgstr ""
 
@@ -601,6 +677,9 @@ msgid "List of all hospitals"
 msgstr ""
 
 msgid "Locality"
+msgstr ""
+
+msgid "Make/receive transmission report"
 msgstr ""
 
 msgid "Male"
@@ -664,6 +743,9 @@ msgstr ""
 msgid "No assignment available"
 msgstr ""
 
+msgid "No comments provided by the internship's master"
+msgstr ""
+
 msgid "No data corresponds to the filters above. Make a choice, please."
 msgstr ""
 
@@ -703,6 +785,9 @@ msgstr ""
 msgid "Normal students"
 msgstr ""
 
+msgid "Number"
+msgstr ""
+
 msgid "Number of enrollments"
 msgstr ""
 
@@ -721,10 +806,16 @@ msgstr ""
 msgid "Number of students who chosed this organization"
 msgstr ""
 
+msgid "Obtain informed consent"
+msgstr ""
+
 msgid "Open"
 msgstr ""
 
 msgid "Options"
+msgstr ""
+
+msgid "Oral presentation of a clinical situation"
 msgstr ""
 
 msgid "Order"
@@ -742,6 +833,15 @@ msgstr ""
 msgid "Other reason"
 msgstr ""
 
+msgid "P1 to P2"
+msgstr ""
+
+msgid "P3 to P5"
+msgstr ""
+
+msgid "P6 to P7"
+msgstr ""
+
 msgid "Parent specialty"
 msgstr ""
 
@@ -754,6 +854,9 @@ msgstr ""
 msgid "Pending"
 msgstr ""
 
+msgid "Perform technical procedures"
+msgstr ""
+
 msgid "Period"
 msgstr ""
 
@@ -764,6 +867,9 @@ msgid "Period deleted"
 msgstr ""
 
 msgid "Period edited"
+msgstr ""
+
+msgid "Period statistics"
 msgstr ""
 
 msgid "Periods"
@@ -779,6 +885,12 @@ msgid "Phone"
 msgstr ""
 
 msgid "Phone Number / Mobile Number"
+msgstr ""
+
+msgid "Place"
+msgstr ""
+
+msgid "Place statistics"
 msgstr ""
 
 msgid "Please wait"
@@ -875,6 +987,15 @@ msgstr ""
 msgid "Second choice"
 msgstr ""
 
+msgid "Select a period:"
+msgstr ""
+
+msgid "Select a place:"
+msgstr ""
+
+msgid "Select a specialty for "
+msgstr ""
+
 msgid ""
 "Select a xls file that contains a list of students who have assesed their "
 "internship."
@@ -887,6 +1008,12 @@ msgid "Select a xlsx file for the internships' injection"
 msgstr ""
 
 msgid "Select a xlsx file that contains the list of students."
+msgstr ""
+
+msgid "Select diagnostic tests"
+msgstr ""
+
+msgid "Select the periods for which evaluations are open"
 msgstr ""
 
 msgid "Selectable by the student"
@@ -963,6 +1090,9 @@ msgstr ""
 msgid "Student does not exist"
 msgstr ""
 
+msgid "Student path"
+msgstr ""
+
 msgid "Student sumup"
 msgstr ""
 
@@ -973,9 +1103,6 @@ msgid "Students"
 msgstr ""
 
 msgid "Students list"
-msgstr ""
-
-msgid "Studies"
 msgstr ""
 
 msgid "Submit choices"
@@ -990,10 +1117,16 @@ msgstr ""
 msgid "Successfully saved item {}"
 msgstr ""
 
+msgid "Successfully saved place evaluations configuration"
+msgstr ""
+
 msgid "Suggestions"
 msgstr ""
 
 msgid "Summaries have been sent successfully"
+msgstr ""
+
+msgid "Take a history (anamnesis)"
 msgstr ""
 
 msgid ""
@@ -1084,6 +1217,12 @@ msgstr ""
 msgid "Website"
 msgstr ""
 
+msgid "Work as a team"
+msgstr ""
+
+msgid "Write medical prescriptions"
+msgstr ""
+
 msgid "Yes"
 msgstr ""
 
@@ -1097,6 +1236,12 @@ msgid ""
 "the list below."
 msgstr ""
 
+msgid "achieves with help"
+msgstr ""
+
+msgid "achieves without help"
+msgstr ""
+
 msgid "delegate(s) without user account"
 msgstr ""
 
@@ -1104,6 +1249,12 @@ msgid "in"
 msgstr ""
 
 msgid "items per page"
+msgstr ""
+
+msgid "not achieving"
+msgstr ""
+
+msgid "not observed"
 msgstr ""
 
 #, python-format
@@ -1115,6 +1266,9 @@ msgid "student with registration id '%(reg_id)s' not found"
 msgstr ""
 
 msgid "the allocation(s) for"
+msgstr ""
+
+msgid "tremendously achieving"
 msgstr ""
 
 msgid "{} day(s)"

@@ -4,7 +4,8 @@
 {% load bootstrap3 %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Studies' %}</a></li>
+    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li class="active">{% trans 'Cohort' %}</li>
 {% endblock %}

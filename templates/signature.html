@@ -1,0 +1,70 @@
+{% comment "License" %}
+    * OSIS stands for Open Student Information System. It's an application
+    * designed to manage the core business of higher education institutions,
+    * such as universities, faculties, institutes and professional schools.
+    * The core business involves the administration of students, teachers,
+    * courses, programs and so on.
+    *
+    * Copyright (C) 2015-2022 Université catholique de Louvain (http://www.uclouvain.be)
+    *
+    * This program is free software: you can redistribute it and/or modify
+    * it under the terms of the GNU General Public License as published by
+    * the Free Software Foundation, either version 3 of the License, or
+    * (at your option) any later version.
+    *
+    * This program is distributed in the hope that it will be useful,
+    * but WITHOUT ANY WARRANTY; without even the implied warranty of
+    * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    * GNU General Public License for more details.
+    *
+    * A copy of this license - GNU General Public License - is available
+    * at the root of the source code of this program.  If not,
+    * see http://www.gnu.org/licenses/.
+{% endcomment %}
+
+<style>
+    .certifiers{
+        display: flex;
+    }
+    .certifier{
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+        margin-left: 20px;
+    }
+    .certification-text{
+        margin-bottom: 20px;
+    }
+    .empty {
+        flex: 1;
+    }
+    .name, .role{
+        font-size: 11px;
+    }
+    .signature img{
+        width: 80px;
+    }
+</style>
+
+<div style="break-inside: avoid;">
+
+    <div class="certification-text text-right">{{ certification_text }}</div>
+
+    <div class="certifiers">
+
+        <div class="empty"></div>
+
+    {% for certifier in certifiers %}
+
+        <div class="certifier">
+            <div class="signature"><img src="data:image/svg+xml;base64,{{ certifier.signature_b64 }}"/></div>
+            <div class="name">{{ certifier.civility_acronym }} {{ certifier.person }}</div>
+            <div class="role">{{ certifier.role }}</div>
+        </div>
+
+    {% endfor %}
+
+
+    </div>
+
+</div>

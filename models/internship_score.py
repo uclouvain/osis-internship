@@ -26,22 +26,23 @@
 import uuid as uuid
 
 from django.contrib.admin import ModelAdmin
-from django.contrib.postgres.fields import JSONField
 from django.db import models
-from django.db.models import Model
+from django.db.models import Model, JSONField
 
 APD_NUMBER = 15
 MIN_APDS = 5
 MAX_APDS = 9
 
 
+
+
 class InternshipScoreAdmin(ModelAdmin):
-    score_fields = ['APD_{}'.format(index) for index in range(1, APD_NUMBER+1)]
+    score_fields = [f'APD_{index}' for index in range(1, APD_NUMBER+1)]
     list_display = (
         'student', 'period', 'cohort',
         *score_fields, 'score', 'excused', 'reason', 'validated',
     )
-    raw_id_fields = ('student_affectation',)
+    raw_id_fields = ('student_affectation', 'validated_by')
     list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
     search_fields = [
         'student_affectation__student__person__first_name',
@@ -82,7 +83,6 @@ class InternshipScore(Model):
     excused = models.BooleanField(default=False)
     reason = models.CharField(max_length=255, null=True, blank=True)
 
-    # TODO: import JSONField from models in Django 3
     comments = JSONField(default=dict, blank=True)
     objectives = JSONField(default=dict, blank=True)
 
@@ -92,10 +92,10 @@ class InternshipScore(Model):
     student_presence = models.BooleanField(null=True)
 
     def __str__(self):
-        return '{} - {}'.format(self.student_affectation, self.get_scores())
+        return f'{self.student_affectation} - {self.get_scores()}'
 
     def get_scores(self):
-        return [vars(self)['APD_{}'.format(index)] for index in range(1, APD_NUMBER+1)]
+        return [vars(self)[f'APD_{index}'] for index in range(1, APD_NUMBER+1)]
 
     @property
     def student(self):

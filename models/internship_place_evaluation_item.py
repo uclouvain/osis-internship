@@ -26,17 +26,18 @@
 import uuid as uuid
 
 from django.contrib.admin import ModelAdmin
-from django.contrib.postgres.fields import JSONField
 from django.db import models
+from django.db.models import JSONField
 from ordered_model.models import OrderedModel
 
 from internship.models.enums.response_type import ResponseType
 
 
 class PlaceEvaluationItemAdmin(ModelAdmin):
-    list_display = ("order", "statement", "type",)
-    list_filter = ("type",)
+    list_display = ("order", "statement", "type", "cohort")
+    list_filter = ("type", "cohort")
     search_fields = ["statement"]
+    ordering = ("cohort", "order")
 
 
 class PlaceEvaluationItem(OrderedModel):
@@ -49,8 +50,9 @@ class PlaceEvaluationItem(OrderedModel):
     options = JSONField(default=list)
 
     active = models.BooleanField(default=True)
+    required = models.BooleanField(default=True)
 
     order_with_respect_to = 'cohort'
 
     def __str__(self):
-        return '({}) {}'.format(self.order, self.statement)
+        return f'({self.order}) {self.statement}'

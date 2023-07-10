@@ -35,4 +35,4 @@ class PlaceEvaluationItemForm(forms.ModelForm):
 
     class Meta:
         model = PlaceEvaluationItem
-        fields = ['statement', 'type', 'options', 'active']
+        fields = ['statement', 'type', 'options', 'active', 'required']

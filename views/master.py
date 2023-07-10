@@ -123,6 +123,9 @@ def _create_master_user_account(request, master):
         if response.status_code == 200:
             _send_creation_account_email(master, connected_user=request.user)
             _update_user_account_status(master, request)
+            if not master.person.global_id and response.json().get('matric_fgs'):
+                master.person.global_id = response.json().get('matric_fgs')
+                master.person.save()
         else:
             _display_creation_error_msg(master, request)
             logger.error(msg=str(response.json()))
