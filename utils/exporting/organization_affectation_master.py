@@ -26,10 +26,10 @@
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
-from openpyxl.writer.excel import save_virtual_workbook
 
 from internship import models
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row, coloring_non_editable_line
+from osis_common.document.xls_build import save_virtual_workbook
 
 
 def export_master_xls(cohort, organization, affections_by_specialities):
