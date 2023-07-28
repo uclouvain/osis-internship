@@ -28,15 +28,15 @@ import pendulum
 
 
 def fn_publication_start_date(cohort):
-    return pendulum.instance(cohort.subscription_start_date).add(months=2)._datetime
+    return pendulum.instance(cohort.subscription_start_date).add(months=2)
 
 
 def fn_subscription_start_date(cohort):
-    return pendulum.today().start_of('month')._datetime
+    return pendulum.today().start_of('month')
 
 
 def fn_subscription_end_date(cohort):
-    return pendulum.instance(cohort.subscription_start_date).add(months=1)._datetime
+    return pendulum.instance(cohort.subscription_start_date).add(months=1)
 
 
 class CohortFactory(factory.django.DjangoModelFactory):
