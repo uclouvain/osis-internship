@@ -23,32 +23,30 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from factory.faker import faker
-generator = faker.Faker()
-
+import factory.fuzzy
 
 
 class CsvRowFactory:
-    name = faker.Faker().name()
-    first_name = faker.Faker().first_name()
-    last_name = faker.Faker().last_name()
+    name = factory.Faker('name')
+    first_name = factory.Faker('first_name')
+    last_name = factory.Faker('last_name')
 
     gender = 'F'
 
     birthdate = '2011-01-21'
-    birthplace = faker.Faker().city()
+    birthplace = factory.Faker('city')
 
     nationality = 'Belge'
 
-    noma = faker.Faker().numerify(text='##########')
-    fgs = faker.Faker().numerify(text='######')
+    noma = factory.Faker('numerify', text='##########')
+    fgs = factory.Faker('numerify', text='######')
 
-    street = faker.Faker().lexify(text='??????')
-    postal_code = faker.Faker().zipcode()
-    city = faker.Faker().city()
-    country = faker.Faker().country()
-    phone_mobile = faker.Faker().phone_number()
-    email = faker.Faker().email()
+    street = factory.Faker('lexify', text='??????')
+    postal_code = factory.Faker('zipcode')
+    city = factory.Faker('city')
+    country = factory.Faker('country')
+    phone_mobile = factory.Faker('phone_number')
+    email = factory.Faker('email')
 
 
 def generate_record(registration_id):
@@ -56,27 +54,28 @@ def generate_record(registration_id):
     return (
         'MD2MS/G',
         '22',
-        f'{row.last_name}, {row.first_name}',
+        '{}, {}'.format(row.last_name.generate({}), row.first_name.generate({})),
+        # row.name.generate({}),
         row.gender,
         row.birthdate,
-        row.birthplace,
+        row.birthplace.generate({}),
         row.nationality,
         registration_id,
-        row.fgs,
-        row.street,
-        row.postal_code,
-        row.city,
-        row.country,
-        row.phone_mobile,
-        row.phone_mobile,
-        row.street,
-        row.postal_code,
-        row.city,
-        row.country,
-        row.email,
-        row.email,
-        row.street,
-        row.postal_code,
-        row.city,
-        row.country,
+        row.fgs.generate({}),
+        row.street.generate({}),
+        row.postal_code.generate({}),
+        row.city.generate({}),
+        row.country.generate({}),
+        row.phone_mobile.generate({}),
+        row.phone_mobile.generate({}),
+        row.street.generate({}),
+        row.postal_code.generate({}),
+        row.city.generate({}),
+        row.country.generate({}),
+        row.email.generate({}),
+        row.email.generate({}),
+        row.street.generate({}),
+        row.postal_code.generate({}),
+        row.city.generate({}),
+        row.country.generate({}),
     )
