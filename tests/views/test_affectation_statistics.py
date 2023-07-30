@@ -92,7 +92,7 @@ class ViewAffectationStatisticsTestCase(TestCase):
         periods = [
             PeriodFactory(
                 cohort=self.cohort,
-                date_end=pendulum.today().add_timedelta(timedelta(days=30*_)).end_of('month')
+                date_end=pendulum.today()._add_timedelta(timedelta(days=30*_)).end_of('month')
             ) for _ in range(11)
         ]
 
