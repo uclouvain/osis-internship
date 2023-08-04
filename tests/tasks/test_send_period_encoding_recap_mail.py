@@ -32,7 +32,7 @@ from internship.tests.factories.period import PeriodFactory
 class TestSendPeriodEncodingRecapMail(TestCase):
 
     @mock.patch('internship.tasks.send_period_encoding_recap_mail.send_internship_score_encoding_recaps')
-    @mock.patch('internship.tasks.send_period_encoding_recap_mail.np.busday_count', return_value=1)
+    @mock.patch('internship.tasks.send_period_encoding_recap_mail.working_days_count', return_value=1)
     def test_send_period_encoding_recap_mail(self, mock_busday_count, mock_send_mail):
         PeriodFactory(date_end=date.today())
         send_period_encoding_recap_mail.run()
