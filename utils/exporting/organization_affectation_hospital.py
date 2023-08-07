@@ -26,11 +26,11 @@
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
-from openpyxl.writer.excel import save_virtual_workbook
 
 from internship import models
 from internship.models.enums import organization_report_fields
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
+from osis_common.document.xls_build import save_virtual_workbook
 
 
 def export_hospital_xls(cohort, organization):
