@@ -27,12 +27,12 @@ from django.utils.translation import gettext as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
+from openpyxl.writer.excel import save_virtual_workbook
 
 from internship import models
 from internship.models.period import get_effective_periods
 from internship.templatetags.dictionary import is_edited
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
-from osis_common.document.xls_build import save_virtual_workbook
 
 LAST_COLUMN = 50
 PERIOD_COLUMN_WIDTH = 7

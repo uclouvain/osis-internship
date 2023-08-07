@@ -34,6 +34,7 @@ from django.urls import reverse
 from django.utils.datetime_safe import date
 from django.utils.translation import gettext_lazy
 from openpyxl import Workbook
+from openpyxl.writer.excel import save_virtual_workbook
 
 from backoffice.settings.base import INSTALLED_APPS
 from base.tests.factories.person import PersonFactory
@@ -56,7 +57,6 @@ from internship.tests.models import test_organization, test_internship_specialit
 from internship.tests.utils.test_student_loader import generate_record
 from internship.views import student
 from internship.views.student import import_students, internships_student_import_update, internships_student_resume
-from osis_common.document.xls_build import save_virtual_workbook
 
 
 class TestStudentResume(TestCase):
