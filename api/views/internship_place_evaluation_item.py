@@ -48,4 +48,4 @@ class InternshipPlaceEvaluationItemList(generics.ListAPIView):
     )  # Default ordering
 
     def get_queryset(self):
-        return PlaceEvaluationItem.objects.all().filter(cohort__name=self.kwargs.get('cohort'))
+        return PlaceEvaluationItem.objects.all().filter(cohort__name=self.kwargs.get('cohort'), active=True)
