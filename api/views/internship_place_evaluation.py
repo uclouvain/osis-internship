@@ -69,7 +69,7 @@ class InternshipStudentPlaceEvaluation(generics.RetrieveUpdateAPIView):
     @staticmethod
     def _all_required_fields_completed(serializer, to_update):
         required_item_uuids = PlaceEvaluationItem.objects.filter(
-            cohort=to_update.organization.cohort
+            cohort=to_update.organization.cohort, active=True, required=True
         ).values_list('uuid', flat=True)
 
         return all(serializer.validated_data['evaluation'][str(item_uuid)] for item_uuid in required_item_uuids)
