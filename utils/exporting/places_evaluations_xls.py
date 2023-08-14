@@ -27,9 +27,9 @@ from django.utils.translation import gettext as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
 from openpyxl.utils import get_column_letter
-from openpyxl.writer.excel import save_virtual_workbook
 
 from internship.utils.exporting.spreadsheet import add_row
+from osis_common.document.xls_build import save_virtual_workbook
 
 DEFAULT_SIZE = 13
 FONT_SIZE = 10
