@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.13"
+  version: "1.1.12"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -718,16 +718,6 @@ paths:
           description: The name of a cohort
           schema:
             type: string
-        - in: query
-          name: limit
-          schema:
-            type: integer
-          required: false
-        - in: query
-          name: offset
-          schema:
-            type: integer
-          required: false
         - $ref: '#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/X-User-FirstName'
         - $ref: '#/components/parameters/X-User-LastName'
