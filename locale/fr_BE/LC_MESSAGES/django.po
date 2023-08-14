@@ -305,9 +305,6 @@ msgstr "Cohorte"
 msgid "Cohorts"
 msgstr "Cohortes"
 
-msgid "Cohorts management"
-msgstr "Gestion des cohortes"
-
 msgid "Comment (manager)"
 msgstr "Commentaire (gestionnaire)"
 

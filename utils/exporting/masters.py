@@ -28,13 +28,13 @@ from django.db.models import Q
 from django.utils.translation import gettext as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
+from openpyxl.writer.excel import save_virtual_workbook
 
 from base.models.person import Person
 from base.models.person_address import PersonAddress
 from internship.models.internship_master import InternshipMaster
 from internship.models.master_allocation import MasterAllocation
 from internship.utils.exporting.spreadsheet import add_row
-from osis_common.document.xls_build import save_virtual_workbook
 
 LAST_COLUMN = 50
 PERIOD_COLUMN_WIDTH = 7
