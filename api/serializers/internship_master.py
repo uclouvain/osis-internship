@@ -65,7 +65,7 @@ class InternshipMasterSerializer(serializers.HyperlinkedModelSerializer):
         return master
 
     def is_valid(self, *args, **kwargs):
-        is_valid = super().is_valid(self)
+        is_valid = super().is_valid()
 
         email = self.validated_data['person']['email']
 
