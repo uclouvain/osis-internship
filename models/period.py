@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -74,6 +74,18 @@ class Period(SerializableModel):
     def clean_start_date(self):
         if all([self.date_start, self.date_end]) and self.date_start >= self.date_end:
             raise ValidationError({"date_start": _("Start date must be earlier than end date.")})
+        if all([self.date_start, self.date_end]):
+            self._check_period_overlap_in_parent_cohort()
+
+    def _check_period_overlap_in_parent_cohort(self):
+        linked_cohorts = self.cohort.parent_cohort.subcohorts.all()
+        for linked_cohort in linked_cohorts:
+            for period in linked_cohort.period_set.all():
+                if (self.date_start <= period.date_end and self.date_end >= period.date_start) or \
+                        (period.date_start <= self.date_end and period.date_end >= self.date_start):
+                    raise ValidationError(
+                        {"date_start": _("The period overlaps {} in {}").format(period.name, linked_cohort.name)}
+                    )
 
     def number(self):
         return int(self.name[1])
