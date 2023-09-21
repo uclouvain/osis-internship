@@ -47,7 +47,7 @@ def cohort_home(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_cohort_selection(request):
-    cohorts = Cohort.objects.all()
+    cohorts = Cohort.objects.filter(is_parent=False)
     return render(request, 'cohort/selection.html', {'cohorts': cohorts})
 
 

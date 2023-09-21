@@ -29,6 +29,7 @@
                         <tr>
                             <th>{% trans 'Name' %}</th>
                             <th>{% trans 'Description' %}</th>
+                            <th>{% trans 'Parent cohort' %}</th>
                             <th>&nbsp;</th>
                         </tr>
                         </thead>
@@ -37,6 +38,7 @@
                             <tr>
                                 <td><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></td>
                                 <td>{{ cohort.description|truncatechars:32 }}</td>
+                                <td>{{ cohort.parent_cohort|default_if_none:'-' }}</td>
                                 <td align="right"><a class="btn btn-warning" id="lnk_cohort_edit"
                                        href="{% url 'cohort_edit' cohort_id=cohort.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
                                   </a></td>
