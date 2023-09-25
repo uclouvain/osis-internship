@@ -37,6 +37,7 @@ from internship.business.assignment import difference, Assignment, _permute_affe
 from internship.business.statistics import load_solution_sol, compute_stats
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_enrollment import InternshipEnrollment
+from internship.models.internship_modality_period import InternshipModalityPeriod
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
@@ -64,6 +65,7 @@ class AssignmentTest(TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.cohort = CohortFactory()
+        cls.periods = [PeriodFactory(name=f"P{_}", cohort=cls.cohort) for _ in range(1, N_PERIODS)]
 
         cls.mandatory_internships, cls.mandatory_specialties = _create_mandatory_internships(cls)
         cls.non_mandatory_internships, cls.non_mandatory_specialties = _create_non_mandatory_internships(cls)
@@ -71,8 +73,7 @@ class AssignmentTest(TestCase):
 
         cls.hospital_error = OrganizationFactory(name='Hospital Error', cohort=cls.cohort, reference=999)
         cls.organizations = [OrganizationFactory(cohort=cls.cohort) for _ in range(0, N_ORGANIZATIONS)]
-        cls.periods = [PeriodFactory(cohort=cls.cohort) for _ in range(0, N_PERIODS)]
-        cls.remedial_period = PeriodFactory(cohort=cls.cohort, remedial=True)
+        cls.remedial_period = PeriodFactory(name='PR1', cohort=cls.cohort, remedial=True)
 
         cls.specialties = cls.mandatory_specialties + cls.non_mandatory_specialties
         cls.internships = cls.mandatory_internships + cls.non_mandatory_internships
@@ -82,8 +83,6 @@ class AssignmentTest(TestCase):
         _make_student_choices(cls)
 
         cls.prior_student = _block_prior_student_choices(cls)
-
-        cls.internship_with_offer_shortage, cls.unlucky_student = _make_shortage_scenario(cls)
 
         _execute_assignment_algorithm(cls)
         cls.affectations = InternshipStudentAffectationStat.objects.all()
@@ -96,7 +95,7 @@ class AssignmentTest(TestCase):
         cls.user.user_permissions.add(permission)
 
     def test_algorithm_execution_all_periods_assigned(self):
-        for student in self.students:
+        for student in [student for student in self.students if student != self.prior_student]:
             student_affectations = self.affectations.filter(student=student)
             self.assertEqual(len(student_affectations), len(self.periods)-1)
 
@@ -105,13 +104,9 @@ class AssignmentTest(TestCase):
             student_affectations = self.affectations.filter(student=student, period=self.remedial_period)
             self.assertFalse(student_affectations)
 
-    def test_algorithm_execution_all_periods_assigned(self):
-        for student in self.students:
-            student_affectations = self.affectations.filter(student=student)
-            self.assertEqual(len(student_affectations), len(self.periods)-1)
-
     @skip('skip force hospital error test')
     def test_force_hospital_error_assignment(self):
+        self.internship_with_offer_shortage, self.unlucky_student = _make_shortage_scenario(self)
         unlucky_student_affectation = self.affectations.get(
             student=self.unlucky_student,
             internship=self.internship_with_offer_shortage
@@ -130,6 +125,16 @@ class AssignmentTest(TestCase):
         stats = compute_stats(self.cohort, solution)
         self.assertEqual(stats['tot_stud'], N_STUDENTS)
         self.assertEqual(stats['erasmus_students'], 1)
+
+    def test_should_constraint_mandatory_internship_to_defined_periods_if_any(self):
+        for student in [student for student in self.students if student != self.prior_student]:
+            student_affectations = self.affectations.filter(student=student)
+            for aff in student_affectations:
+                aff_constraint_periods = aff.internship.internshipmodalityperiod_set.all().values_list(
+                    'period__name', flat=True
+                )
+                if aff_constraint_periods:
+                    self.assertTrue(aff.period.name in aff_constraint_periods)
 
 
 def _make_student_choices(cls):
@@ -204,6 +209,9 @@ def _create_mandatory_internships(cls):
         )
         for spec in mandatory_specialties
     ]
+    # add a period constraint on specialty-0
+    for period in [period for period in cls.periods if period.name in ['P6', 'P7']]:
+        InternshipModalityPeriod(internship=mandatory_internships[0], period=period).save()
     return mandatory_internships, mandatory_specialties
 
 

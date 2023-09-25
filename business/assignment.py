@@ -404,9 +404,9 @@ def affect_hospital_error(assignment, student, internship, periods, speciality=N
 
 def get_student_periods(assignment, student, internship):
     if is_mandatory_internship(internship):
-        student_periods = all_available_periods(assignment, student, internship.length_in_periods, assignment.periods)
+        student_periods = all_available_periods(assignment, student, internship.length_in_periods, assignment.periods, internship)
     else:
-        student_periods = all_available_periods(assignment, student, 1, assignment.periods)
+        student_periods = all_available_periods(assignment, student, 1, assignment.periods, internship)
     random.shuffle(student_periods)
     return student_periods
 
@@ -415,9 +415,9 @@ def find_first_student_available_periods_for_internship_choice(assignment, stude
     """ Look for available periods for specific choice."""
     periods_with_places = find_available_periods_for_internship_choice(assignment, choice)
     if is_mandatory_internship(internship):
-        return first_relevant_periods(assignment, student, internship.length_in_periods, periods_with_places)
+        return first_relevant_periods(assignment, student, internship.length_in_periods, periods_with_places, internship)
     else:
-        return first_relevant_periods(assignment, student, 1, periods_with_places)
+        return first_relevant_periods(assignment, student, 1, periods_with_places, internship)
 
 
 def find_available_periods_for_internship_choice(assignment, choice):
@@ -425,9 +425,9 @@ def find_available_periods_for_internship_choice(assignment, choice):
     return find_available_periods_for_offers(assignment, offers)
 
 
-def first_relevant_periods(assignment, student, internship_length, periods):
+def first_relevant_periods(assignment, student, internship_length, periods, internship):
     """ Return relevant period groups for student for internship. Can be groups of 1 or 2 periods."""
-    available_periods = all_available_periods(assignment, student, internship_length, periods)
+    available_periods = all_available_periods(assignment, student, internship_length, periods, internship)
 
     if len(available_periods) > 0:
         return random.choice(available_periods)
@@ -435,11 +435,14 @@ def first_relevant_periods(assignment, student, internship_length, periods):
         return available_periods
 
 
-def all_available_periods(assignment, student, internship_length, periods):
+def all_available_periods(assignment, student, internship_length, periods, internship):
     """ Difference between the authorized periods and the already affected periods from the student."""
     student_affectations = get_student_affectations(student, assignment.affectations)
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
+    modality_periods = get_modality_periods_for_internship(internship)
+    if modality_periods:
+        available_periods = [period for period in available_periods if period.name in modality_periods]
     return list(group_periods_by_consecutives(available_periods, leng=internship_length))
 
 
@@ -598,6 +601,10 @@ def flatten(list_of_lists):
 
 def get_periods_from_affectations(affectations):
     return list(map(lambda affectation: affectation.period, affectations))
+
+
+def get_modality_periods_for_internship(internship):
+    return internship.internshipmodalityperiod_set.all().values_list('period__name', flat=True)
 
 
 def get_student_cost(affectations, student):

@@ -27,6 +27,7 @@ from collections import OrderedDict
 
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.forms.formsets import formset_factory
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
@@ -157,7 +158,9 @@ def save_period_places(request, cohort_id, internship_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_list(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
-    internships = mdl_int.internship.Internship.objects.filter(cohort_id=cohort_id)
+    internships = mdl_int.internship.Internship.objects.filter(cohort_id=cohort_id).annotate(
+        periods=ArrayAgg('internshipmodalityperiod__period__name', ordering='internshipmodalityperiod__period__name')
+    )
     context = {
         'cohort': cohort,
         'internships': internships,
