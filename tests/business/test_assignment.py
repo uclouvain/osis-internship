@@ -31,6 +31,7 @@ from django.contrib.auth.models import User, Permission
 from django.test import TestCase
 from django.utils import timezone
 
+from base.models.student import Student
 from base.tests.factories.person import PersonFactory
 from base.tests.factories.student import StudentFactory
 from internship.business.assignment import difference, Assignment, _permute_affectations
@@ -39,6 +40,7 @@ from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_enrollment import InternshipEnrollment
 from internship.models.internship_modality_period import InternshipModalityPeriod
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
+from internship.models.period import Period, get_effective_periods
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.internship import InternshipFactory
 from internship.tests.factories.internship_choice import create_internship_choice
@@ -84,7 +86,7 @@ class AssignmentTest(TestCase):
 
         cls.prior_student = _block_prior_student_choices(cls)
 
-        _execute_assignment_algorithm(cls)
+        _execute_assignment_algorithm(cls.cohort)
         cls.affectations = InternshipStudentAffectationStat.objects.all()
 
         cls.prior_student_affectations = cls.affectations.filter(student=cls.prior_student)
@@ -266,8 +268,8 @@ def _make_shortage_scenario(cls):
     return internship_with_offer_shortage, unlucky_student
 
 
-def _execute_assignment_algorithm(cls):
-    assignment = Assignment(cls.cohort)
+def _execute_assignment_algorithm(cohort):
+    assignment = Assignment(cohort)
     assignment.TIMEOUT = 1
     assignment.solve()
     assignment.persist_solution()
@@ -366,3 +368,124 @@ class AlgorithmExecutionBlockedTest(TestCase):
             self.assignment.solve()
             self.assertIn("blocked due to execution after publication date", str(logger.output))
             self.assertFalse(self.assignment.affectations)
+
+
+class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
+    def setUp(self):
+        self.client.force_login(self.user)
+
+    @classmethod
+    def setUpTestData(cls):
+
+        cls.parent_cohort = CohortFactory(
+            name='parent', is_parent=True,
+            publication_start_date=None, subscription_start_date=None, subscription_end_date=None
+        )
+
+        cls.cohorts = [CohortFactory(name=name, parent_cohort=cls.parent_cohort) for name in ['m1', 'm2', 'm3']]
+        periods_names = {'m1': ["P0", "P1", "P2", "P3"], 'm2': ["P0", "P4", "P5", "P6"], 'm3': ["P0", "P7", "P8"]}
+        specialties_names = {
+            'm1': ["Urgence", "Geriatrie", "Anesthésie", "Gynécologie"],
+            'm2': ["Chirurgie", "Urgence", "Geriatrie", "Pédiatrie", "Gynécologie", "Médecine Interne"],
+            'm3': ["Chirurgie", "Urgence", "Anesthésie", "Medecine Générale", "Gynécologie", "Médecine Interne"],
+        }
+
+        students = [StudentFactory(person=PersonFactory()) for _ in range(0, N_STUDENTS)]
+
+        for cohort in cls.cohorts:
+            mandatory_specialties = [
+                SpecialtyFactory(name=_, cohort=cohort, mandatory=True) for _ in specialties_names[cohort.name]
+            ]
+            periods = [PeriodFactory(name=_, cohort=cohort) for _ in periods_names[cohort.name]]
+            mandatory_internships = [
+                InternshipFactory(cohort=cohort, name=spec.name, speciality=spec) for spec in mandatory_specialties
+            ]
+
+            students_info = [
+                InternshipStudentInformationFactory(cohort=cohort, person=student.person) for student in students
+            ]
+
+            hospital_error = OrganizationFactory(name='Hospital Error', cohort=cohort, reference=999)
+            organizations = [OrganizationFactory(cohort=cohort) for _ in range(0, 5)]
+
+            offers = [
+                OfferFactory(cohort=cohort, organization=organization, speciality=specialty)
+                for specialty in mandatory_specialties for organization in organizations
+            ]
+
+            # ensure enough places
+
+            places = [
+                PeriodInternshipPlacesFactory(period=period, internship_offer=offer, number_places=len(students))
+                for period in periods for offer in offers
+            ]
+
+            error_offers = [
+                OfferFactory(cohort=cohort, organization=hospital_error, speciality=specialty)
+                for specialty in mandatory_specialties
+            ]
+            hospital_error_places = [
+                PeriodInternshipPlacesFactory(period=period, internship_offer=offer, number_places=len(students))
+                for period in periods for offer in error_offers
+            ]
+
+            for student in students:
+                for internship in mandatory_internships:
+                    for choice in range(1, 5):
+                        organization = random.choice(organizations)
+                        create_internship_choice(
+                            organization=organization,
+                            student=student,
+                            internship=internship,
+                            choice=choice,
+                            speciality=internship.speciality,
+                        )
+
+        # force Medecine Generale only in P8
+        mg_internship = next(
+            internship for internship in mandatory_internships if internship.speciality.name == "Medecine Générale"
+        )
+        m3_p8 = Period.objects.get(cohort__name='m3', name='P8')
+        m3_p7 = Period.objects.get(cohort__name='m3', name='P7')
+        InternshipModalityPeriod(internship=mg_internship, period=m3_p8).save()
+        InternshipModalityPeriod(internship=mg_internship, period=m3_p7).save()
+
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
+
+        # execute algorithms for each cohort
+        _execute_assignment_algorithm(cls.cohorts[0])
+        _execute_assignment_algorithm(cls.cohorts[1])
+        _execute_assignment_algorithm(cls.cohorts[2])
+
+    @skip('print algorithm execution results')
+    def test_algorithm_execution_print_results(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        for student in Student.objects.all():
+            for aff in affectations.filter(student=student).order_by('period__name'):
+                print(aff.student, aff.internship, aff.period, aff.organization, aff.period.cohort)
+            print('--')
+
+    def test_all_periods_affected_for_each_student(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        periods_count = len([period for cohort in self.cohorts for period in get_effective_periods(cohort.id)])
+        for student in Student.objects.all():
+            self.assertEqual(affectations.filter(student=student).count(), periods_count)
+
+    def test_algorithm_execution_check_no_duplicate_mandatory_internships_across_cohorts(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        for student in Student.objects.all():
+            student_affectations = affectations.filter(student=student)
+            student_affected_internships_specialties = []
+            for aff in student_affectations:
+                self.assertNotIn(aff.internship.speciality.name, student_affected_internships_specialties)
+                student_affected_internships_specialties.append(aff.internship.speciality.name)
+
+    def test_algorithm_execution_check_medecine_generale_is_in_P7_or_P8(self):
+        medecine_generale_affectations = InternshipStudentAffectationStat.objects.filter(
+            internship__speciality__name="Medecine Générale"
+        )
+        self.assertGreater(len(medecine_generale_affectations), 0)
+        for aff in medecine_generale_affectations:
+            self.assertIn(aff.period.name, ["P7", "P8"])

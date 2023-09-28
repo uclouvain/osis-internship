@@ -74,11 +74,11 @@ class Period(SerializableModel):
     def clean_start_date(self):
         if all([self.date_start, self.date_end]) and self.date_start >= self.date_end:
             raise ValidationError({"date_start": _("Start date must be earlier than end date.")})
-        if all([self.date_start, self.date_end]):
+        if all([self.cohort_id, self.date_start, self.date_end]):
             self._check_period_overlap_in_parent_cohort()
 
     def _check_period_overlap_in_parent_cohort(self):
-        linked_cohorts = self.cohort.parent_cohort.subcohorts.all()
+        linked_cohorts = self.cohort.parent_cohort.subcohorts.all() if self.cohort.parent_cohort else []
         for linked_cohort in linked_cohorts:
             for period in linked_cohort.period_set.all():
                 if (self.date_start <= period.date_end and self.date_end >= period.date_start) or \
