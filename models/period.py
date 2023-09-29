@@ -63,6 +63,7 @@ class Period(SerializableModel):
     reminder_mail_sent = models.BooleanField(default=False)
     remedial = models.BooleanField(default=False)
     place_evaluation_active = models.BooleanField(default=False)
+    exclude_from_assignment = models.BooleanField(default=False)
 
     objects = models.Manager()
     active = ActivePeriod()
@@ -107,24 +108,22 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def get_periods(cohort_id, remedial: bool):
+def get_periods(cohort_id, remedial: bool, exclude_from_assignment: bool=False):
     return Period.objects.filter(
         cohort__pk=cohort_id,
-        remedial=remedial
+        remedial=remedial,
+        exclude_from_assignment=exclude_from_assignment,
     ).prefetch_related(
         'internshipstudentaffectationstat_set'
     ).order_by("date_end")
 
 
 def get_assignable_periods(cohort_id):
-    periods = get_periods(cohort_id, remedial=False)
-    if periods:
-        periods = periods.exclude(pk=periods.last().pk)
-    return periods
+    return get_periods(cohort_id, remedial=False, exclude_from_assignment=False)
 
 
 def get_remedial_periods(cohort_id):
-    return get_periods(cohort_id, remedial=True)
+    return get_periods(cohort_id, remedial=True, exclude_from_assignment=True)
 
 
 def get_effective_periods(cohort_id):

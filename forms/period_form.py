@@ -32,7 +32,7 @@ class PeriodForm(forms.ModelForm):
 
     class Meta:
         model = Period
-        fields = ['name', 'date_start', 'date_end', 'remedial']
+        fields = ['name', 'date_start', 'date_end', 'remedial', 'exclude_from_assignment']
         widgets = {
             'date_start': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
             'date_end': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'})

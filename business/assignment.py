@@ -27,6 +27,7 @@ import logging
 import random
 import time
 import timeit
+from typing import Iterable
 
 from django.conf import settings
 from django.core.exceptions import ObjectDoesNotExist
@@ -112,13 +113,15 @@ class Assignment:
                     InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort)
                 )
 
-        # flag internships that are not available in all other cohorts
+        # flag mandatory internships that are not available in all other cohorts
+
+        self.internships_not_available_in_all_other_cohorts = []
         if self.parent_cohort:
-            for internship in self.internships:
+            for internship in self.internships.filter(speciality__isnull=False):
                 for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
                     cohort_specialties = list(cohort.internshipspeciality_set.all().values_list('name', flat=True))
-                    internship.available_in_all_other_cohorts = internship.speciality.name in cohort_specialties
-                    if not internship.available_in_all_other_cohorts:
+                    if internship.speciality.name not in cohort_specialties:
+                        self.internships_not_available_in_all_other_cohorts.append(internship)
                         break
 
         self.errors_count = 0
@@ -167,7 +170,7 @@ class Assignment:
 
         for student in students:
             # shuffle interships, keeps on top specialties that are not available in all cohorts to prioritize on these
-            internships = sorted(self.internships, key=lambda i: (i.available_in_all_other_cohorts, random.random()))
+            internships = sorted(self.internships, key=lambda i: (i in self.internships_not_available_in_all_other_cohorts, random.random()))
             for internship in internships:
                 _assign_student(self, student, internship)
                 logger.info("Assigned regular students to {}.".format(internship.name))
@@ -374,15 +377,21 @@ def _assign_student(assignment, student, internship):
                 affectations = assign_choices_to_student(assignment, student, choices, internship)
         # Deal with internship at choice
         else:
-            for chosen_internship in internship:
-                if affectations is None or affectations == []:
-                    last = chosen_internship == list(internship)[:-1]
-                    setattr(chosen_internship, 'first', chosen_internship == list(internship)[0])
-                    choices = assignment.choices.filter(student=student, internship=chosen_internship).order_by(
-                        "choice"
-                    )
-                    affectations = assign_choices_to_student(assignment, student, choices, chosen_internship, last)
-                    # logger.info("{} -- {}".format(student, chosen_internship))
+            if isinstance(internship, Iterable):
+                for chosen_internship in internship:
+                    if affectations is None or affectations == []:
+                        last = chosen_internship == list(internship)[:-1]
+                        setattr(chosen_internship, 'first', chosen_internship == list(internship)[0])
+                        choices = assignment.choices.filter(student=student, internship=chosen_internship).order_by(
+                            "choice"
+                        )
+                        affectations = assign_choices_to_student(assignment, student, choices, chosen_internship, last)
+                        # logger.info("{} -- {}".format(student, chosen_internship))
+            else:
+                choices = assignment.choices.filter(student=student, internship=internship).order_by(
+                    "choice"
+                )
+                affectations = assign_choices_to_student(assignment, student, choices, internship)
 
         if affectations:
             assignment.affectations.extend(affectations)
@@ -405,9 +414,8 @@ def assign_choices_to_student(assignment, student, choices, internship, last=Fal
 
         periods = find_first_student_available_periods_for_internship_choice(assignment, student, internship, choice)
         if len(periods) > 0:
-            if is_non_mandatory_internship(
-                    internship) and not internship.first and not choice.priority and not is_prior_internship(internship,
-                                                                                                             choices):
+            if isinstance(internship, Iterable) and is_non_mandatory_internship(internship) and not internship.first\
+                    and not choice.priority and not is_prior_internship(internship, choices):
                 choice.choice = ChoiceType.IMPOSED.value
             affectations.extend(build_affectation_for_periods(assignment, student, choice.organization, periods,
                                                               choice.speciality, choice.choice, choice.priority,
