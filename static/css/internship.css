@@ -220,3 +220,8 @@ li.disabled a {
 .evaluation-stats-period, .evaluation-stats-place, .place-specialties-select {
     display: none;
 }
+
+.cohort-group{
+    margin-top: 20px;
+    margin-bottom: 20px;
+}

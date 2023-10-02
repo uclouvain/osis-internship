@@ -47,8 +47,12 @@ def cohort_home(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_cohort_selection(request):
-    cohorts = Cohort.objects.filter(is_parent=False)
-    return render(request, 'cohort/selection.html', {'cohorts': cohorts})
+    parent_cohorts = Cohort.objects.filter(is_parent=True)
+    standalone_cohorts = Cohort.objects.filter(is_parent=False, parent_cohort=None)
+    return render(request, 'cohort/selection.html', {
+        'parent_cohorts': parent_cohorts,
+        'standalone_cohorts': standalone_cohorts
+    })
 
 
 def _count_delegates_without_user(cohort):

@@ -240,9 +240,8 @@ def compute_stats(cohort, sol):
     return stats
 
 
-def load_solution_table(data, cohort):
-    periods = get_assignable_periods(cohort_id=cohort.id)
-    period_ids = periods.values_list("id", flat=True)
+def load_solution_table(data, periods):
+    period_ids = [period.id for period in periods]
     prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(
         period_id__in=period_ids
     ).order_by("period_id").select_related(
@@ -253,37 +252,37 @@ def load_solution_table(data, cohort):
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
 
-    keys = periods.values_list("name", flat=True)
+    keys = [period.name for period in periods]
 
     for pid in prd_internship_places:
-        organization = pid.internship_offer.organization
+        organization_ref = pid.internship_offer.organization.reference
         acronym = pid.internship_offer.speciality.acronym
         period_name = pid.period.name
-        if acronym not in temp_internship_table[organization]:
-            temp_internship_table[organization][acronym] = OrderedDict()
-            _fill_periods_default_values(acronym, keys, organization, temp_internship_table)
+        if acronym not in temp_internship_table[organization_ref]:
+            temp_internship_table[organization_ref][acronym] = OrderedDict()
+            _fill_periods_default_values(acronym, keys, organization_ref, temp_internship_table)
 
-        temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
-        temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
+        temp_internship_table[organization_ref][acronym][period_name]['before'] += pid.number_places
+        temp_internship_table[organization_ref][acronym][period_name]['after'] += pid.number_places
 
     for item in data:
         # Update the number of available places for given organization, speciality, period
-        if item.organization not in temp_internship_table or \
-                item.speciality.acronym not in temp_internship_table[item.organization]:
+        if item.organization.reference not in temp_internship_table or \
+                item.speciality.acronym not in temp_internship_table[item.organization.reference]:
             continue
-        temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
+        temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
-        if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
-                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
-                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        if temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] > 0:
+            temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = \
+                temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['after'] / \
+                temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] * 100
         else:
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = 0
+            temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = 0
     # Sort all student by the score (descending order)
     sorted_internship_table = []
-    for organization, specialities in temp_internship_table.items():
+    for organization_ref, specialities in temp_internship_table.items():
         for speciality, periods in specialities.items():
-            sorted_internship_table.append((int(organization.reference), speciality, periods))
+            sorted_internship_table.append((int(organization_ref), speciality, periods))
     sorted_internship_table.sort(key=itemgetter(0))
 
     return sorted_internship_table

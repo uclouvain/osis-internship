@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from datetime import date
+from itertools import chain
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -128,3 +129,9 @@ def get_remedial_periods(cohort_id):
 
 def get_effective_periods(cohort_id):
     return get_assignable_periods(cohort_id) | get_remedial_periods(cohort_id)
+
+
+def get_subcohorts_periods(cohort):
+    return list(
+        chain.from_iterable([get_assignable_periods(cohort_id=subcohort.id) for subcohort in cohort.subcohorts.all()])
+    )
