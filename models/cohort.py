@@ -54,7 +54,9 @@ class Cohort(SerializableModel):
     )
 
     is_parent = models.BooleanField(default=False)
-    parent_cohort = models.ForeignKey('Cohort', null=True, blank=True, on_delete=models.PROTECT, related_name='subcohorts')
+    parent_cohort = models.ForeignKey(
+        'Cohort', null=True, blank=True, on_delete=models.PROTECT, related_name='subcohorts'
+    )
 
     def clean(self):
         self.clean_start_date()
@@ -94,10 +96,9 @@ class Cohort(SerializableModel):
     class Meta:
         ordering = ['name']
         constraints = [
-                models.CheckConstraint(
+            models.CheckConstraint(
                 check=Q(is_parent=False) | Q(publication_start_date__isnull=True),
-                name=_("A parent cohort cannot have publication and subscription dates")
-            ),
+                name=_("A parent cohort cannot have publication and subscription dates")),
             models.CheckConstraint(
                 check=Q(is_parent=True) | Q(publication_start_date__isnull=False),
                 name=_("A subcohort must have publication and subscription dates")
@@ -118,4 +119,3 @@ class Cohort(SerializableModel):
 
     def __str__(self):
         return self.name
-

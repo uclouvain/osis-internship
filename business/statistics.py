@@ -147,7 +147,9 @@ def compute_stats(cohort, sol):
                     # with imposed choices
                     others_students.add(student)
                     others_specialities[affectation.speciality.cohort.name][affectation.speciality] += 1
-                    others_specialities_students[affectation.speciality.cohort.name][affectation.speciality].add(student)
+                    others_specialities_students[affectation.speciality.cohort.name][affectation.speciality].add(
+                        student
+                    )
                 # Hostpital error
                 if int(affectation.organization.reference) == HOSPITAL_ERROR:
                     hospital_error_count += 1
@@ -283,8 +285,12 @@ def load_solution_table(data, periods):
         # Update the % of takes places
         if temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] > 0:
             temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = \
-                temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['after'] / \
-                temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] * 100
+                temp_internship_table[
+                    item.organization.reference
+                ][item.speciality.acronym][item.period.name]['after'] / \
+                temp_internship_table[
+                    item.organization.reference
+                ][item.speciality.acronym][item.period.name]['before'] * 100
         else:
             temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = 0
     # Sort all student by the score (descending order)

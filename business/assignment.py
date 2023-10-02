@@ -170,7 +170,10 @@ class Assignment:
 
         for student in students:
             # shuffle interships, keeps on top specialties that are not available in all cohorts to prioritize on these
-            internships = sorted(self.internships, key=lambda i: (i in self.internships_not_available_in_all_other_cohorts, random.random()))
+            internships = sorted(
+                self.internships,
+                key=lambda i: (i in self.internships_not_available_in_all_other_cohorts, random.random())
+            )
             for internship in internships:
                 _assign_student(self, student, internship)
                 logger.info("Assigned regular students to {}.".format(internship.name))
@@ -461,7 +464,9 @@ def affect_hospital_error(assignment, student, internship, periods, speciality=N
 
 def get_student_periods(assignment, student, internship):
     if is_mandatory_internship(internship):
-        student_periods = all_available_periods(assignment, student, internship.length_in_periods, assignment.periods, internship)
+        student_periods = all_available_periods(
+            assignment, student, internship.length_in_periods, assignment.periods, internship
+        )
     else:
         student_periods = all_available_periods(assignment, student, 1, assignment.periods, internship)
     random.shuffle(student_periods)
@@ -472,7 +477,9 @@ def find_first_student_available_periods_for_internship_choice(assignment, stude
     """ Look for available periods for specific choice."""
     periods_with_places = find_available_periods_for_internship_choice(assignment, choice)
     if is_mandatory_internship(internship):
-        return first_relevant_periods(assignment, student, internship.length_in_periods, periods_with_places, internship)
+        return first_relevant_periods(
+            assignment, student, internship.length_in_periods, periods_with_places, internship
+        )
     else:
         return first_relevant_periods(assignment, student, 1, periods_with_places, internship)
 
@@ -555,8 +562,9 @@ def student_has_no_affectations_for_internship(assignment, student, internship):
     student_affectations = get_student_affectations(student, existing_affectations)
 
     # Take only the affectations with the same specialty of the internship.
-    affectations_with_speciality = list(filter(lambda affectation: affectation.speciality.name == internship.speciality.name,
-                                               student_affectations))
+    affectations_with_speciality = list(
+        filter(lambda affectation: affectation.speciality.name == internship.speciality.name, student_affectations)
+    )
     # Take only the affectations whose internship does have a specialty.
     affectations_with_speciality = list(filter(lambda affectation: affectation.internship.speciality is not None,
                                                affectations_with_speciality))

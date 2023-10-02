@@ -109,7 +109,7 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def get_periods(cohort_id, remedial: bool, exclude_from_assignment: bool=False):
+def get_periods(cohort_id, remedial: bool, exclude_from_assignment: bool = False):
     return Period.objects.filter(
         cohort__pk=cohort_id,
         remedial=remedial,

@@ -17,7 +17,9 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uuid', models.UUIDField(db_index=True, default=uuid.uuid4, editable=False, unique=True)),
-                ('internship', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.internship')),
+                ('internship', models.ForeignKey(
+                    on_delete=django.db.models.deletion.PROTECT, to='internship.internship')
+                 ),
                 ('period', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.period')),
             ],
             options={

@@ -12,14 +12,20 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddConstraint(
             model_name='cohort',
-            constraint=models.CheckConstraint(check=models.Q(('is_parent', False), ('publication_start_date__isnull', True), _connector='OR'), name='A parent cohort cannot have publication and subscription dates'),
+            constraint=models.CheckConstraint(
+                check=models.Q(('is_parent', False), ('publication_start_date__isnull', True), _connector='OR'),
+                name='A parent cohort cannot have publication and subscription dates'),
         ),
         migrations.AddConstraint(
             model_name='cohort',
-            constraint=models.CheckConstraint(check=models.Q(('is_parent', True), ('publication_start_date__isnull', False), _connector='OR'), name='A subcohort must have publication and subscription dates'),
+            constraint=models.CheckConstraint(
+                check=models.Q(('is_parent', True), ('publication_start_date__isnull', False), _connector='OR'),
+                name='A subcohort must have publication and subscription dates'),
         ),
         migrations.AddConstraint(
             model_name='cohort',
-            constraint=models.CheckConstraint(check=models.Q(('is_parent', False), ('parent_cohort__isnull', True), _connector='OR'), name='A parent cohort cannot have a parent itself'),
+            constraint=models.CheckConstraint(
+                check=models.Q(('is_parent', False), ('parent_cohort__isnull', True), _connector='OR'),
+                name='A parent cohort cannot have a parent itself'),
         ),
     ]

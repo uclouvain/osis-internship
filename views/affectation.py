@@ -184,7 +184,9 @@ def view_errors(request, cohort_id):
             .filter(organization__in=hospital, period_id__in=period_ids)
 
     latest_generation = models.affectation_generation_time.get_latest(cohort)
-    context = {'cohort': cohort, 'cohorts': cohorts, 'errors': internship_errors, 'latest_generation': latest_generation}
+    context = {
+        'cohort': cohort, 'cohorts': cohorts, 'errors': internship_errors, 'latest_generation': latest_generation
+    }
     return render(request, "internship_affectation_errors.html", context)
 
 

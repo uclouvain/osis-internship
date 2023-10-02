@@ -63,7 +63,7 @@ class InternshipForm(forms.ModelForm):
         self.fields['periods'].initial = InternshipModalityPeriod.objects.filter(
             internship=kwargs['instance']
         ).values_list('period_id', flat=True)
-        
+
     def save(self, commit=True):
         instance = super().save(commit)
 
