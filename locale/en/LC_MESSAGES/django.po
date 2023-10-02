@@ -58,6 +58,12 @@ msgid ""
 "role."
 msgstr ""
 
+msgid "A parent cohort cannot have a parent itself"
+msgstr ""
+
+msgid "A parent cohort cannot have publication and subscription dates"
+msgstr ""
+
 msgid ""
 "A person with this email address has been previously recorded. Form inputs "
 "will be filled based on the existing data. Fields with existing information "
@@ -67,6 +73,13 @@ msgstr ""
 msgid ""
 "A similar person with the following email address has been found: <b>{}</b>. "
 "Please use this information instead."
+msgstr ""
+
+msgid "A subcohort must have publication and subscription dates"
+msgstr ""
+
+msgid ""
+"A subcohort or standalone cohort must have publication and subscription dates"
 msgstr ""
 
 msgid ""
@@ -444,6 +457,9 @@ msgstr ""
 msgid "Evolution score will be exported"
 msgstr ""
 
+msgid "Exclude from assignment"
+msgstr ""
+
 msgid "Expired"
 msgstr ""
 
@@ -571,6 +587,9 @@ msgstr ""
 msgid "Imposed choices"
 msgstr ""
 
+msgid "Imposed choices distribution"
+msgstr ""
+
 msgid "Improvement areas"
 msgstr ""
 
@@ -653,6 +672,9 @@ msgstr ""
 
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
+msgstr ""
+
+msgid "Is parent"
 msgstr ""
 
 msgid "Item"
@@ -842,6 +864,9 @@ msgstr ""
 msgid "P6 to P7"
 msgstr ""
 
+msgid "Parent cohorts"
+msgstr ""
+
 msgid "Parent specialty"
 msgstr ""
 
@@ -1013,7 +1038,15 @@ msgstr ""
 msgid "Select diagnostic tests"
 msgstr ""
 
+msgid "Select parent cohort"
+msgstr ""
+
 msgid "Select the periods for which evaluations are open"
+msgstr ""
+
+msgid ""
+"Select which period should be exclusively filled for this modality. No "
+"selection means there is no constraint on the period."
 msgstr ""
 
 msgid "Selectable by the student"
@@ -1055,6 +1088,9 @@ msgid "Specialty deleted"
 msgstr ""
 
 msgid "Specialty successfully saved"
+msgstr ""
+
+msgid "Standalone cohorts"
 msgstr ""
 
 msgid "Standard deviation"
@@ -1132,6 +1168,12 @@ msgstr ""
 msgid ""
 "The following masters/delegates allocations have been transferred to cohort "
 "{}: "
+msgstr ""
+
+msgid "The parent cohort must be defined as parent"
+msgstr ""
+
+msgid "The period overlaps {} in {}"
 msgstr ""
 
 msgid "Third choice"
