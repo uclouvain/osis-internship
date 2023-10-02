@@ -27,6 +27,7 @@ import re
 from collections import OrderedDict
 from collections import defaultdict
 from operator import itemgetter
+from statistics import mean, stdev
 
 from base.models.student import Student
 from internship import models
@@ -36,8 +37,7 @@ from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_speciality import InternshipSpeciality
-from internship.models.period import get_assignable_periods, get_effective_periods, get_subcohorts_periods
-from statistics import mean, stdev
+from internship.models.period import get_assignable_periods, get_subcohorts_periods
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
