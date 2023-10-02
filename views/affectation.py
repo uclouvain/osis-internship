@@ -37,7 +37,7 @@ from django.utils import timezone
 from internship import models
 from internship.business import assignment, statistics
 from internship.models import internship_student_affectation_stat
-from internship.models.period import get_assignable_periods, get_effective_periods
+from internship.models.period import get_assignable_periods, get_effective_periods, get_subcohorts_periods
 
 
 @login_required
@@ -76,15 +76,15 @@ def run_affectation(request, cohort_id):
 def view_hospitals(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, table, stats, internship_errors = None, None, None, None
-    periods = get_assignable_periods(cohort_id=cohort_id)
-    period_ids = periods.values_list("id", flat=True)
+    periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id=cohort_id)
+    period_ids = [period.id for period in periods]
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
         .select_related("student", "organization", "speciality", "period")
 
     if student_affectations.count() > 0:
-        table = statistics.load_solution_table(student_affectations, cohort)
+        table = statistics.load_solution_table(student_affectations, periods)
         # Mange sort of the organizations
         table.sort(key=itemgetter(0))
 
@@ -100,8 +100,8 @@ def view_hospitals(request, cohort_id):
 def view_students(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, tabl = None, None
-    periods = get_effective_periods(cohort_id=cohort_id)
-    period_ids = periods.values_list("id", flat=True)
+    periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id=cohort_id)
+    period_ids = [period.id for period in periods]
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
@@ -132,8 +132,8 @@ def view_students(request, cohort_id):
 def view_statistics(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     sol, table, stats = None, None, None
-    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
-    period_ids = periods.values_list("id", flat=True)
+    periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id=cohort_id)
+    period_ids = [period.id for period in periods]
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
@@ -153,7 +153,11 @@ def view_statistics(request, cohort_id):
 
     latest_generation = models.affectation_generation_time.get_latest(cohort)
 
-    context = {'cohort': cohort, 'stats': stats, 'latest_generation': latest_generation}
+    cohorts = [cohort]
+    if cohort.is_parent:
+        cohorts = cohort.subcohorts.all()
+
+    context = {'cohort': cohort, 'cohorts': cohorts, 'stats': stats, 'latest_generation': latest_generation}
 
     return render(request, "internship_affectation_statistics.html", context)
 
@@ -163,20 +167,26 @@ def view_statistics(request, cohort_id):
 def view_errors(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     internship_errors = None
-    periods = models.period.Period.objects.filter(cohort=cohort).order_by('date_end')
-    period_ids = periods.values_list("id", flat=True)
+    periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id=cohort_id)
+    period_ids = [period.id for period in periods]
 
     student_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects\
         .filter(period_id__in=period_ids)\
         .select_related("student", "organization", "speciality", "period")
 
+    cohorts = [cohort]
+    if cohort.is_parent:
+        cohorts = cohort.subcohorts.all()
+
     if student_affectations.count() > 0:
-        hospital = models.organization.get_hospital_error(cohort)
+        hospital = [models.organization.get_hospital_error(cohort) for cohort in cohorts]
         internship_errors = internship_student_affectation_stat.InternshipStudentAffectationStat.objects \
-            .filter(organization=hospital, period_id__in=period_ids)
+            .filter(organization__in=hospital, period_id__in=period_ids)
 
     latest_generation = models.affectation_generation_time.get_latest(cohort)
-    context = {'cohort': cohort, 'errors': internship_errors, 'latest_generation': latest_generation}
+    context = {
+        'cohort': cohort, 'cohorts': cohorts, 'errors': internship_errors, 'latest_generation': latest_generation
+    }
     return render(request, "internship_affectation_errors.html", context)
 
 

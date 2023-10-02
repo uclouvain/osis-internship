@@ -90,7 +90,7 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-affectation">
         {% include "fragment/affectation_panel_heading.html" %}
 
         <div class="panel-body">
@@ -112,6 +112,7 @@
                                 <th>{% trans 'Student' %}</th>
                                 <th>{% trans 'Specialty' %}</th>
                                 <th class="no-sort">{% trans 'Period' %}</th>
+                                <th>{% trans 'Cohort' %}</th>
                                 <th class="no-sort">{% trans 'Hospital' %}</th>
                                 <th class="no-sort">{% trans 'Internship type' %}</th>
                             </tr>
@@ -121,6 +122,7 @@
                                 <td><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=internship.student.id %}" target="_blank">{{internship.student}}</a></td>
                                 <td>{{internship.speciality}}</td>
                                 <td>{{internship.period}}</td>
+                                <td>{{internship.period.cohort.name}}</td>
                                 <td>{{internship.organization}}</td>
                                 <td>{{internship.type}}</td>
                             </tr>

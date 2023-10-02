@@ -59,7 +59,7 @@ def _import_offer(row, cohort):
 
 
 def _import_hospital_places(row, cohort, hospitals):
-    periods = period.Period.objects.filter(cohort=cohort)
+    periods = period.Period.objects.filter(cohort=cohort).order_by('date_start')
     maximum_enrollments = _get_maximum_enrollments(row, periods)
 
     logger.info("Importing places of the hospital {}".format(hospitals.first()))
@@ -68,9 +68,9 @@ def _import_hospital_places(row, cohort, hospitals):
         logger.info("Importing places of the speciality {}".format(specialty))
         offer = _create_offer(row, cohort, specialty, hospitals.first(), maximum_enrollments)
 
-        number_period = 1
+        number_period = 0
         for x in range(3, len(periods) + 3):
-            period_name = "P{}".format(number_period)
+            period_name = periods[number_period].name
             number_period += 1
             _create_offer_places(cohort, period_name, offer, row[x].value)
 

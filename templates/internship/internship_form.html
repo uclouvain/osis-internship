@@ -32,6 +32,11 @@
                     {% bootstrap_field form.position form_group_class="form-group col-md-6" label=_("Order position") %}
                 </div>
 
+                <div class="row">
+                    {% bootstrap_field form.periods form_group_class="form-group col-md-12" label=_("Periods") %}
+                </div>
+
+
                 <button type="submit" class="btn btn-primary" title="{%trans 'Save' %}" id="bt_internship_save">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
                     {% trans 'Save' %}

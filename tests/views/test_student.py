@@ -262,7 +262,7 @@ class StudentsAffectationModification(TestCase):
 
         self.periods = [
             PeriodFactory(name='P{}'.format(p), date_end=date.today() + timedelta(days=p*30), cohort=self.cohort)
-            for p in range(1, 8)
+            for p in range(1, 7)
         ]
 
         self.affectations = [StudentAffectationStatFactory(
@@ -272,7 +272,7 @@ class StudentsAffectationModification(TestCase):
             speciality__cohort=self.cohort,
             internship__cohort=self.cohort,
             cost=1,
-        ) for period in self.periods[:-1]]
+        ) for period in self.periods]
 
         self.offers = [OfferFactory(
             organization=a.organization, speciality=a.speciality, cohort=self.cohort
