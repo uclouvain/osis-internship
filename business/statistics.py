@@ -35,7 +35,8 @@ from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
-from internship.models.period import get_assignable_periods, get_effective_periods
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.period import get_assignable_periods, get_effective_periods, get_subcohorts_periods
 from statistics import mean, stdev
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
@@ -58,12 +59,20 @@ def compute_stats(cohort, sol):
     others_specialities_students = {}
 
     # Retrieve all specialities
-    specialities = models.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort).select_related()
+    specialities = InternshipSpeciality.objects.filter(cohort=cohort).select_related()
+    if cohort.is_parent:
+        specialities = InternshipSpeciality.objects.filter(cohort__in=cohort.subcohorts.all())
+        for subcohort in cohort.subcohorts.all():
+            others_specialities[subcohort.name] = {}
+            others_specialities_students[subcohort.name] = {}
+    else:
+        others_specialities[cohort.name] = {}
+        others_specialities_students[cohort.name] = {}
 
     # Initialize the others_specialities and others_specialities_students
     for speciality in specialities:
-        others_specialities[speciality] = 0
-        others_specialities_students[speciality] = set()
+        others_specialities[speciality.cohort.name][speciality] = 0
+        others_specialities_students[speciality.cohort.name][speciality] = set()
 
     # Total number of internships
     first, second, third, fourth = 0, 0, 0, 0
@@ -137,8 +146,8 @@ def compute_stats(cohort, sol):
                     # we will use this set to find the number of students
                     # with imposed choices
                     others_students.add(student)
-                    others_specialities[affectation.speciality] += 1
-                    others_specialities_students[affectation.speciality].add(student)
+                    others_specialities[affectation.speciality.cohort.name][affectation.speciality] += 1
+                    others_specialities_students[affectation.speciality.cohort.name][affectation.speciality].add(student)
                 # Hostpital error
                 if int(affectation.organization.reference) == HOSPITAL_ERROR:
                     hospital_error_count += 1
@@ -289,7 +298,8 @@ def load_solution_table(data, periods):
 
 
 def load_solution_sol(cohort, student_affectations):
-    keys = get_effective_periods(cohort_id=cohort.id).values_list("name", flat=True)
+    periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id=cohort.id)
+    keys = [period.name for period in periods]
     internships = Internship.objects.filter(cohort=cohort)
     priority_choices = InternshipChoice.objects.filter(internship__in=internships, priority=True)
     students = Student.objects.filter(id__in=priority_choices.values("student").distinct())
