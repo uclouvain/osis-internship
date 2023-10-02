@@ -100,7 +100,7 @@ class AssignmentTest(TestCase):
     def test_algorithm_execution_all_periods_assigned(self):
         for student in [student for student in self.students if student != self.prior_student]:
             student_affectations = self.affectations.filter(student=student)
-            self.assertEqual(len(student_affectations), len(self.periods)-1)
+            self.assertEqual(len(student_affectations), len(self.periods))
 
     def test_algorithm_discard_remedial_periods(self):
         for student in self.students:
