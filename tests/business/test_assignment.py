@@ -384,11 +384,14 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
         )
 
         cls.cohorts = [CohortFactory(name=name, parent_cohort=cls.parent_cohort) for name in ['m1', 'm2', 'm3']]
-        periods_names = {'m1': ["P0", "P1", "P2"], 'm2': ["P0", "P3", "P4"], 'm3': ["P0", "P5", "P6", "P7", "P8"]}
+        periods_names = {'m1': ["P1", "P2"], 'm2': ["P3", "P4"], 'm3': ["P5", "P6", "P7", "P8"]}
         specialties_names = {
             'm1': ["Urgence", "Geriatrie", "Anesthésie", "Gynécologie"],
             'm2': ["Chirurgie", "Urgence", "Geriatrie", "Pédiatrie", "Gynécologie", "Médecine Interne"],
-            'm3': ["Chirurgie", "Urgence", "Anesthésie", "Medecine Générale", "Gynécologie", "Médecine Interne"],
+            'm3': [
+                "Chirurgie", "Urgence", "Geriatrie", "Anesthésie",
+                "Medecine Générale", "Gynécologie", "Médecine Interne"
+            ],
         }
 
         all_specialties = {specialty for specialties_list in specialties_names.values() for specialty in
@@ -475,7 +478,6 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
                 print(aff.student, aff.internship, aff.period, aff.organization, aff.period.cohort)
             print('--')
 
-    @skip('to fix')
     def test_all_periods_affected_for_each_student(self):
         affectations = InternshipStudentAffectationStat.objects.all()
         periods_count = len([period for cohort in self.cohorts for period in get_effective_periods(cohort.id)])

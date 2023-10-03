@@ -27,6 +27,7 @@ import logging
 import random
 import time
 import timeit
+from collections import defaultdict
 from typing import Iterable
 
 from django.conf import settings
@@ -113,15 +114,14 @@ class Assignment:
                     InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort)
                 )
 
-        # flag mandatory internships that are not available in all other cohorts
-
-        self.internships_not_available_in_all_other_cohorts = []
+        # keep internship availability occurences in all cohorts
+        self.internships_availability_occurence = defaultdict(int)
         if self.parent_cohort:
             for internship in self.internships.filter(speciality__isnull=False):
                 for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
                     cohort_specialties = list(cohort.internshipspeciality_set.all().values_list('name', flat=True))
-                    if internship.speciality.name not in cohort_specialties:
-                        self.internships_not_available_in_all_other_cohorts.append(internship)
+                    if internship.speciality.name in cohort_specialties:
+                        self.internships_availability_occurence[internship] += 1
                         break
 
         self.errors_count = 0
@@ -169,10 +169,14 @@ class Assignment:
         self.total_count = len(students)
 
         for student in students:
+            student_existing_affectations = [aff for aff in self.existing_affectations if aff.student == student]
+            available_internships = self.internships.exclude(
+                speciality__name__in=[aff.internship.speciality.name for aff in student_existing_affectations]
+            )
             # shuffle interships, keeps on top specialties that are not available in all cohorts to prioritize on these
             internships = sorted(
-                self.internships,
-                key=lambda i: (i in self.internships_not_available_in_all_other_cohorts, random.random())
+                available_internships,
+                key=lambda i: (self.internships_availability_occurence[i], random.random())
             )
             for internship in internships:
                 _assign_student(self, student, internship)
