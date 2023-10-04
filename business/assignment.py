@@ -106,24 +106,6 @@ class Assignment:
         # As the algorithm progresses, these variables are updated with partial results.
         self.affectations = []
 
-        # fill with existing affectations from siblings cohorts
-        self.existing_affectations = []
-        if self.parent_cohort:
-            for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
-                self.existing_affectations += list(
-                    InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort)
-                )
-
-        # keep internship availability occurences in all cohorts
-        self.internships_availability_occurence = defaultdict(int)
-        if self.parent_cohort:
-            for internship in self.internships.filter(speciality__isnull=False):
-                for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
-                    cohort_specialties = list(cohort.internshipspeciality_set.all().values_list('name', flat=True))
-                    if internship.speciality.name in cohort_specialties:
-                        self.internships_availability_occurence[internship] += 1
-                        break
-
         self.errors_count = 0
 
     def is_not_published(function):
@@ -149,17 +131,55 @@ class Assignment:
         logger.info("Assigned priority students.")
 
         if self.parent_cohort:
+            self._prepare_subcohorts()
             self._assign_students_in_subcohorts()
         else:
             self._assign_students_in_standalone_cohort()
+            _assign_non_mandatory_internships(self)
 
-        _assign_non_mandatory_internships(self)
         _balance_assignments(self)
         self.stop = timeit.default_timer()
         total_time = self.stop - self.start
         logger.info('Time: {} seconds'.format(total_time))
 
+    def _prepare_subcohorts(self):
+        # fill with existing affectations from siblings cohorts
+        self.existing_affectations = []
+        if self.parent_cohort:
+            for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
+                self.existing_affectations += list(
+                    InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort)
+                )
+
+        # keep internship availability occurences in all cohorts
+        self.internships_availability_occurence = defaultdict(int)
+        if self.parent_cohort:
+            for internship in self.internships.filter(speciality__isnull=False):
+                for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
+                    cohort_specialties = list(cohort.internshipspeciality_set.all().values_list('name', flat=True))
+                    if internship.speciality.name in cohort_specialties:
+                        self.internships_availability_occurence[internship] += 1
+                        break
+
+        # distribute randomly one non mandatory internship by subcohort taking into account existing affectation
+        self.non_mandatory_internship_cohort_by_student = {}
+        if self.parent_cohort:
+            existing_non_mandatory_affectations = InternshipStudentAffectationStat.objects.filter(
+                period__cohort__parent_cohort=self.parent_cohort, internship__speciality__isnull=True
+            )
+            students_without_non_mandatory_internship = self.students.exclude(
+                pk__in=existing_non_mandatory_affectations.values_list('student__pk')
+            )
+            unavailable_subcohorts = existing_non_mandatory_affectations.values('period__cohort__name').distinct()
+            subcohorts = self.parent_cohort.subcohorts.all().exclude(name__in=unavailable_subcohorts)
+            for student in students_without_non_mandatory_internship:
+                self.non_mandatory_internship_cohort_by_student[student] = random.choice(subcohorts)
+
     def _assign_students_in_subcohorts(self):
+
+        # assign non mandatory internship
+        self._assign_non_mandatory_internship_subcohort()
+
         self._assign_priority_internships()
 
         self.count = 0
@@ -169,10 +189,13 @@ class Assignment:
         self.total_count = len(students)
 
         for student in students:
-            student_existing_affectations = [aff for aff in self.existing_affectations if aff.student == student]
+            stud_existing_mandatory_affectations = [
+                aff for aff in self.existing_affectations if aff.student == student and aff.internship.speciality
+            ]
             available_internships = self.internships.exclude(
-                speciality__name__in=[aff.internship.speciality.name for aff in student_existing_affectations]
+                speciality__name__in=[aff.internship.speciality.name for aff in stud_existing_mandatory_affectations]
             )
+
             # shuffle interships, keeps on top specialties that are not available in all cohorts to prioritize on these
             internships = sorted(
                 available_internships,
@@ -182,6 +205,20 @@ class Assignment:
                 _assign_student(self, student, internship)
                 logger.info("Assigned regular students to {}.".format(internship.name))
                 self.internship_count += 1
+
+    def _assign_non_mandatory_internship_subcohort(self):
+        self.total_count = len(self.students_information)
+        _assign_students_with_priority_choices(self, self.non_mandatory_internships)
+        logger.info("Assigned students with priority choices to stages au choix.")
+        self.count = 0
+        """ Assign the best possible choice to other non-priority students."""
+        students = mdl.internship_choice.find_students_with_regular_choices(self.non_mandatory_internships)
+        students = _sort_by_cost_after_random_shuffle(self, students)
+        self.total_count = len(students)
+        for student in students:
+            if self.non_mandatory_internship_cohort_by_student.get(student) == self.cohort:
+                _assign_student(self, student, self.non_mandatory_internships)
+                logger.info("Assigned regular students to stages au choix")
 
     def _assign_students_in_standalone_cohort(self):
         self._assign_priority_internships()
@@ -394,15 +431,15 @@ def _assign_student(assignment, student, internship):
                         )
                         affectations = assign_choices_to_student(assignment, student, choices, chosen_internship, last)
                         # logger.info("{} -- {}".format(student, chosen_internship))
-            else:
-                choices = assignment.choices.filter(student=student, internship=internship).order_by(
-                    "choice"
-                )
-                affectations = assign_choices_to_student(assignment, student, choices, internship)
+            # else:
+            #     choices = assignment.choices.filter(student=student, internship=internship).order_by(
+            #         "choice"
+            #     )
+            #     affectations = assign_choices_to_student(assignment, student, choices, internship)
 
         if affectations:
             assignment.affectations.extend(affectations)
-        # logger.info("Student {} affected to {} in period {}".format(student, internship, affectations))
+        logger.info("Student {} affected to {} in period {}".format(student, internship, affectations))
 
 
 def assign_choices_to_student(assignment, student, choices, internship, last=False):

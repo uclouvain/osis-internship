@@ -384,7 +384,7 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
         )
 
         cls.cohorts = [CohortFactory(name=name, parent_cohort=cls.parent_cohort) for name in ['m1', 'm2', 'm3']]
-        periods_names = {'m1': ["P1", "P2"], 'm2': ["P3", "P4"], 'm3': ["P5", "P6", "P7", "P8"]}
+        periods_names = {'m1': ["P1", "P2"], 'm2': ["P3", "P4"], 'm3': ["P5", "P6", "P7", "P8", "P9"]}
         specialties_names = {
             'm1': ["Urgence", "Geriatrie", "Anesthésie", "Gynécologie"],
             'm2': ["Chirurgie", "Urgence", "Geriatrie", "Pédiatrie", "Gynécologie", "Médecine Interne"],
@@ -399,14 +399,24 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
 
         students = [StudentFactory(person=PersonFactory()) for _ in range(0, N_STUDENTS)]
 
+        non_mandatory_specialties_names = ["Chirurgie plastique", "Médecine Nucléaire", "Neurologie", "Radiologie"]
+
+        for name in non_mandatory_specialties_names:
+            all_specialties.add(name)
+
         for cohort in cls.cohorts:
             mandatory_specialties = [
                 SpecialtyFactory(name=_, cohort=cohort, mandatory=True) for _ in specialties_names[cohort.name]
+            ]
+            non_mandatory_specialties = [
+                SpecialtyFactory(name=_, cohort=cohort, mandatory=False) for _ in non_mandatory_specialties_names
             ]
             periods = [PeriodFactory(name=_, cohort=cohort) for _ in periods_names[cohort.name]]
             mandatory_internships = [
                 InternshipFactory(cohort=cohort, name=spec.name, speciality=spec) for spec in mandatory_specialties
             ]
+
+            non_mandatory_internship = InternshipFactory(cohort=cohort, name="Stage au choix")
 
             students_info = [
                 InternshipStudentInformationFactory(cohort=cohort, person=student.person) for student in students
@@ -417,7 +427,7 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
 
             offers = [
                 OfferFactory(cohort=cohort, organization=organization, speciality=specialty)
-                for specialty in mandatory_specialties for organization in organizations
+                for specialty in mandatory_specialties + non_mandatory_specialties for organization in organizations
             ]
 
             # ensure enough places
@@ -449,6 +459,13 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
                             choice=choice,
                             speciality=internship.speciality,
                         )
+                create_internship_choice(
+                    organization=random.choice(organizations),
+                    student=student,
+                    internship=non_mandatory_internship,
+                    choice=1,
+                    speciality=random.choice(non_mandatory_specialties),
+                )
 
         # force Medecine Generale only in P8
         mg_internship = next(
@@ -490,8 +507,9 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
             student_affectations = affectations.filter(student=student)
             student_affected_internships_specialties = []
             for aff in student_affectations:
-                self.assertNotIn(aff.internship.speciality.name, student_affected_internships_specialties)
-                student_affected_internships_specialties.append(aff.internship.speciality.name)
+                if aff.internship.speciality:
+                    self.assertNotIn(aff.internship.speciality.name, student_affected_internships_specialties)
+                    student_affected_internships_specialties.append(aff.internship.speciality.name)
 
     def test_algorithm_execution_check_medecine_generale_is_in_P6_or_P7_or_P8(self):
         medecine_generale_affectations = InternshipStudentAffectationStat.objects.filter(
@@ -500,3 +518,8 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
         self.assertGreater(len(medecine_generale_affectations), 0)
         for aff in medecine_generale_affectations:
             self.assertIn(aff.period.name, ["P6", "P7", "P8"])
+
+    def test_one_non_mandatory_internship_by_student(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        for student in Student.objects.all():
+            self.assertTrue([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None])
