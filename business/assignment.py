@@ -598,7 +598,7 @@ def find_available_periods_for_offers(assignment, offers):
 
 
 def student_has_no_affectations_for_internship(assignment, student, internship):
-    existing_affectations = assignment.affectations
+    existing_affectations = [] + assignment.affectations
     if assignment.parent_cohort:
         existing_affectations += assignment.existing_affectations
     # Take all affectations of the student.

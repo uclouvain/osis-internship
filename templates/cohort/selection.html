@@ -34,7 +34,7 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for cohort in parent_cohorts|dictsortreversed:"subscription_start_date" %}
+                        {% for cohort in parent_cohorts %}
                             <tr class="active">
                                 <td><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></td>
                                 <td>{{ cohort.description|truncatechars:32 }}</td>
@@ -42,7 +42,7 @@
                                        href="{% url 'cohort_edit' cohort_id=cohort.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
                                   </a></td>
                             </tr>
-                            {% for subcohort in cohort.subcohorts.all %}
+                            {% for subcohort in cohort.subcohorts.all|dictsort:"subscription_start_date" %}
                             <tr>
                                 <td><a href="{% url 'internships_home' cohort_id=subcohort.id %}">{{ subcohort.name }}</a></td>
                                 <td>{{ subcohort.description|truncatechars:32 }}</td>
@@ -50,6 +50,12 @@
                                        href="{% url 'cohort_edit' cohort_id=subcohort.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
                                   </a></td>
                             </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3">
+                                        {% trans 'No subcohorts' %}
+                                    </td>
+                                </tr>
                             {% endfor %}
                         {% endfor %}
                         </tbody>

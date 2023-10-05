@@ -792,6 +792,9 @@ msgstr ""
 msgid "No specialty"
 msgstr ""
 
+msgid "No subcohorts"
+msgstr ""
+
 msgid "No user account created"
 msgstr ""
 
