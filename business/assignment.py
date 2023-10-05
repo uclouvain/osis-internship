@@ -239,7 +239,7 @@ def _sort_by_cost_after_random_shuffle(assignment, students_list):
     students_list = list(students_list)
     random.shuffle(students_list)
     for student in students_list:
-        student.cost = get_student_cost(assignment.affectations, student)
+        student.cost = get_student_cost(assignment, student)
     list_sorted = sorted(students_list, key=lambda x: x.cost, reverse=True)
     logger.info("Shuffled students list and sorted by cost")
     return list_sorted
@@ -720,7 +720,10 @@ def get_modality_periods_for_internship(internship):
     return internship.internshipmodalityperiod_set.all().values_list('period__name', flat=True)
 
 
-def get_student_cost(affectations, student):
+def get_student_cost(assignment, student):
+    affectations = [] + assignment.affectations
+    if assignment.parent_cohort:
+        affectations += assignment.existing_affectations
     student_affectations_cost = [a.cost for a in affectations if a.student.person_id == student.person_id]
     return sum(student_affectations_cost)
 
