@@ -542,7 +542,9 @@ def first_relevant_periods(assignment, student, internship_length, periods, inte
 
 def all_available_periods(assignment, student, internship_length, periods, internship):
     """ Difference between the authorized periods and the already affected periods from the student."""
-    existing_affectations = assignment.affectations + assignment.existing_affectations
+    existing_affectations = [] + assignment.affectations
+    if assignment.parent_cohort:
+        existing_affectations += assignment.existing_affectations
     student_affectations = get_student_affectations(student, existing_affectations)
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
