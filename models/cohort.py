@@ -29,6 +29,7 @@ from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from internship.models.period import Period
 from osis_common.models.serializable_model import SerializableModel
 from osis_common.models.serializable_model import SerializableModelAdmin
 
@@ -119,3 +120,7 @@ class Cohort(SerializableModel):
 
     def __str__(self):
         return self.name
+
+
+def get_current_and_future_cohorts():
+    return Cohort.objects.filter(id__in=Period.future.values_list('cohort').distinct())
