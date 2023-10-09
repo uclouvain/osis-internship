@@ -1176,7 +1176,7 @@ msgstr ""
 msgid "The parent cohort must be defined as parent"
 msgstr ""
 
-msgid "The period overlaps {} in {}"
+msgid "The period overlaps {} in {} (only possible for remedial periods)"
 msgstr ""
 
 msgid "Third choice"
