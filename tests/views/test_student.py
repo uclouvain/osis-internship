@@ -207,7 +207,7 @@ class StudentsListImport(TestCase):
         })
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, "students_update.html")
-        self.assertEqual(len(find_by_cohort(self.cohort.id)), 10)
+        self.assertEqual(len(find_by_cohort(self.cohort)), 10)
         self.assertRedirects(
             apply_response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id})
         )
@@ -244,7 +244,7 @@ class StudentsListImport(TestCase):
         response = self.client.post(self.import_url, {
             'file_upload': invalid_file
         })
-        self.assertEqual(len(find_by_cohort(self.cohort.id)), 0)
+        self.assertEqual(len(find_by_cohort(self.cohort)), 0)
         self.assertRedirects(response, reverse('internships_student_resume', kwargs={"cohort_id": self.cohort.id}))
 
 
