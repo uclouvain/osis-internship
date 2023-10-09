@@ -83,14 +83,16 @@ class Period(SerializableModel):
         linked_cohorts = self.cohort.parent_cohort.subcohorts.all() if self.cohort.parent_cohort else []
         for linked_cohort in linked_cohorts:
             for period in linked_cohort.period_set.filter(remedial=False):
-                if self.cohort != linked_cohort and not self.remedial \
-                        and ((self.date_start <= period.date_end and self.date_end >= period.date_start) or
-                             (period.date_start <= self.date_end and period.date_end >= self.date_start)):
+                if self.cohort != linked_cohort and not self.remedial and self._dates_overlaps(period):
                     raise ValidationError(
                         {"date_start": _(
                             "The period overlaps {} in {} (only possible for remedial periods)"
                         ).format(period.name, linked_cohort.name)}
                     )
+
+    def _dates_overlaps(self, period):
+        return ((self.date_start <= period.date_end and self.date_end >= period.date_start) or
+                (period.date_start <= self.date_end and period.date_end >= self.date_start))
 
     def number(self):
         return int(self.name[1])
