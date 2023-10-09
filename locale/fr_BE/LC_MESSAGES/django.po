@@ -405,6 +405,12 @@ msgstr "Détails"
 msgid "Display students"
 msgstr "Afficher les étudiants"
 
+msgid "Do not postpone"
+msgstr "Ne pas reporter"
+
+msgid "Do you want to postpone allocations modifications on these cohorts ?"
+msgstr "Voulez-vous reporter les modifications d'affectations sur ces cohortes ?"
+
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
 
@@ -969,6 +975,12 @@ msgstr "Position"
 msgid "Postal code"
 msgstr "Code postal"
 
+msgid "Postpone"
+msgstr "Reporter"
+
+msgid "Postpone allocations ?"
+msgstr "Reporter les affectations ?"
+
 msgid "Predifined reason"
 msgstr "Motif prédéfini"
 
@@ -1217,6 +1229,10 @@ msgstr "Les emails récapitulatifs ont bien été envoyés"
 msgid "Take a history (anamnesis)"
 msgstr "Prendre l'anamnèse"
 
+msgid "The current allocations may exist in the following cohorts:"
+msgstr ""
+"Les affectations actuelles peuvent aussi exister dans les cohortes suivantes:"
+
 msgid ""
 "The following masters/delegates allocations have been transferred to cohort "
 "{}: "
@@ -1228,7 +1244,9 @@ msgid "The parent cohort must be defined as parent"
 msgstr "La cohorte parente doit être définie comme parent"
 
 msgid "The period overlaps {} in {} (only possible for remedial periods)"
-msgstr "La période chevauche {} en {} (seulement possible pour les périodes de remédiation)"
+msgstr ""
+"La période chevauche {} en {} (seulement possible pour les périodes de "
+"remédiation)"
 
 msgid "Third choice"
 msgstr "3ème choix"
