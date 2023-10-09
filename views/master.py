@@ -48,12 +48,14 @@ from internship.forms.internship_person_address_form import InternshipPersonAddr
 from internship.forms.internship_person_form import InternshipPersonForm
 from internship.forms.master import MasterForm
 from internship.models import master_allocation, internship_master, internship_speciality, organization, cohort
-from internship.models.cohort import Cohort
+from internship.models.cohort import Cohort, get_current_and_future_cohorts
 from internship.models.enums import user_account_status
 from internship.models.enums.role import Role
 from internship.models.enums.user_account_status import UserAccountStatus
 from internship.models.internship_master import InternshipMaster
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.master_allocation import MasterAllocation
+from internship.models.organization import Organization
 from internship.utils.exporting.masters import export_xls
 from internship.views.common import display_errors, get_object_list
 from osis_common.decorators.download import set_download_cookie
@@ -316,6 +318,8 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
 
     dynamic_fields = json.dumps(list(person_form.fields.keys()) + list(person_address_form.fields.keys()))
 
+    postponable_cohorts = get_current_and_future_cohorts().exclude(id=cohort_id)
+
     return render(request, "master_form.html", locals())
 
 
@@ -366,6 +370,7 @@ def master_save(request, cohort_id):
     hospital = ""
     if form_master.is_valid() and form_person.is_valid() and form_person_address.is_valid():
         allocated_master = form_master.instance
+        postpone_allocations = bool(int(request.POST.get('postpone-allocations')))
         if _validate_allocations(request):
             person = form_person.save()
             address = form_person_address.save(commit=False)
@@ -374,8 +379,8 @@ def master_save(request, cohort_id):
             master = form_master.save()
             master.person = person
             master.save()
-            master_allocation.clean_allocations(current_cohort, allocated_master)
-            allocations = _build_allocations(request, allocated_master)
+            master_allocation.clean_allocations(current_cohort, allocated_master, postpone_allocations)
+            allocations = _build_allocations(request, current_cohort, allocated_master, postpone_allocations)
             _save_allocations(allocations)
             hospital = _extract_hospital_id(allocations)
         else:
@@ -411,7 +416,7 @@ def export_masters(request, cohort_id):
     return response
 
 
-def _build_allocations(request, allocated_master):
+def _build_allocations(request, current_cohort, allocated_master, postpone):
     hospitals = []
     if 'hospital' in request.POST:
         hospitals = request.POST.getlist('hospital')
@@ -443,7 +448,23 @@ def _build_allocations(request, allocated_master):
             )
             allocations.append(allocation)
 
-    return allocations
+    all_allocations = [] + allocations
+
+    if postpone:
+        postponable_cohorts = get_current_and_future_cohorts().exclude(id=current_cohort.id)
+        for p_cohort in postponable_cohorts:
+            for allocation in allocations:
+                hospital = Organization.objects.get(cohort=p_cohort, reference=allocation.organization.reference)
+                specialty = InternshipSpeciality.objects.get(cohort=p_cohort, name=allocation.specialty.name)
+                allocation = master_allocation.MasterAllocation(
+                    master=allocated_master,
+                    organization=hospital,
+                    specialty=specialty,
+                    role=allocation.role
+                )
+                all_allocations.append(allocation)
+
+    return all_allocations
 
 
 def _clean_empty_strings(a_list):

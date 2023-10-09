@@ -56,6 +56,12 @@ class PastPeriod(models.Manager):
         ).order_by('-date_end')
 
 
+class FuturePeriod(models.Manager):
+    def get_queryset(self):
+        current_date = date.today()
+        return super().get_queryset().filter(date_start__gte=current_date, date_end__gte=current_date)
+
+
 class Period(SerializableModel):
     name = models.CharField(max_length=255)
     date_start = models.DateField()
@@ -69,6 +75,7 @@ class Period(SerializableModel):
     objects = models.Manager()
     active = ActivePeriod()
     past = PastPeriod()
+    future = FuturePeriod()
 
     def clean(self):
         self.clean_start_date()
