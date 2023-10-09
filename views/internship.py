@@ -259,7 +259,8 @@ def get_all_specialities(internships):
     """
     tab = []
     for internship in internships:
-        tab.append(internship.speciality)
+        if internship.speciality.name not in [s.name for s in tab]:
+            tab.append(internship.speciality)
 
     tab = list(OrderedDict.fromkeys(tab))
     return tab
