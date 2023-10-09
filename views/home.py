@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.contrib.auth.decorators import login_required, permission_required
+from django.db.models import F, Subquery, OuterRef
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators import http
 
@@ -47,7 +48,10 @@ def cohort_home(request, cohort_id):
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_cohort_selection(request):
-    parent_cohorts = Cohort.objects.filter(is_parent=True)
+    subcohorts_query = Cohort.objects.filter(parent_cohort__pk=OuterRef('pk')).order_by('subscription_start_date')
+    parent_cohorts = Cohort.objects.filter(is_parent=True).annotate(
+        start_date=Subquery(subcohorts_query.values('subscription_start_date')[:1])
+    ).order_by('-start_date')
     standalone_cohorts = Cohort.objects.filter(is_parent=False, parent_cohort=None)
     return render(request, 'cohort/selection.html', {
         'parent_cohorts': parent_cohorts,

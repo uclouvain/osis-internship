@@ -306,7 +306,10 @@ def load_solution_table(data, periods):
 def load_solution_sol(cohort, student_affectations):
     periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id=cohort.id)
     keys = [period.name for period in periods]
-    internships = Internship.objects.filter(cohort=cohort)
+    if cohort.is_parent:
+        internships = Internship.objects.filter(cohort__in=cohort.subcohorts.all())
+    else:
+        internships = Internship.objects.filter(cohort=cohort)
     priority_choices = InternshipChoice.objects.filter(internship__in=internships, priority=True)
     students = Student.objects.filter(id__in=priority_choices.values("student").distinct())
     sol = {}

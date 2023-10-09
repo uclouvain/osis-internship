@@ -27,6 +27,7 @@ import logging
 import random
 import time
 import timeit
+from collections import defaultdict
 from typing import Iterable
 
 from django.conf import settings
@@ -105,25 +106,6 @@ class Assignment:
         # As the algorithm progresses, these variables are updated with partial results.
         self.affectations = []
 
-        # fill with existing affectations from siblings cohorts
-        self.existing_affectations = []
-        if self.parent_cohort:
-            for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
-                self.existing_affectations += list(
-                    InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort)
-                )
-
-        # flag mandatory internships that are not available in all other cohorts
-
-        self.internships_not_available_in_all_other_cohorts = []
-        if self.parent_cohort:
-            for internship in self.internships.filter(speciality__isnull=False):
-                for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
-                    cohort_specialties = list(cohort.internshipspeciality_set.all().values_list('name', flat=True))
-                    if internship.speciality.name not in cohort_specialties:
-                        self.internships_not_available_in_all_other_cohorts.append(internship)
-                        break
-
         self.errors_count = 0
 
     def is_not_published(function):
@@ -149,17 +131,55 @@ class Assignment:
         logger.info("Assigned priority students.")
 
         if self.parent_cohort:
+            self._prepare_subcohorts()
             self._assign_students_in_subcohorts()
         else:
             self._assign_students_in_standalone_cohort()
+            _assign_non_mandatory_internships(self)
 
-        _assign_non_mandatory_internships(self)
         _balance_assignments(self)
         self.stop = timeit.default_timer()
         total_time = self.stop - self.start
         logger.info('Time: {} seconds'.format(total_time))
 
+    def _prepare_subcohorts(self):
+        # fill with existing affectations from siblings cohorts
+        self.existing_affectations = []
+        if self.parent_cohort:
+            for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
+                self.existing_affectations += list(
+                    InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort)
+                )
+
+        # keep internship availability occurences in all cohorts
+        self.internships_availability_occurence = defaultdict(int)
+        if self.parent_cohort:
+            for internship in self.internships.filter(speciality__isnull=False):
+                for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
+                    cohort_specialties = list(cohort.internshipspeciality_set.all().values_list('name', flat=True))
+                    if internship.speciality.name in cohort_specialties:
+                        self.internships_availability_occurence[internship] += 1
+                        break
+
+        # distribute randomly one non mandatory internship by subcohort taking into account existing affectation
+        self.non_mandatory_internship_cohort_by_student = {}
+        if self.parent_cohort:
+            existing_non_mandatory_affectations = InternshipStudentAffectationStat.objects.filter(
+                period__cohort__parent_cohort=self.parent_cohort, internship__speciality__isnull=True
+            )
+            students_without_non_mandatory_internship = self.students.exclude(
+                pk__in=existing_non_mandatory_affectations.values_list('student__pk')
+            )
+            unavailable_subcohorts = existing_non_mandatory_affectations.values('period__cohort__name').distinct()
+            subcohorts = self.parent_cohort.subcohorts.all().exclude(name__in=unavailable_subcohorts)
+            for student in students_without_non_mandatory_internship:
+                self.non_mandatory_internship_cohort_by_student[student] = random.choice(subcohorts)
+
     def _assign_students_in_subcohorts(self):
+
+        # assign non mandatory internship
+        self._assign_non_mandatory_internship_subcohort()
+
         self._assign_priority_internships()
 
         self.count = 0
@@ -169,15 +189,36 @@ class Assignment:
         self.total_count = len(students)
 
         for student in students:
+            stud_existing_mandatory_affectations = [
+                aff for aff in self.existing_affectations if aff.student == student and aff.internship.speciality
+            ]
+            available_internships = self.internships.exclude(
+                speciality__name__in=[aff.internship.speciality.name for aff in stud_existing_mandatory_affectations]
+            )
+
             # shuffle interships, keeps on top specialties that are not available in all cohorts to prioritize on these
             internships = sorted(
-                self.internships,
-                key=lambda i: (i in self.internships_not_available_in_all_other_cohorts, random.random())
+                available_internships,
+                key=lambda i: (self.internships_availability_occurence[i], random.random())
             )
             for internship in internships:
                 _assign_student(self, student, internship)
                 logger.info("Assigned regular students to {}.".format(internship.name))
                 self.internship_count += 1
+
+    def _assign_non_mandatory_internship_subcohort(self):
+        self.total_count = len(self.students_information)
+        _assign_students_with_priority_choices(self, self.non_mandatory_internships)
+        logger.info("Assigned students with priority choices to stages au choix.")
+        self.count = 0
+        """ Assign the best possible choice to other non-priority students."""
+        students = mdl.internship_choice.find_students_with_regular_choices(self.non_mandatory_internships)
+        students = _sort_by_cost_after_random_shuffle(self, students)
+        self.total_count = len(students)
+        for student in students:
+            if self.non_mandatory_internship_cohort_by_student.get(student) == self.cohort:
+                _assign_student(self, student, self.non_mandatory_internships)
+                logger.info("Assigned regular students to stages au choix")
 
     def _assign_students_in_standalone_cohort(self):
         self._assign_priority_internships()
@@ -198,7 +239,7 @@ def _sort_by_cost_after_random_shuffle(assignment, students_list):
     students_list = list(students_list)
     random.shuffle(students_list)
     for student in students_list:
-        student.cost = get_student_cost(assignment.affectations, student)
+        student.cost = get_student_cost(assignment, student)
     list_sorted = sorted(students_list, key=lambda x: x.cost, reverse=True)
     logger.info("Shuffled students list and sorted by cost")
     return list_sorted
@@ -390,15 +431,15 @@ def _assign_student(assignment, student, internship):
                         )
                         affectations = assign_choices_to_student(assignment, student, choices, chosen_internship, last)
                         # logger.info("{} -- {}".format(student, chosen_internship))
-            else:
-                choices = assignment.choices.filter(student=student, internship=internship).order_by(
-                    "choice"
-                )
-                affectations = assign_choices_to_student(assignment, student, choices, internship)
+            # else:
+            #     choices = assignment.choices.filter(student=student, internship=internship).order_by(
+            #         "choice"
+            #     )
+            #     affectations = assign_choices_to_student(assignment, student, choices, internship)
 
         if affectations:
             assignment.affectations.extend(affectations)
-        # logger.info("Student {} affected to {} in period {}".format(student, internship, affectations))
+        logger.info("Student {} affected to {} in period {}".format(student, internship, affectations))
 
 
 def assign_choices_to_student(assignment, student, choices, internship, last=False):
@@ -501,7 +542,9 @@ def first_relevant_periods(assignment, student, internship_length, periods, inte
 
 def all_available_periods(assignment, student, internship_length, periods, internship):
     """ Difference between the authorized periods and the already affected periods from the student."""
-    existing_affectations = assignment.affectations + assignment.existing_affectations
+    existing_affectations = [] + assignment.affectations
+    if assignment.parent_cohort:
+        existing_affectations += assignment.existing_affectations
     student_affectations = get_student_affectations(student, existing_affectations)
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
@@ -557,7 +600,9 @@ def find_available_periods_for_offers(assignment, offers):
 
 
 def student_has_no_affectations_for_internship(assignment, student, internship):
-    existing_affectations = assignment.affectations + assignment.existing_affectations
+    existing_affectations = [] + assignment.affectations
+    if assignment.parent_cohort:
+        existing_affectations += assignment.existing_affectations
     # Take all affectations of the student.
     student_affectations = get_student_affectations(student, existing_affectations)
 
@@ -675,7 +720,10 @@ def get_modality_periods_for_internship(internship):
     return internship.internshipmodalityperiod_set.all().values_list('period__name', flat=True)
 
 
-def get_student_cost(affectations, student):
+def get_student_cost(assignment, student):
+    affectations = [] + assignment.affectations
+    if assignment.parent_cohort:
+        affectations += assignment.existing_affectations
     student_affectations_cost = [a.cost for a in affectations if a.student.person_id == student.person_id]
     return sum(student_affectations_cost)
 

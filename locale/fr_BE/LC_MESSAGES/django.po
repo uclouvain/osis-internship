@@ -72,7 +72,8 @@ msgid "A parent cohort cannot have a parent itself"
 msgstr "Une cohorte parente ne peut avoir elle-même un parent"
 
 msgid "A parent cohort cannot have publication and subscription dates"
-msgstr "Une cohorte parente ne peut avoir des dates de publication et inscription"
+msgstr ""
+"Une cohorte parente ne peut avoir des dates de publication et inscription"
 
 msgid ""
 "A person with this email address has been previously recorded. Form inputs "
@@ -95,7 +96,9 @@ msgstr "Une sous-cohorte doit avoir des dates de publication et inscription"
 
 msgid ""
 "A subcohort or standalone cohort must have publication and subscription dates"
-msgstr "Une sous-cohorte ou cohorte unique doit avoir des dates de publication et inscription"
+msgstr ""
+"Une sous-cohorte ou cohorte unique doit avoir des dates de publication et "
+"inscription"
 
 msgid ""
 "A subspecialty must exclusively define a name and should not be mandatory "
@@ -828,6 +831,9 @@ msgstr "Aucun résultat"
 msgid "No specialty"
 msgstr "Pas de spécialité"
 
+msgid "No subcohorts"
+msgstr "Pas de sous-cohorte"
+
 msgid "No user account created"
 msgstr "Pas de compte utilisateur créé"
 
@@ -1089,7 +1095,9 @@ msgstr ""
 msgid ""
 "Select which period should be exclusively filled for this modality. No "
 "selection means there is no constraint on the period."
-msgstr "Choisir quelles périodes devraient être exclusivement complétées pour ce stage. Pas de choix signifie pas de contrainte sur la période."
+msgstr ""
+"Choisir quelles périodes devraient être exclusivement complétées pour ce "
+"stage. Pas de choix signifie pas de contrainte sur la période."
 
 msgid "Selectable by the student"
 msgstr "Sélectionnable par l'étudiant"
@@ -1219,8 +1227,8 @@ msgstr ""
 msgid "The parent cohort must be defined as parent"
 msgstr "La cohorte parente doit être définie comme parent"
 
-msgid "The period overlaps {} in {}"
-msgstr "La période chevauche {} en {}"
+msgid "The period overlaps {} in {} (only possible for remedial periods)"
+msgstr "La période chevauche {} en {} (seulement possible pour les périodes de remédiation)"
 
 msgid "Third choice"
 msgstr "3ème choix"
