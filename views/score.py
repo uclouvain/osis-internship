@@ -39,6 +39,7 @@ from django.db.models import OuterRef, Subquery, F
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
+from django.utils.datetime_safe import date
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
@@ -55,7 +56,7 @@ from internship.models.internship_score_reason import InternshipScoreReason
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
-from internship.models.period import get_effective_periods, get_assignable_periods
+from internship.models.period import get_effective_periods, get_assignable_periods, get_subcohorts_periods
 from internship.templatetags.dictionary import is_edited, is_excused
 from internship.templatetags.student import has_remedial
 from internship.utils.exporting import score_encoding_xls, score_summary_pdf
@@ -84,14 +85,16 @@ def scores_encoding(request, cohort_id):
         ),
         pk=cohort_id
     )
-    all_periods = get_effective_periods(cohort_id)
-    assignable_periods = get_assignable_periods(cohort_id)
-    periods = all_periods.order_by('date_end')
-    completed_periods = periods.filter(date_end__lt=today())
+    all_periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_effective_periods(cohort_id)
+    assignable_periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id)
+    periods = sorted(all_periods, key=lambda p: p.date_end)
+    completed_periods = [p for p in periods if p.date_end < date.today()]
     search_form = ScoresFilterForm(request.GET, cohort=cohort)
     students_list = []
 
-    affectations_count = InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort).count()
+    cohorts = cohort.subcohorts.all() if cohort.is_parent else [cohort]
+
+    affectations_count = InternshipStudentAffectationStat.objects.filter(internship__cohort__in=cohorts).count()
 
     if search_form.is_valid():
         students_list = search_form.get_students(cohort=cohort)
@@ -103,13 +106,14 @@ def scores_encoding(request, cohort_id):
         students_list = _filter_students_with_all_grades_submitted(students_list, periods, grades_filter)
         students_list = _filter_students_with_evaluations_submitted(students_list, periods, evals_filter)
         students_list = _filter_students_with_all_apds_validated(cohort, students_list, periods, apds_filter)
+        students_list = sorted(students_list, key=lambda s: f"{s.person.last_name}, {s.person.first_name}")
 
     students = get_object_list(request, students_list)
 
-    mapping = _prepare_score_table(cohort, periods, students.object_list)
+    mapping = _prepare_score_table(cohorts, periods, students.object_list)
     grades = [grade for grade, _ in InternshipScore.SCORE_CHOICES]
 
-    assignable_periods = assignable_periods.filter(pk__in=periods.values_list('pk', flat=True))
+    assignable_periods = [p for p in assignable_periods if p in periods]
 
     context = {
         'cohort': cohort, 'periods': periods, 'mandatory_periods': assignable_periods, 'all_periods': all_periods,
@@ -527,12 +531,12 @@ def empty_score(request, cohort_id):
         })
 
 
-def _prepare_score_table(cohort, periods, students):
+def _prepare_score_table(cohorts, periods, students):
     persons, scores = _get_persons_scores(students)
-    mapping = cohort.internshipscoremapping_set.all().select_related('period')
+    mapping = InternshipScoreMapping.objects.filter(cohort__in=cohorts).select_related('period')
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person_id__in=list(persons),
-        period__cohort=cohort,
+        period__in=periods,
     ).select_related(
         'student', 'period', 'speciality'
     ).values(
@@ -544,7 +548,7 @@ def _prepare_score_table(cohort, periods, students):
     scores = _group_by_students_and_periods(scores)
 
     _prepare_students_extra_data(students)
-    _match_scores_with_students(cohort, periods, scores, students)
+    _match_scores_with_students(periods, scores, students)
     _set_condition_fulfilled_status(students)
     _map_numeric_score(mapping, students)
     _link_periods_to_organizations(students, students_affectations)
@@ -552,7 +556,7 @@ def _prepare_score_table(cohort, periods, students):
     _link_periods_to_evaluations(students, students_affectations)
     _append_registration_ids(students, students_affectations)
     _append_remedials_count(students, students_affectations)
-    _compute_evolution_score(students, cohort.id)
+    _compute_evolution_score(students, periods)
     return mapping
 
 
@@ -587,8 +591,8 @@ def _prepare_students_extra_data(students):
         student.remedial_periods_count = 0
 
 
-def _compute_evolution_score(students, cohort_id):
-    n_completed_periods = get_effective_periods(cohort_id).filter(date_end__lt=today()).count()
+def _compute_evolution_score(students, periods):
+    n_completed_periods = len([p for p in periods if p.date_end < date.today()])
     for student in students:
         if student.evolution_score is None:
             student.evolution_score = _get_scores_mean(student.periods_scores, n_completed_periods)
@@ -681,7 +685,7 @@ def _sum_mapped_note(indexed_note, mapping, period, period_score):
     return period_score
 
 
-def _match_scores_with_students(cohort, periods, scores, students):
+def _match_scores_with_students(periods, scores, students):
     # append scores for each period to each student
     for student in students:
         for period in periods:
@@ -858,7 +862,7 @@ def _filter_students_with_all_apds_validated(cohort, students, periods, filter):
         ).order_by('student_affectation__student__person')
         scores = _group_by_students_and_periods(scores)
         _prepare_students_extra_data(students)
-        _match_scores_with_students(cohort, periods, scores, students)
+        _match_scores_with_students(periods, scores, students)
         _set_condition_fulfilled_status(students)
         students = [s for s in students if s.fulfill_condition == filter]
     return students
@@ -990,6 +994,7 @@ def download_scores(request, cohort_id):
         ),
         pk=cohort_id
     )
+    cohorts = cohort.subcohorts.all() if cohort.is_parent else [cohort]
     selected_periods = request.POST.getlist('period')
     periods = cohort.period_set.filter(name__in=selected_periods).order_by('date_start')
     students = cohort.internshipstudentinformation_set.all().select_related(
@@ -997,7 +1002,7 @@ def download_scores(request, cohort_id):
     ).order_by('person__last_name')
     internships = cohort.internship_set.all().order_by('position')
     internships = _list_internships_acronyms(internships)
-    _prepare_score_table(cohort, periods, students)
+    _prepare_score_table(cohorts, periods, students)
     workbook = score_encoding_xls.export_xls_with_scores(cohort, periods, students, internships)
     response = HttpResponse(workbook, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
     file_name = "encodage_notes_{}.xlsx".format(cohort.name.strip().replace(' ', '_'))
@@ -1023,11 +1028,14 @@ def download_summary(request, cohort_id, student_id):
         ),
         pk=cohort_id
     )
+
+    cohorts = cohort.subcohorts.all() if cohort.is_parent else [cohort]
+
     periods = cohort.period_set.filter(name__in=selected_periods).order_by('date_start')
     student = cohort.internshipstudentinformation_set.get(id=student_id)
     internships = cohort.internship_set.all().order_by('position')
     internships = _list_internships_acronyms(internships)
-    mapping = _prepare_score_table(cohort, periods, [student])
+    mapping = _prepare_score_table(cohorts, periods, [student])
     file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping, extra_data)
 
     response = HttpResponse(file, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
