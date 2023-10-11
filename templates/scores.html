@@ -99,7 +99,7 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li>
+                                    <li {% if cohort.is_parent %} class="disabled" {% endif %}>
                                         <a href="#" data-toggle="modal"
                                                 data-target="#upload_scores" id="bt_upload_score_modal">
                                             <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
@@ -107,7 +107,7 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li {% if affectations_count < 1 %} class="disabled" {% endif %}>
+                                    <li {% if affectations_count < 1 or cohort.is_parent %} class="disabled" {% endif %}>
                                         <a {% if affectations_count < 1 %}
                                                 title="{% trans 'No assignment available' %}"
                                             {% else %}
@@ -196,7 +196,6 @@
                          <tr>
                              {% with rowspan_no_remedial=mandatory_periods|length|add:1 %}
                              {% with rowspan_remedial=student.remedial_periods_count %}
-
                               <td
                                 {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"

@@ -103,7 +103,8 @@ def get_student(request):
     registration_id = request.GET.get('id', '')
     student = mdl.student.find_by_registration_id(registration_id)
     if student:
-        cohort = request.GET.get('cohort', '')
+        cohort_id = request.GET.get('cohort', '')
+        cohort = Cohort.objects.get(pk=cohort_id)
         existing_student = mdl_int.internship_student_information.find_by_person(student.person, cohort)
         if not existing_student:
             data = {'id': student.person.id,
@@ -112,7 +113,7 @@ def get_student(request):
                     'gender': student.person.gender,
                     'email': student.person.email,
                     'phone_mobile': student.person.phone_mobile,
-                    'birth_date': student.person.birth_date.strftime("%Y-%m-%d")}
+                    'birth_date': student.person.birth_date.strftime("%Y-%m-%d") if student.person.birth_date else None}
 
             student_address = mdl.person_address.find_by_person(student.person)
             if student_address:

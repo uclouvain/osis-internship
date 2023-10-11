@@ -22,6 +22,7 @@
 {% else %}
     {{ period_score }}
 {% endif %}
+{% if not cohort.is_parent %}
 <div style="display: none;" id="edit-{{ student.registration_id }}{{ period.name }}" class="cell-actions pull-right">
     {% if period_score.edited or not period_score|is_edited %}
         {% if period_score %}
@@ -35,7 +36,7 @@
                 class="btn btn-xs btn-warning">
             <i class="fas fa-pencil-alt"></i>
         </button>
-        {% else %}
+        {% elif not cohort.is_parent %}
             {% include 'fragment/btn_empty_score.html' %}
         {% endif %}
     {% endif %}
@@ -50,3 +51,4 @@
         </button>
     {% endif %}
 </div>
+{% endif %}
