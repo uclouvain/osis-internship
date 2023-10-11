@@ -802,7 +802,7 @@ def _append_student_registration_id(student, students_affectations):
 def _filter_students_with_all_grades_submitted(students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
-        completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
+        completed_periods = [p.id for p in periods if p.date_end < date.today()]
         students_with_affectations = InternshipStudentAffectationStat.objects.filter(
             student__person__in=persons, period__in=completed_periods
         ).values_list('student', flat=True)
@@ -843,7 +843,7 @@ def _filter_students_with_all_grades_submitted(students, periods, filter):
 def _filter_students_with_evaluations_submitted(students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
-        completed_periods = periods.filter(date_end__lt=today()).values_list('id', flat=True)
+        completed_periods = [p.id for p in periods if p.date_end < date.today()]
         students_with_affectations = InternshipStudentAffectationStat.objects.filter(
             student__person__in=persons, period__in=completed_periods, internship_evaluated=filter
         ).values_list('student', flat=True)
@@ -856,7 +856,7 @@ def _filter_students_with_all_apds_validated(cohort, students, periods, filter):
     if filter is not None:
         persons = students.values_list('person', flat=True)
         scores = InternshipScore.objects.filter(
-            student_affectation__period__cohort=cohort,
+            student_affectation__period__in=periods,
             student_affectation__student__person_id__in=list(persons)).select_related(
             'student_affectation__student__person', 'student_affectation__period__cohort'
         ).order_by('student_affectation__student__person')
