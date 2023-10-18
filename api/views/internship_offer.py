@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,32 +23,31 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
+from django_filters import rest_framework as filters
+from rest_framework import generics
 
-from internship.models.cohort import Cohort
+from internship.api.serializers.internship_offer import InternshipOfferSerializer
+from internship.models.internship_offer import InternshipOffer
 
 
-class CohortSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:cohort-detail',
-        lookup_field='name'
-    )
-    parent_cohort = SerializerMethodField()
+class OfferFilter(filters.FilterSet):
+    cohort_name = filters.CharFilter(field_name="cohort__name")
+    specialty = filters.UUIDFilter(field_name="speciality__uuid")
+    selectable = filters.BooleanFilter(field_name="selectable")
 
     class Meta:
-        model = Cohort
-        fields = (
-            'url',
-            'uuid',
-            'name',
-            'description',
-            'publication_start_date',
-            'subscription_start_date',
-            'subscription_end_date',
-            'is_parent',
-            'parent_cohort',
-        )
+        model = InternshipOffer
+        fields = ['cohort_name', 'selectable', 'specialty']
 
-    def get_parent_cohort(self, obj):
-        return CohortSerializer(obj.parent_cohort, context={'request': None}).data if obj.parent_cohort else None
+
+class InternshipOfferList(generics.ListAPIView):
+    """
+       Return a list of internship offers with optional filtering.
+    """
+    name = 'internship-offer-list'
+    serializer_class = InternshipOfferSerializer
+    queryset = InternshipOffer.objects.all().select_related(
+        'organization', 'cohort', 'speciality'
+    ).order_by('organization__reference','speciality__name')
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = OfferFilter

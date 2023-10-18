@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,31 +24,31 @@
 #
 ##############################################################################
 from rest_framework import serializers
-from rest_framework.fields import SerializerMethodField
+from rest_framework.fields import UUIDField, CharField
 
-from internship.models.cohort import Cohort
+from internship.api.serializers.internship_score import InternshipScoreListSerializer
+from internship.api.serializers.internship_specialty import InternshipSpecialtySerializer, OfferSpecialtySerializer
+from internship.api.serializers.internship_student import InternshipStudentSerializer
+from internship.api.serializers.organization import OrganizationSerializer, OfferOrganizationSerializer
+from internship.api.serializers.period import PeriodSerializer
+from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_offer import InternshipOffer
+from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 
 
-class CohortSerializer(serializers.HyperlinkedModelSerializer):
-    url = serializers.HyperlinkedIdentityField(
-        view_name='internship_api_v1:cohort-detail',
-        lookup_field='name'
-    )
-    parent_cohort = SerializerMethodField()
+class InternshipOfferSerializer(serializers.ModelSerializer):
+    organization = OfferOrganizationSerializer()
+    speciality = OfferSpecialtySerializer()
+    cohort = serializers.CharField(read_only=True, source='cohort.name')
 
     class Meta:
-        model = Cohort
+        model = InternshipOffer
         fields = (
-            'url',
             'uuid',
-            'name',
-            'description',
-            'publication_start_date',
-            'subscription_start_date',
-            'subscription_end_date',
-            'is_parent',
-            'parent_cohort',
+            'organization',
+            'speciality',
+            'title',
+            'maximum_enrollments',
+            'selectable',
+            'cohort'
         )
-
-    def get_parent_cohort(self, obj):
-        return CohortSerializer(obj.parent_cohort, context={'request': None}).data if obj.parent_cohort else None

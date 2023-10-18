@@ -39,7 +39,7 @@ class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = InternshipSpeciality
-        fields = (
+        fields = [
             'url',
             'uuid',
             'name',
@@ -49,10 +49,17 @@ class InternshipSpecialtySerializer(serializers.HyperlinkedModelSerializer):
             'cohort',
             'selectable',
             'parent'
-        )
+        ]
 
     def get_parent(self, obj):
         if obj.parent:
             serializer = InternshipSpecialtySerializer(instance=obj.parent, context=self.context)
             return serializer.data
         return None
+
+
+class OfferSpecialtySerializer(InternshipSpecialtySerializer):
+    cohort = serializers.CharField(read_only=True, source='cohort.name')
+
+    class Meta(InternshipSpecialtySerializer.Meta):
+        fields = [field for field in InternshipSpecialtySerializer.Meta.fields if field != 'cohort']

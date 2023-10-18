@@ -243,10 +243,141 @@ paths:
                 $ref: '#/components/schemas/AllocationGet'
       tags:
         - internship
+  /choices:
+    get:
+      description: Obtain the list of choices
+      parameters:
+        - in: query
+          name: student_uuid
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: specialties_uuid
+          schema:
+            type: array
+            items:
+              type: string
+          required: false
+        - in: query
+          name: internship_uuid
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successful get of the list of choices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ChoicePaging"
+      tags:
+        - internship
+  /first_choices_count/{cohort_name}/:
+    get:
+      description: Obtain the list of total first choices by organization
+      parameters:
+        - in: path
+          name: cohort_name
+          schema:
+            type: string
+          required: true
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successful get of the list of first choices
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FirstChoicePaging"
+      tags:
+        - internship
+  /offers:
+    get:
+      description: Obtain the list of offers
+      parameters:
+        - in: query
+          name: cohort_name
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: specialty_uuid
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: selectable
+          schema:
+            type: boolean
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successful get of the list of offers
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/OfferPaging"
+      tags:
+        - internship
   /specialties:
     get:
       description: Obtain the list of specialties
       parameters:
+        - in: query
+          name: cohort_name
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: selectable
+          schema:
+            type: boolean
+          required: false
         - $ref: '#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/X-User-FirstName'
         - $ref: '#/components/parameters/X-User-LastName'
@@ -303,16 +434,16 @@ paths:
                 $ref: "#/components/schemas/CohortPaging"
       tags:
         - internship
-  /cohorts/{uuid}/:
+  /cohorts/{name}/:
     get:
       description: Obtain information about a specific cohort
       parameters:
         - in: path
-          name: uuid
+          name: name
           required: true
-          description: The UUID of the cohort
+          description: The name of the cohort
           schema:
-            $ref: '#/components/schemas/Uuid'
+            type: string
         - $ref: '#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/X-User-FirstName'
         - $ref: '#/components/parameters/X-User-LastName'
@@ -325,6 +456,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CohortGet'
+      tags:
+        - internship
+  /cohorts/{name}/is_open_for_selection:
+    get:
+      description: Is cohort open for selection
+      parameters:
+        - in: path
+          name: name
+          required: true
+          description: The name of the cohort
+          schema:
+            type: string
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        200:
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  is_open_for_selection:
+                    type: boolean
       tags:
         - internship
   /organizations:
@@ -378,6 +536,12 @@ paths:
         - $ref: '#/components/parameters/X-User-LastName'
         - $ref: '#/components/parameters/X-User-Email'
         - $ref: '#/components/parameters/X-User-GlobalID'
+        - in: query
+          name: cohort_name
+          required: false
+          description: The name of the cohort
+          schema:
+            type: string
       responses:
         200:
           description: Successful get of the list of internships
@@ -467,6 +631,18 @@ paths:
         - $ref: '#/components/parameters/X-User-LastName'
         - $ref: '#/components/parameters/X-User-Email'
         - $ref: '#/components/parameters/X-User-GlobalID'
+        - name: global_id
+          in: query
+          description: Filter by global id
+          required: false
+          schema:
+            type: string
+        - name: cohort_name
+          in: query
+          description: Filter by cohort
+          required: false
+          schema:
+            type: string
       responses:
         200:
           description: Successful get of the list of students
@@ -476,16 +652,16 @@ paths:
                 $ref: "#/components/schemas/StudentPaging"
       tags:
         - internship
-  /students/{uuid}/:
+  /students/{global_id}/:
     get:
       description: Obtain information about a specific internship student
       parameters:
         - in: path
-          name: uuid
+          name: global_id
           required: true
-          description: The UUID of the internship student
+          description: The global_id of the internship student
           schema:
-            $ref: '#/components/schemas/Uuid'
+            type: string
         - $ref: '#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/X-User-FirstName'
         - $ref: '#/components/parameters/X-User-LastName'
@@ -907,6 +1083,62 @@ components:
           example: true
         parent:
           $ref: '#/components/schemas/SpecialtyGet'
+    ChoiceGet:
+      type: object
+      nullable: true
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        student:
+          $ref: '#/components/schemas/StudentGet'
+        specialty:
+          $ref: '#/components/schemas/SpecialtyGet'
+        internship:
+          type: string
+          nullable: true
+          example: "XYZ"
+        choice:
+          type: integer
+          example: 1
+        priority:
+          type: boolean
+          example: true
+        registered:
+          type: string
+          nullable: true
+          example: '01/01/2024'
+    FirstChoiceGet:
+      type: object
+      nullable: true
+      properties:
+        reference:
+          type: string
+        organization:
+          type: string
+        specialty:
+          type: string
+        specialty_uuid:
+          type: string
+        count:
+          type: integer
+    OfferGet:
+      type: object
+      nullable: true
+      properties:
+        uuid:
+          $ref: '#/components/schemas/Uuid'
+        organization:
+          $ref: '#/components/schemas/OrganizationGet'
+        speciality:
+          $ref: '#/components/schemas/SpecialtyGet'
+        title:
+          type: string
+        maximum_enrollments:
+          type: integer
+        selectable:
+          type: boolean
+        cohort:
+          type: string
     CohortGet:
       type: object
       properties:
@@ -925,13 +1157,21 @@ components:
           example: "Student cohort for academic year 2020-2021"
         publication_start_date:
           type: string
+          nullable: true
           example: 01/04/2020
         subscription_start_date:
           type: string
+          nullable: true
           example: 01/02/2020
         subscription_end_date:
           type: string
+          nullable: true
           example: 01/03/2020
+        is_parent:
+          type: boolean
+          example: false
+        parent_cohort_uuid:
+          $ref: '#/components/schemas/Uuid'
     OrganizationGet:
       type: object
       nullable: true
@@ -972,7 +1212,7 @@ components:
           nullable: true
           example: "Bruxelles"
         country:
-          $ref: '#/components/schemas/Country'
+          type: string
         cohort:
           $ref: '#/components/schemas/CohortGet'
     InternshipGet:
@@ -1326,6 +1566,48 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/AllocationGet'
+    ChoicePaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChoiceGet'
+    FirstChoicePaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/FirstChoiceGet'
+    OfferPaging:
+      properties:
+        count:
+          type: number
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OfferGet'
     SpecialtyPaging:
       properties:
         count:

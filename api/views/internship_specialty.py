@@ -28,6 +28,17 @@ from rest_framework import generics
 from internship.api.serializers.internship_specialty import InternshipSpecialtySerializer
 from internship.models.internship_speciality import InternshipSpeciality
 
+from django_filters import rest_framework as filters
+
+
+class SpecialtyFilter(filters.FilterSet):
+    cohort_name = filters.CharFilter(field_name="cohort__name")
+    selectable = filters.BooleanFilter(field_name="selectable")
+
+    class Meta:
+        model = InternshipSpeciality
+        fields = ['cohort_name', 'selectable']
+
 
 class InternshipSpecialtyList(generics.ListAPIView):
     """
@@ -35,7 +46,7 @@ class InternshipSpecialtyList(generics.ListAPIView):
     """
     name = 'specialty-list'
     serializer_class = InternshipSpecialtySerializer
-    queryset = InternshipSpeciality.objects.all()
+    queryset = InternshipSpeciality.objects.all().order_by('name')
     filterset_fields = (
         'cohort',
     )
@@ -48,6 +59,8 @@ class InternshipSpecialtyList(generics.ListAPIView):
     ordering = (
         'cohort',
     )  # Default ordering
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = SpecialtyFilter
 
 
 class InternshipSpecialtyDetail(generics.RetrieveAPIView):

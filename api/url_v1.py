@@ -25,10 +25,12 @@
 ##############################################################################
 from django.urls import path
 
-from internship.api.views.cohort import CohortList, CohortDetail
+from internship.api.views.cohort import CohortList, CohortDetail, CohortOpenForSelection
 from internship.api.views.internship import InternshipList, InternshipDetail
+from internship.api.views.internship_choice import InternshipChoiceList, FirstChoiceOrganizationCount
 from internship.api.views.internship_master import InternshipMasterActivateAccount, InternshipMasterUpdateDetail, \
     InternshipMasterAllocationListCreate, InternshipMasterListCreate
+from internship.api.views.internship_offer import InternshipOfferList
 from internship.api.views.internship_place_evaluation import InternshipStudentPlaceEvaluation
 from internship.api.views.internship_place_evaluation_item import InternshipPlaceEvaluationItemList
 from internship.api.views.internship_score import InternshipScoreCreateRetrieveUpdate, ValidateInternshipScore
@@ -59,7 +61,9 @@ urlpatterns = [
     path('specialties/<uuid:uuid>/', InternshipSpecialtyDetail.as_view(), name=InternshipSpecialtyDetail.name),
 
     path('cohorts', CohortList.as_view(), name=CohortList.name),
-    path('cohorts/<uuid:uuid>/', CohortDetail.as_view(), name=CohortDetail.name),
+    path('cohorts/<str:name>/', CohortDetail.as_view(), name=CohortDetail.name),
+    path('cohorts/<str:name>/is_open_for_selection', CohortOpenForSelection.as_view(),
+         name=CohortOpenForSelection.name),
 
     path('organizations', OrganizationList.as_view(), name=OrganizationList.name),
     path('organizations/<uuid:uuid>/', OrganizationDetail.as_view(), name=OrganizationDetail.name),
@@ -90,5 +94,11 @@ urlpatterns = [
     path('place_evaluation_items/<str:cohort>/', InternshipPlaceEvaluationItemList.as_view(),
          name=InternshipPlaceEvaluationItemList.name),
     path('place_evaluation/<uuid:affectation_uuid>/', InternshipStudentPlaceEvaluation.as_view(),
-         name=InternshipStudentPlaceEvaluation.name)
+         name=InternshipStudentPlaceEvaluation.name),
+
+    path('choices/', InternshipChoiceList.as_view(), name=InternshipChoiceList.name),
+    path('first_choices_count/<str:cohort_name>/',
+         FirstChoiceOrganizationCount.as_view(), name=FirstChoiceOrganizationCount.name),
+    path('offers/', InternshipOfferList.as_view(), name=InternshipOfferList.name),
+
 ]

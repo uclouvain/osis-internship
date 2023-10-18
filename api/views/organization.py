@@ -35,7 +35,7 @@ class OrganizationList(generics.ListAPIView):
     """
     name = 'organization-list'
     serializer_class = OrganizationSerializer
-    queryset = Organization.objects.all()
+    queryset = Organization.objects.all().order_by('reference')
     filterset_fields = (
         'cohort',
         'city',
