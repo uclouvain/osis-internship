@@ -47,7 +47,7 @@ class InternshipOfferList(generics.ListAPIView):
     name = 'internship-offer-list'
     serializer_class = InternshipOfferSerializer
     queryset = InternshipOffer.objects.all().select_related(
-        'organization', 'cohort', 'speciality'
-    ).order_by('organization__reference','speciality__name')
+        'organization__cohort', 'cohort', 'speciality__cohort', 'organization__country',
+    ).order_by('organization__reference', 'speciality__name')
     filter_backends = [filters.DjangoFilterBackend]
     filterset_class = OfferFilter

@@ -494,6 +494,22 @@ paths:
         - $ref: '#/components/parameters/X-User-LastName'
         - $ref: '#/components/parameters/X-User-Email'
         - $ref: '#/components/parameters/X-User-GlobalID'
+        - in: query
+          name: cohort_name
+          description: Filter by cohort
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: offset
+          schema:
+            type: integer
+          required: false
       responses:
         200:
           description: Successful get of the list of organizations
