@@ -54,9 +54,14 @@ class InternshipChoiceList(generics.ListAPIView):
         student_uuid = self.request.query_params.get('student_uuid')
         internship_uuid = self.request.query_params.get('internship_uuid')
         specialties_uuid = self.request.query_params.getlist('specialties_uuid')
+        cohort_name = self.request.query_params.get('cohort_name')
 
         if student_uuid:
             queryset = queryset.filter(student__uuid=student_uuid)
+            has_criteria = True
+
+        if cohort_name:
+            queryset = queryset.filter(internship__cohort__name=cohort_name)
             has_criteria = True
 
         if internship_uuid:

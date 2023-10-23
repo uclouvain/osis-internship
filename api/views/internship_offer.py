@@ -32,12 +32,13 @@ from internship.models.internship_offer import InternshipOffer
 
 class OfferFilter(filters.FilterSet):
     cohort_name = filters.CharFilter(field_name="cohort__name")
-    specialty = filters.UUIDFilter(field_name="speciality__uuid")
+    specialty_uuid = filters.UUIDFilter(field_name="speciality__uuid")
+    organization_uuid = filters.UUIDFilter(field_name="organization__uuid")
     selectable = filters.BooleanFilter(field_name="selectable")
 
     class Meta:
         model = InternshipOffer
-        fields = ['cohort_name', 'selectable', 'specialty']
+        fields = ['cohort_name', 'selectable', 'specialty_uuid', 'organization_uuid']
 
 
 class InternshipOfferList(generics.ListAPIView):

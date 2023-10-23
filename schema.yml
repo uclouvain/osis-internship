@@ -253,6 +253,11 @@ paths:
             type: string
           required: false
         - in: query
+          name: cohort_name
+          schema:
+            type: string
+          required: false
+        - in: query
           name: specialties_uuid
           schema:
             type: array
@@ -332,6 +337,11 @@ paths:
           required: false
         - in: query
           name: specialty_uuid
+          schema:
+            type: string
+          required: false
+        - in: query
+          name: organization_uuid
           schema:
             type: string
           required: false
@@ -599,6 +609,11 @@ paths:
           name: active
           schema:
             type: boolean
+          required: false
+        - in: query
+          name: cohort_name
+          schema:
+            type: string
           required: false
         - $ref: '#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/X-User-FirstName'
