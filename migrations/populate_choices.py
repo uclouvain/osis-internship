@@ -58,7 +58,7 @@ def populate_internship_choices(apps, schema_editor):
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('internship', '0033_period_exclude_from_assignment'),
+        ('internship', '0034_auto_20231012_1433'),
     ]
 
     operations = [
