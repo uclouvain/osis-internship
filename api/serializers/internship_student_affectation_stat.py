@@ -70,6 +70,7 @@ class InternshipPersonAffectationSerializer(serializers.HyperlinkedModelSerializ
     organization = OrganizationSerializer(read_only=True)
     speciality = InternshipSpecialtySerializer(read_only=True)
     period = PeriodSerializer(read_only=True)
+    internship = serializers.CharField(read_only=True, source='internship.name')
     master = CharField()
 
     class Meta:
@@ -79,6 +80,7 @@ class InternshipPersonAffectationSerializer(serializers.HyperlinkedModelSerializ
             'uuid',
             'organization',
             'speciality',
+            'internship',
             'period',
             'master',
             'internship_evaluated',

@@ -26,15 +26,19 @@
 from django.db.models import Subquery, OuterRef, CharField, F, Value, Count
 from django.db.models.functions import Concat, Substr, Upper
 from django.http import JsonResponse
-from rest_framework import generics
+from rest_framework import generics, status
+from rest_framework.response import Response
 
+from base.models.student import Student
 from internship.api.serializers.internship_choice import InternshipChoiceSerializer, FirstChoiceCountSerializer
 from internship.api.serializers.internship_student_affectation_stat import InternshipStudentAffectationSerializer, \
     InternshipPersonAffectationSerializer
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
+from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.master_allocation import MasterAllocation
+from internship.models.organization import Organization
 
 
 class InternshipChoiceList(generics.ListAPIView):
@@ -91,3 +95,48 @@ class FirstChoiceOrganizationCount(generics.ListAPIView):
          ).annotate(count=Count("id")).order_by(
             'organization__reference', 'speciality__name'
         )
+
+
+class InternshipDeleteChoices(generics.DestroyAPIView):
+    name = 'choices-delete'
+    serializer_class = InternshipChoiceSerializer
+    queryset = InternshipChoice.objects.all()
+
+    def delete(self, request, *args, **kwargs):
+        self.queryset.filter(
+            student__person=self.request.user.person,
+            internship__uuid=self.kwargs['internship_uuid'],
+        ).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class InternshipSaveChoice(generics.CreateAPIView):
+    name = 'choice-save'
+    serializer_class = InternshipChoiceSerializer
+    queryset = InternshipChoice.objects.all()
+
+    def post(self, request, *args, **kwargs):
+        # delete previous choice for given internship
+        self.queryset.filter(
+            student__person=self.request.user.person,
+            internship__uuid=self.kwargs['internship_uuid'],
+            choice=self.request.data['choice'],
+        ).delete()
+
+        # build new choice
+        choice = InternshipChoice(
+            student=Student.objects.get(person=self.request.user.person),
+            internship=Internship.objects.get(uuid=self.kwargs['internship_uuid']),
+            organization=Organization.objects.get(uuid=self.request.data['organization_uuid']),
+            speciality=InternshipSpeciality.objects.get(uuid=self.request.data['specialty_uuid']),
+            choice=self.request.data['choice'],
+            priority=False,
+        )
+
+        # validate and save
+        serializer = self.get_serializer(data=choice.__dict__)
+        serializer.is_valid(raise_exception=True)
+        choice.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

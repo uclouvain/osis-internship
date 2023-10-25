@@ -293,6 +293,56 @@ paths:
                 $ref: "#/components/schemas/ChoicePaging"
       tags:
         - internship
+  /save_choice/{internship_uuid}/:
+    post:
+      description: Save a choice
+      parameters:
+        - in: path
+          name: internship_uuid
+          required: true
+          description: The UUID of the internship
+          schema:
+            $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InternshipChoiceCreateCommand'
+      responses:
+        204:
+          description: Successful save internship choice
+        404:
+          description: Error saving internship choice
+      tags:
+        - internship
+  /delete_choices/{internship_uuid}/:
+    delete:
+      description: Delete internship choices for a student
+      parameters:
+        - in: path
+          name: internship_uuid
+          required: true
+          description: The UUID of the internship
+          schema:
+            $ref: '#/components/schemas/Uuid'
+        - $ref: '#/components/parameters/Accept-Language'
+        - $ref: '#/components/parameters/X-User-FirstName'
+        - $ref: '#/components/parameters/X-User-LastName'
+        - $ref: '#/components/parameters/X-User-Email'
+        - $ref: '#/components/parameters/X-User-GlobalID'
+      responses:
+        204:
+          description: Successful delete internship choices
+        404:
+          description: Error deleting internship choices
+      tags:
+        - internship
   /first_choices_count/{cohort_name}/:
     get:
       description: Obtain the list of total first choices by organization
@@ -1803,5 +1853,19 @@ components:
       properties:
         evaluation:
           type: object
+    InternshipChoiceCreateCommand:
+      type: object
+      properties:
+        organization_uuid:
+          type: string
+        specialty_uuid:
+          type: string
+        choice:
+          type: integer
+          example: 1
+      required:
+        - organization_uuid
+        - specialty_uuid
+        - choice
 security:
   - Token: []
