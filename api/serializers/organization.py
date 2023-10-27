@@ -35,12 +35,12 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
         view_name='internship_api_v1:organization-detail',
         lookup_field='uuid'
     )
-    country = CountrySerializer(read_only=True)
+    country = serializers.CharField(read_only=True, source='country.name')
     cohort = CohortSerializer()
 
     class Meta:
         model = Organization
-        fields = (
+        fields = [
             'url',
             'uuid',
             'name',
@@ -53,4 +53,11 @@ class OrganizationSerializer(serializers.HyperlinkedModelSerializer):
             'city',
             'country',
             'cohort',
-        )
+        ]
+
+
+class OfferOrganizationSerializer(OrganizationSerializer):
+    cohort = serializers.CharField(read_only=True, source='cohort.name')
+
+    class Meta(OrganizationSerializer.Meta):
+        fields = [field for field in OrganizationSerializer.Meta.fields if field != 'cohort']

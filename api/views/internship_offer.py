@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2020 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -23,49 +23,32 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django_filters import rest_framework as filters
 from rest_framework import generics
 
-from internship.api.serializers.period import PeriodSerializer
-from internship.models.period import Period
-from django_filters import rest_framework as filters
+from internship.api.serializers.internship_offer import InternshipOfferSerializer
+from internship.models.internship_offer import InternshipOffer
 
 
-class PeriodFilter(filters.FilterSet):
+class OfferFilter(filters.FilterSet):
     cohort_name = filters.CharFilter(field_name="cohort__name")
+    specialty_uuid = filters.UUIDFilter(field_name="speciality__uuid")
+    organization_uuid = filters.UUIDFilter(field_name="organization__uuid")
+    selectable = filters.BooleanFilter(field_name="selectable")
 
     class Meta:
-        model = Period
-        fields = ['cohort_name']
+        model = InternshipOffer
+        fields = ['cohort_name', 'selectable', 'specialty_uuid', 'organization_uuid']
 
 
-class PeriodList(generics.ListAPIView):
+class InternshipOfferList(generics.ListAPIView):
     """
-       Return a list of periods with optional filtering.
+       Return a list of internship offers with optional filtering.
     """
-    name = 'period-list'
-    serializer_class = PeriodSerializer
-    search_fields = (
-        'name'
-    )
-    ordering_fields = (
-        'date_start',
-    )
-    ordering = (
-        'date_start',
-    )  # Default ordering
+    name = 'internship-offer-list'
+    serializer_class = InternshipOfferSerializer
+    queryset = InternshipOffer.objects.all().select_related(
+        'organization__cohort', 'cohort', 'speciality__cohort', 'organization__country',
+    ).order_by('organization__reference', 'speciality__name')
     filter_backends = [filters.DjangoFilterBackend]
-    filterset_class = PeriodFilter
-
-    def get_queryset(self):
-        active = self.request.query_params.get('active', False)
-        return Period.active.all() if active else Period.objects.all()
-
-
-class PeriodDetail(generics.RetrieveAPIView):
-    """
-        Return the detail of the period
-    """
-    name = 'period-detail'
-    serializer_class = PeriodSerializer
-    queryset = Period.objects.all()
-    lookup_field = 'uuid'
+    filterset_class = OfferFilter

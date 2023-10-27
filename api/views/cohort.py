@@ -23,10 +23,12 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.http import HttpResponse, JsonResponse
 from rest_framework import generics
 
 from internship.api.serializers.cohort import CohortSerializer
 from internship.models.cohort import Cohort
+from internship.models.internship_offer import InternshipOffer
 
 
 class CohortList(generics.ListAPIView):
@@ -35,7 +37,7 @@ class CohortList(generics.ListAPIView):
     """
     name = 'cohort-list'
     serializer_class = CohortSerializer
-    queryset = Cohort.objects.all()
+    queryset = Cohort.objects.filter(is_parent=False)
     search_fields = (
         'name'
     )
@@ -54,4 +56,12 @@ class CohortDetail(generics.RetrieveAPIView):
     name = 'cohort-detail'
     serializer_class = CohortSerializer
     queryset = Cohort.objects.all()
-    lookup_field = 'uuid'
+    lookup_field = 'name'
+
+
+class CohortOpenForSelection(generics.GenericAPIView):
+    name = 'cohort-open-for-selection'
+
+    def get(self, *args, **kwargs):
+        offer_count = InternshipOffer.objects.filter(selectable=True, cohort__name=kwargs['name']).count()
+        return JsonResponse({'is_open_for_selection': offer_count > 0})

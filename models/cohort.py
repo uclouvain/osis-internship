@@ -44,7 +44,7 @@ class CohortAdmin(SerializableModelAdmin):
 
 
 class Cohort(SerializableModel):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     description = models.TextField()
     publication_start_date = models.DateField(null=True, blank=True)
     subscription_start_date = models.DateField(null=True, blank=True)
