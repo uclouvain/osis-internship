@@ -62,4 +62,3 @@ class FirstChoiceCountSerializer(serializers.Serializer):
     specialty = serializers.CharField(read_only=True, source='speciality__name')
     specialty_uuid = serializers.UUIDField(read_only=True, source='speciality__uuid')
     count = serializers.IntegerField(read_only=True)
-

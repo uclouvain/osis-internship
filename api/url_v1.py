@@ -99,7 +99,8 @@ urlpatterns = [
 
     path('choices/', InternshipChoiceList.as_view(), name=InternshipChoiceList.name),
     path('save_choice/<uuid:internship_uuid>/', InternshipSaveChoice.as_view(), name=InternshipSaveChoice.name),
-    path('delete_choices/<uuid:internship_uuid>/', InternshipDeleteChoices.as_view(), name=InternshipDeleteChoices.name),
+    path('delete_choices/<uuid:internship_uuid>/',
+         InternshipDeleteChoices.as_view(), name=InternshipDeleteChoices.name),
     path('first_choices_count/<str:cohort_name>/',
          FirstChoiceOrganizationCount.as_view(), name=FirstChoiceOrganizationCount.name),
     path('offers/', InternshipOfferList.as_view(), name=InternshipOfferList.name),
