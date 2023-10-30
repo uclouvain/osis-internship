@@ -56,7 +56,7 @@ class ViewHomeTest(TestCase):
         response = self.client.get(reverse('internship'))
         self.assertEqual(response.status_code, 200)
 
-        cohorts = response.context['cohorts']
+        cohorts = response.context['standalone_cohorts']
         self.assertTemplateUsed(response, 'cohort/selection.html')
         self.assertEqual(cohorts.count(), number_of_cohorts)
 

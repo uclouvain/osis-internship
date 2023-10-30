@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% load static %}
 {% load i18n %}
+{% load dictionary %}
 
 {% comment "License" %}
 * OSIS stands for Open Student Information System. It's an application
@@ -90,11 +91,11 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-affectation">
         {% include "fragment/affectation_panel_heading.html" %}
 
         <div class="panel-body">
-            <ul class="nav nav-tabs">
+            <ul class="nav nav-tabs internship-stats-tabs">
                 <li><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'Hospitals' %}</a></li>
                 <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
                 <li class="active"><a href="#">{% trans 'Statistics' %}</a></li>
@@ -202,11 +203,21 @@
                             <td>{% trans 'Imposed choices' %}</td>
                             <td>{{ stats.others }} ({{ stats.others_n_pc }}%) | Students : {{ stats.others_students}} | Mean distance : {{ stats.distance_mean}}km</td>
                         </tr>
-                        {% for speciality, value in stats.others_specialities.items %}
-                            <tr>
-                                <td>>>> {{ speciality }}</td>
-                                <td>{{ value }}</td>
-                            </tr>
+                        <tr class="active">
+                            <td>{% trans 'Imposed choices distribution' %}</td>
+                            <td></td>
+                        </tr>
+                        {% for cohort in cohorts %}
+                            {% with stats.others_specialities|get_item:cohort.name as cohort_items %}
+                            {% for speciality, value in cohort_items.items %}
+                                {% if value > 0 %}
+                                <tr>
+                                    <td>>>> {{ speciality }} - {{ cohort.name }}</td>
+                                    <td>{{ value }}</td>
+                                </tr>
+                                {% endif %}
+                            {% endfor %}
+                            {% endwith %}
                         {% endfor %}
                         <tr class="active">
                             <td>{% trans 'Non mandatory internships' %}</td>

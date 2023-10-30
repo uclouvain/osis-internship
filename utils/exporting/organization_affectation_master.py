@@ -33,7 +33,10 @@ from osis_common.document.xls_build import save_virtual_workbook
 
 
 def export_master_xls(cohort, organization, affections_by_specialities):
+
     periods = models.period.search(cohort=cohort)
+    if cohort.is_parent:
+        periods = models.period.search(cohort__in=cohort.subcohorts.all())
 
     workbook = Workbook()
     if workbook.worksheets:
@@ -47,7 +50,7 @@ def export_master_xls(cohort, organization, affections_by_specialities):
 def create_worksheets(workbook, organization, periods, affections_by_specialities):
     for specialty, affectations in affections_by_specialities:
         if affectations:
-            sheet_title = specialty.name.strip()[0:30]
+            sheet_title = specialty.strip()[0:30]
             worksheet = workbook.create_sheet(title=sheet_title)
             _add_header(worksheet, organization, specialty, affectations)
             columns_resizing(worksheet, {'A': 18, 'B': 18, 'C': 18, 'D': 40, 'E': 40, 'F': 10, 'G': 20, 'H': 30})
@@ -56,7 +59,7 @@ def create_worksheets(workbook, organization, periods, affections_by_specialitie
 
 def _add_header(worksheet, organization, specialty, affectations):
     add_row(worksheet, [str(organization.name) if organization else ''])
-    add_row(worksheet, [str(specialty.name)])
+    add_row(worksheet, [str(specialty)])
     add_row(worksheet)
     date_format = str(_('Date format'))
     printing_date = timezone.now()

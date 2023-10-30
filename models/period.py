@@ -6,7 +6,7 @@
 #    The core business involves the administration of students, teachers,
 #    courses, programs and so on.
 #
-#    Copyright (C) 2015-2019 Université catholique de Louvain (http://www.uclouvain.be)
+#    Copyright (C) 2015-2023 Université catholique de Louvain (http://www.uclouvain.be)
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from datetime import date
+from itertools import chain
 
 from django.core.exceptions import ValidationError
 from django.db import models
@@ -55,6 +56,12 @@ class PastPeriod(models.Manager):
         ).order_by('-date_end')
 
 
+class FuturePeriod(models.Manager):
+    def get_queryset(self):
+        current_date = date.today()
+        return super().get_queryset().filter(date_start__gte=current_date, date_end__gte=current_date)
+
+
 class Period(SerializableModel):
     name = models.CharField(max_length=255)
     date_start = models.DateField()
@@ -63,10 +70,12 @@ class Period(SerializableModel):
     reminder_mail_sent = models.BooleanField(default=False)
     remedial = models.BooleanField(default=False)
     place_evaluation_active = models.BooleanField(default=False)
+    exclude_from_assignment = models.BooleanField(default=False)
 
     objects = models.Manager()
     active = ActivePeriod()
     past = PastPeriod()
+    future = FuturePeriod()
 
     def clean(self):
         self.clean_start_date()
@@ -74,6 +83,23 @@ class Period(SerializableModel):
     def clean_start_date(self):
         if all([self.date_start, self.date_end]) and self.date_start >= self.date_end:
             raise ValidationError({"date_start": _("Start date must be earlier than end date.")})
+        if all([self.cohort_id, self.date_start, self.date_end]):
+            self._check_period_overlap_in_parent_cohort()
+
+    def _check_period_overlap_in_parent_cohort(self):
+        linked_cohorts = self.cohort.parent_cohort.subcohorts.all() if self.cohort.parent_cohort else []
+        for linked_cohort in linked_cohorts:
+            for period in linked_cohort.period_set.filter(remedial=False):
+                if self.cohort != linked_cohort and not self.remedial and self._dates_overlaps(period):
+                    raise ValidationError(
+                        {"date_start": _(
+                            "The period overlaps {} in {} (only possible for remedial periods)"
+                        ).format(period.name, linked_cohort.name)}
+                    )
+
+    def _dates_overlaps(self, period):
+        return ((self.date_start <= period.date_end and self.date_end >= period.date_start) or
+                (period.date_start <= self.date_end and period.date_end >= self.date_start))
 
     def number(self):
         return int(self.name[1])
@@ -95,25 +121,29 @@ def search(**kwargs):
     return Period.objects.filter(**kwargs).select_related().order_by("date_start")
 
 
-def get_periods(cohort_id, remedial: bool):
+def get_periods(cohort_id, remedial: bool, exclude_from_assignment: bool = False):
     return Period.objects.filter(
         cohort__pk=cohort_id,
-        remedial=remedial
+        remedial=remedial,
+        exclude_from_assignment=exclude_from_assignment,
     ).prefetch_related(
         'internshipstudentaffectationstat_set'
     ).order_by("date_end")
 
 
 def get_assignable_periods(cohort_id):
-    periods = get_periods(cohort_id, remedial=False)
-    if periods:
-        periods = periods.exclude(pk=periods.last().pk)
-    return periods
+    return get_periods(cohort_id, remedial=False, exclude_from_assignment=False)
 
 
 def get_remedial_periods(cohort_id):
-    return get_periods(cohort_id, remedial=True)
+    return get_periods(cohort_id, remedial=True, exclude_from_assignment=True)
 
 
 def get_effective_periods(cohort_id):
     return get_assignable_periods(cohort_id) | get_remedial_periods(cohort_id)
+
+
+def get_subcohorts_periods(cohort):
+    return list(
+        chain.from_iterable([get_assignable_periods(cohort_id=subcohort.id) for subcohort in cohort.subcohorts.all()])
+    )

@@ -35,10 +35,14 @@ class DateInput(TextInput):
 
 
 class CohortForm(forms.ModelForm):
-    publication_start_date = forms.DateField(widget=DateInput)
-    subscription_start_date = forms.DateField(widget=DateInput)
-    subscription_end_date = forms.DateField(widget=DateInput)
+    publication_start_date = forms.DateField(widget=DateInput, required=False)
+    subscription_start_date = forms.DateField(widget=DateInput, required=False)
+    subscription_end_date = forms.DateField(widget=DateInput, required=False)
     originated_from = forms.ModelChoiceField(queryset=Cohort.objects.all(), empty_label="", required=False)
+    is_parent = forms.BooleanField(required=False)
+    parent_cohort = forms.ModelChoiceField(
+        queryset=Cohort.objects.filter(is_parent=True), empty_label="", required=False
+    )
 
     class Meta:
         model = cohort.Cohort
@@ -48,5 +52,7 @@ class CohortForm(forms.ModelForm):
             'publication_start_date',
             'subscription_start_date',
             'subscription_end_date',
-            'originated_from'
+            'originated_from',
+            'is_parent',
+            'parent_cohort',
         ]

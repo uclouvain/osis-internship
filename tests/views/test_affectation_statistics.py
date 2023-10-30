@@ -79,6 +79,12 @@ class ViewAffectationStatisticsTestCase(TestCase):
         self.assertIn(affectation.speciality.name, response.context[0]['hospital_specialties'])
 
     def test_affectation_statistics(self):
+        specialty = SpecialtyFactory(cohort=self.cohort)
+        organization = OrganizationFactory(cohort=self.cohort)
+        affectation = StudentAffectationStatFactory(
+            period__cohort=self.cohort, organization=organization, speciality=specialty, internship__cohort=self.cohort
+        )
+
         url = reverse('internship_affectation_statistics', kwargs={
             'cohort_id': self.cohort.id
         })

@@ -111,4 +111,5 @@ class InternshipMasterAllocationListCreate(generics.ListCreateAPIView):
                 else Period.past.all().values_list('cohort_id').first()
             )
             qs = qs.filter(specialty__cohort_id__in=current_cohorts, organization__cohort_id__in=current_cohorts)
+            qs = qs.filter(specialty__cohort__is_parent=False, organization__cohort__is_parent=False)
         return qs

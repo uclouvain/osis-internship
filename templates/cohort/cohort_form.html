@@ -31,6 +31,9 @@
                     {% bootstrap_field form.originated_from label=_("Copy from cohort") %}
                 {% endif %}
 
+                {% bootstrap_field form.is_parent label=_("Is parent") %}
+                {% bootstrap_field form.parent_cohort label=_("Select parent cohort") form_group_class="form-group select-parent" %}
+
                 <button type="submit" class="btn btn-primary" title="{%trans 'Save' %}" id="bt_cohort_save">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save' %}
                 </button>
@@ -40,4 +43,12 @@
             </form>
         </div>
     </div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        document.querySelector('#id_is_parent').addEventListener('change', (e) => {
+            document.querySelector('#id_parent_cohort').disabled = e.target.checked;
+        });
+    </script>
 {% endblock %}

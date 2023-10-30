@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from rest_framework import serializers
+from rest_framework.fields import SerializerMethodField
 
 from internship.models.cohort import Cohort
 
@@ -31,8 +32,9 @@ from internship.models.cohort import Cohort
 class CohortSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(
         view_name='internship_api_v1:cohort-detail',
-        lookup_field='uuid'
+        lookup_field='name'
     )
+    parent_cohort = SerializerMethodField()
 
     class Meta:
         model = Cohort
@@ -43,5 +45,10 @@ class CohortSerializer(serializers.HyperlinkedModelSerializer):
             'description',
             'publication_start_date',
             'subscription_start_date',
-            'subscription_end_date'
+            'subscription_end_date',
+            'is_parent',
+            'parent_cohort',
         )
+
+    def get_parent_cohort(self, obj):
+        return CohortSerializer(obj.parent_cohort, context={'request': None}).data if obj.parent_cohort else None

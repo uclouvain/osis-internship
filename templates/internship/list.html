@@ -38,6 +38,7 @@
                             <th>{% trans 'Specialty' %}</th>
                             <th>{% trans 'Number of periods' %}</th>
                             <th>{% trans 'Position' %}</th>
+                            <th>{% trans 'Periods' %}</th>
                             <th>&nbsp;</th>
                         </tr>
                         </thead>
@@ -48,6 +49,13 @@
                                 <td>{{ internship.speciality | default_if_none:'' }}</td>
                                 <td>{{ internship.length_in_periods }}</td>
                                 <td>{{ internship.position }}</td>
+                                <td>
+                                    {% if internship.periods.0 %}
+                                        {{ internship.periods|join:', ' }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
                                 <td align="right">
                                     <a class="btn btn-warning" id="lnk_internship_edit"
                                        href="{% url 'internship-edit' cohort_id=internship.cohort.id internship_id=internship.id %}">

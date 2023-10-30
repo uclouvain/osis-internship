@@ -77,7 +77,7 @@ class PeriodTestCase(TestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, 200)
-        self.assertTemplateUsed(response, 'period_create.html')
+        self.assertTemplateUsed(response, 'period_form.html')
 
     def test_period_save_ok(self):
         period = PeriodFactory(cohort=self.cohort, name='P24', remedial=False)
@@ -176,7 +176,7 @@ class PeriodTestCase(TestCase):
         url = self.url_for_cohort_period('period_get', self.cohort, period)
 
         response = self.client.get(url)
-        self.assertTemplateUsed(response, 'period_create.html')
+        self.assertTemplateUsed(response, 'period_form.html')
         self.assertEqual(response.context['period'], period)
         self.assertEqual(response.context['cohort'], self.cohort)
 

@@ -68,6 +68,13 @@ msgstr ""
 "Un maître de stage doit être affecté à au moins un hôpital ou une spécialité "
 "avec obligatoirement un rôle"
 
+msgid "A parent cohort cannot have a parent itself"
+msgstr "Une cohorte parente ne peut avoir elle-même un parent"
+
+msgid "A parent cohort cannot have publication and subscription dates"
+msgstr ""
+"Une cohorte parente ne peut avoir des dates de publication et inscription"
+
 msgid ""
 "A person with this email address has been previously recorded. Form inputs "
 "will be filled based on the existing data. Fields with existing information "
@@ -83,6 +90,15 @@ msgid ""
 msgstr ""
 "Une personne similaire avec l'adresse email suivante a été trouvée: <b>{}</"
 "b>. Veuillez plutôt utiliser cette information."
+
+msgid "A subcohort must have publication and subscription dates"
+msgstr "Une sous-cohorte doit avoir des dates de publication et inscription"
+
+msgid ""
+"A subcohort or standalone cohort must have publication and subscription dates"
+msgstr ""
+"Une sous-cohorte ou cohorte unique doit avoir des dates de publication et "
+"inscription"
 
 msgid ""
 "A subspecialty must exclusively define a name and should not be mandatory "
@@ -389,6 +405,12 @@ msgstr "Détails"
 msgid "Display students"
 msgstr "Afficher les étudiants"
 
+msgid "Do not postpone"
+msgstr "Ne pas reporter"
+
+msgid "Do you want to postpone allocations modifications on these cohorts ?"
+msgstr "Voulez-vous reporter les modifications d'affectations sur ces cohortes ?"
+
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
 
@@ -470,6 +492,9 @@ msgstr "Le score d'évolution <b>ne</b> sera <b>pas</b> exporté"
 
 msgid "Evolution score will be exported"
 msgstr "Le score d'évolution sera exporté"
+
+msgid "Exclude from assignment"
+msgstr "Exclure de l'affectation"
 
 msgid "Expired"
 msgstr "Expiré"
@@ -600,6 +625,9 @@ msgstr "Importer cotes de stage"
 msgid "Imposed choices"
 msgstr "Choix imposés"
 
+msgid "Imposed choices distribution"
+msgstr "Répartition des choix imposés"
+
 msgid "Improvement areas"
 msgstr "Points à améliorer"
 
@@ -686,6 +714,9 @@ msgstr "Offres de stage"
 #, python-format
 msgid "Internships ratings successfully imported for period %(period)s"
 msgstr "Cotes de stage importées avec succès pour la période %(period)s"
+
+msgid "Is parent"
+msgstr "Est parente"
 
 msgid "Item"
 msgstr "Question"
@@ -806,6 +837,9 @@ msgstr "Aucun résultat"
 msgid "No specialty"
 msgstr "Pas de spécialité"
 
+msgid "No subcohorts"
+msgstr "Pas de sous-cohorte"
+
 msgid "No user account created"
 msgstr "Pas de compte utilisateur créé"
 
@@ -878,6 +912,9 @@ msgstr "P3 à P5"
 msgid "P6 to P7"
 msgstr "P6 à P7"
 
+msgid "Parent cohorts"
+msgstr "Cohortes parentes"
+
 msgid "Parent specialty"
 msgstr "Spécialité parente"
 
@@ -937,6 +974,12 @@ msgstr "Position"
 
 msgid "Postal code"
 msgstr "Code postal"
+
+msgid "Postpone"
+msgstr "Reporter"
+
+msgid "Postpone allocations ?"
+msgstr "Reporter les affectations ?"
 
 msgid "Predifined reason"
 msgstr "Motif prédéfini"
@@ -1053,10 +1096,20 @@ msgstr "Veuillez sélectionner un fichier xlsx pour l'injection des étudiants."
 msgid "Select diagnostic tests"
 msgstr "Sélectionner des tests diagnostics"
 
+msgid "Select parent cohort"
+msgstr "Choisir une cohorte parente"
+
 msgid "Select the periods for which evaluations are open"
 msgstr ""
 "Sélectionnez les périodes pour lesquelles les évaluations des lieux de stage "
 "sont ouvertes"
+
+msgid ""
+"Select which period should be exclusively filled for this modality. No "
+"selection means there is no constraint on the period."
+msgstr ""
+"Choisir quelles périodes devraient être exclusivement complétées pour ce "
+"stage. Pas de choix signifie pas de contrainte sur la période."
 
 msgid "Selectable by the student"
 msgstr "Sélectionnable par l'étudiant"
@@ -1100,6 +1153,9 @@ msgstr "Specialité supprimée"
 
 msgid "Specialty successfully saved"
 msgstr "Specialité enregistrée avec succès"
+
+msgid "Standalone cohorts"
+msgstr "Cohortes uniques"
 
 msgid "Standard deviation"
 msgstr "Écart-type"
@@ -1173,12 +1229,24 @@ msgstr "Les emails récapitulatifs ont bien été envoyés"
 msgid "Take a history (anamnesis)"
 msgstr "Prendre l'anamnèse"
 
+msgid "The current allocations may exist in the following cohorts:"
+msgstr ""
+"Les affectations actuelles peuvent aussi exister dans les cohortes suivantes:"
+
 msgid ""
 "The following masters/delegates allocations have been transferred to cohort "
 "{}: "
 msgstr ""
 "Les attributions suivantes des maîtres/délégués de stage ont été transférées "
 "dans la cohorte {}:"
+
+msgid "The parent cohort must be defined as parent"
+msgstr "La cohorte parente doit être définie comme parent"
+
+msgid "The period overlaps {} in {} (only possible for remedial periods)"
+msgstr ""
+"La période chevauche {} en {} (seulement possible pour les périodes de "
+"remédiation)"
 
 msgid "Third choice"
 msgstr "3ème choix"

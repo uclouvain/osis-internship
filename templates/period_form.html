@@ -52,6 +52,7 @@
                     {% bootstrap_field form.date_start form_group_class="form-group col-md-4" label=_("Start date") %}
                     {% bootstrap_field form.date_end form_group_class="form-group col-md-4" label=_("End date") %}
                     {% bootstrap_field form.remedial form_group_class="form-group col-md-4" label=_("Remedial") %}
+                    {% bootstrap_field form.exclude_from_assignment form_group_class="form-group col-md-4" label=_("Exclude from assignment") %}
             </div>
 
             <a href="{% url 'internships_periods' cohort_id=cohort.id %}" class="btn btn-default">
