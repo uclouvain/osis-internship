@@ -23,10 +23,19 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django_filters import rest_framework as filters
 from rest_framework import generics
 
 from internship.api.serializers.internship import InternshipSerializer
 from internship.models.internship import Internship
+
+
+class InternshipFilter(filters.FilterSet):
+    cohort_name = filters.CharFilter(field_name="cohort__name")
+
+    class Meta:
+        model = Internship
+        fields = ['cohort_name']
 
 
 class InternshipList(generics.ListAPIView):
@@ -35,7 +44,7 @@ class InternshipList(generics.ListAPIView):
     """
     name = 'internship-list'
     serializer_class = InternshipSerializer
-    queryset = Internship.objects.all()
+    queryset = Internship.objects.all().order_by('speciality__name', 'name')
     search_fields = (
         'name', 'speciality'
     )
@@ -43,8 +52,10 @@ class InternshipList(generics.ListAPIView):
         'position', 'name', 'length_in_periods'
     )
     ordering = (
-        'position',
+        'name'
     )  # Default ordering
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = InternshipFilter
 
 
 class InternshipDetail(generics.RetrieveAPIView):

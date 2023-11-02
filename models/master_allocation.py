@@ -31,6 +31,7 @@ from django.db import models
 from django.db.models import Q
 from django.utils.datetime_safe import datetime
 
+from internship.models.cohort import get_current_and_future_cohorts
 from internship.models.enums.role import Role
 from internship.models.enums.user_account_expiry import UserAccountExpiry
 
@@ -121,8 +122,14 @@ def search(cohort, specialty, hospital, account=None, expiry=None, role=Role.MAS
             .order_by("master__person__last_name", "master__person__first_name")
 
 
-def clean_allocations(cohort, master):
-    find_by_master(cohort, master).delete()
+def clean_allocations(cohort, master, postpone):
+    if postpone:
+        MasterAllocation.objects.filter(
+            organization__cohort__in=get_current_and_future_cohorts(),
+            master=master
+        ).delete()
+    else:
+        find_by_master(cohort, master).delete()
 
 
 def find_by_cohort(cohort_from):

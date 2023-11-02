@@ -29,6 +29,7 @@ from openpyxl.styles import Font
 
 from internship import models
 from internship.models.enums import organization_report_fields
+from internship.models.internship_student_information import InternshipStudentInformation
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 from osis_common.document.xls_build import save_virtual_workbook
 
@@ -56,22 +57,39 @@ def _add_header(worksheet, organization):
 
 
 def _add_students(worksheet, cohort, organization):
-    students_stat = models.internship_student_affectation_stat.find_by_organization(cohort, organization)
+    if cohort.is_parent:
+        students_stat = models.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(
+            organization__cohort__in=cohort.subcohorts.all(), organization__reference=organization.reference
+        ).select_related('student__person')
+    else:
+        students_stat = models.internship_student_affectation_stat.find_by_organization(
+            cohort, organization
+        ).select_related('student__person')
+
     rep_seq = list(organization.report_sequence())
 
-    for student in students_stat:
-        student_info = models.internship_student_information.find_by_person(student.student.person, cohort).first()
-        address = student.student.person.personaddress_set.first()
-        seq_dict = {organization_report_fields.PERIOD: student.period.name,
-                    organization_report_fields.START_DATE: student.period.date_start.strftime("%d-%m-%Y"),
-                    organization_report_fields.END_DATE: student.period.date_end.strftime("%d-%m-%Y"),
-                    organization_report_fields.LAST_NAME: student.student.person.last_name,
-                    organization_report_fields.FIRST_NAME: student.student.person.first_name,
-                    organization_report_fields.GENDER: student.student.person.gender,
-                    organization_report_fields.SPECIALTY: student.speciality.name,
-                    organization_report_fields.BIRTHDATE: student.student.person.birth_date.strftime("%d-%m-%Y"),
-                    organization_report_fields.EMAIL: student.student.person.email,
-                    organization_report_fields.NOMA: student.student.registration_id,
+    cohorts = cohort.subcohorts.all() if cohort.is_parent else [cohort]
+
+    persons = students_stat.values('student__person')
+    students_info_list = InternshipStudentInformation.objects.filter(person__in=persons, cohort__in=cohorts).distinct(
+        'person'
+    )
+    students_info_dict = {stud_info.person_id: stud_info for stud_info in students_info_list}
+
+    for student_stat in students_stat:
+        student_info = students_info_dict[student_stat.student.person_id]
+        address = student_info.person.personaddress_set.first()
+        seq_dict = {organization_report_fields.PERIOD: student_stat.period.name,
+                    organization_report_fields.START_DATE: student_stat.period.date_start.strftime("%d-%m-%Y"),
+                    organization_report_fields.END_DATE: student_stat.period.date_end.strftime("%d-%m-%Y"),
+                    organization_report_fields.LAST_NAME: student_info.person.last_name,
+                    organization_report_fields.FIRST_NAME: student_info.person.first_name,
+                    organization_report_fields.GENDER: student_info.person.gender,
+                    organization_report_fields.SPECIALTY: student_stat.speciality.name,
+                    organization_report_fields.BIRTHDATE: student_info.person.birth_date.strftime("%d-%m-%Y")
+                    if student_info.person.birth_date else None,
+                    organization_report_fields.EMAIL: student_info.person.email,
+                    organization_report_fields.NOMA: student_stat.student.registration_id,
                     organization_report_fields.PHONE: student_info.phone_mobile,
                     organization_report_fields.ADDRESS: address.location,
                     organization_report_fields.POSTAL_CODE: address.postal_code,

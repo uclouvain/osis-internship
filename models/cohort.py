@@ -25,33 +25,44 @@
 ##############################################################################
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.db.models import Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
+from internship.models.period import Period
 from osis_common.models.serializable_model import SerializableModel
 from osis_common.models.serializable_model import SerializableModelAdmin
 
 
 class CohortAdmin(SerializableModelAdmin):
     list_display = ('name', 'description', 'publication_start_date', 'subscription_start_date',
-                    'subscription_end_date', 'originated_from')
-    fields = ('name', 'description', 'publication_start_date', 'subscription_start_date', 'subscription_end_date')
+                    'subscription_end_date', 'originated_from', 'is_parent', 'parent_cohort')
+    fields = (
+        'name', 'description', 'publication_start_date',
+        'subscription_start_date', 'subscription_end_date', 'is_parent', 'parent_cohort',
+    )
 
 
 class Cohort(SerializableModel):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     description = models.TextField()
-    publication_start_date = models.DateField()
-    subscription_start_date = models.DateField()
-    subscription_end_date = models.DateField()
+    publication_start_date = models.DateField(null=True, blank=True)
+    subscription_start_date = models.DateField(null=True, blank=True)
+    subscription_end_date = models.DateField(null=True, blank=True)
     originated_from = models.ForeignKey(
         'Cohort', null=True, blank=True,
         on_delete=models.CASCADE
     )
 
+    is_parent = models.BooleanField(default=False)
+    parent_cohort = models.ForeignKey(
+        'Cohort', null=True, blank=True, on_delete=models.PROTECT, related_name='subcohorts'
+    )
+
     def clean(self):
         self.clean_start_date()
         self.clean_publication_date()
+        self.clean_parent_cohort()
 
     def clean_start_date(self):
         if all([self.subscription_start_date, self.subscription_end_date]):
@@ -65,8 +76,39 @@ class Cohort(SerializableModel):
                     {"publication_start_date": _("Publication must be done after the subscription process.")}
                 )
 
+    def clean_parent_cohort(self):
+        if self.parent_cohort and not self.parent_cohort.is_parent:
+            raise ValidationError(
+                {"parent_cohort": _("The parent cohort must be defined as parent")}
+            )
+        if self.is_parent and any(
+                [self.subscription_start_date, self.subscription_end_date, self.publication_start_date]
+        ):
+            raise ValidationError(
+                {"is_parent": _("A parent cohort cannot have publication and subscription dates")}
+            )
+        if not self.is_parent and not all(
+                [self.subscription_start_date, self.subscription_end_date, self.publication_start_date]
+        ):
+            raise ValidationError(
+                {"is_parent": _("A subcohort or standalone cohort must have publication and subscription dates")}
+            )
+
     class Meta:
         ordering = ['name']
+        constraints = [
+            models.CheckConstraint(
+                check=Q(is_parent=False) | Q(publication_start_date__isnull=True),
+                name=_("A parent cohort cannot have publication and subscription dates")),
+            models.CheckConstraint(
+                check=Q(is_parent=True) | Q(publication_start_date__isnull=False),
+                name=_("A subcohort must have publication and subscription dates")
+            ),
+            models.CheckConstraint(
+                check=Q(is_parent=False) | Q(parent_cohort__isnull=True),
+                name=_("A parent cohort cannot have a parent itself")
+            ),
+        ]
 
     @property
     def is_subscription_active(self):
@@ -78,3 +120,7 @@ class Cohort(SerializableModel):
 
     def __str__(self):
         return self.name
+
+
+def get_current_and_future_cohorts():
+    return Cohort.objects.filter(id__in=Period.future.values_list('cohort').distinct())

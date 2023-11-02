@@ -186,6 +186,7 @@ class MasterTestCase(TestCase):
             'hospital': hospital.pk,
             'specialty': specialty.pk,
             'role': Role.MASTER.name,
+            'postpone-allocations': 0,
         })
         self.assertRedirects(response, '{}?{}'.format(
             reverse('internships_masters', kwargs={'cohort_id': self.cohort.id}),

@@ -49,3 +49,6 @@ class CohortFactory(factory.django.DjangoModelFactory):
     publication_start_date = factory.LazyAttribute(fn_publication_start_date)
     subscription_start_date = factory.LazyAttribute(fn_subscription_start_date)
     subscription_end_date = factory.LazyAttribute(fn_subscription_end_date)
+
+    is_parent = False
+    parent_cohort = None
