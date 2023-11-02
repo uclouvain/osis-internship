@@ -4,26 +4,28 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li class="active">{% trans 'Internships management' %}</li>
 {% endblock %}
 
 {% block content %}
-    <div class="page-header">
+    <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
         <h2>{% trans 'Cohorts' %}</h2>
+        <div class="pull-right">
+            <a href="{% url 'cohort_new' %}" id="lnk_cohort_create" class="btn btn-default" title="Create a cohort">
+                <span class="glyphicon glyphicon-plus"></span> {% trans 'Add' %}
+            </a>
+        </div>
     </div>
 
-    <div class="panel panel-default">
+        <div class="panel panel-default">
+        <div class="panel panel-heading">
+            {% trans 'Parent cohorts' %}
+        </div>
         <div class="panel panel-body">
             <div class="row">
                 <div class="col-md-12">
-                    <a href="{% url 'cohort_new' %}" id="lnk_cohort_create" class="btn btn-default pull-right" title="Create a cohort">
-                        <span class="glyphicon glyphicon-plus"></span> {% trans 'Add' %}
-                    </a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12">
-                    <table class="table table-striped">
+                    <table class="table table-condensed">
                         <thead>
                         <tr>
                             <th>{% trans 'Name' %}</th>
@@ -32,7 +34,54 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {% for cohort in cohorts|dictsortreversed:"subscription_start_date" %}
+                        {% for cohort in parent_cohorts %}
+                            <tr class="active">
+                                <td><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></td>
+                                <td>{{ cohort.description|truncatechars:32 }}</td>
+                                <td align="right"><a class="btn btn-warning" id="lnk_cohort_edit"
+                                       href="{% url 'cohort_edit' cohort_id=cohort.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
+                                  </a></td>
+                            </tr>
+                            {% for subcohort in cohort.subcohorts.all|dictsort:"subscription_start_date" %}
+                            <tr>
+                                <td><a href="{% url 'internships_home' cohort_id=subcohort.id %}">{{ subcohort.name }}</a></td>
+                                <td>{{ subcohort.description|truncatechars:32 }}</td>
+                                <td align="right"><a class="btn btn-warning" id="lnk_cohort_edit"
+                                       href="{% url 'cohort_edit' cohort_id=subcohort.id %}"><span class="glyphicon glyphicon-pencil" aria-hidden="true" />
+                                  </a></td>
+                            </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="3">
+                                        {% trans 'No subcohorts' %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel panel-heading">
+            {% trans 'Standalone cohorts' %}
+        </div>
+        <div class="panel panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <table class="table table-striped table-condensed">
+                        <thead>
+                        <tr>
+                            <th>{% trans 'Name' %}</th>
+                            <th>{% trans 'Description' %}</th>
+                            <th>&nbsp;</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for cohort in standalone_cohorts|dictsortreversed:"subscription_start_date" %}
                             <tr>
                                 <td><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></td>
                                 <td>{{ cohort.description|truncatechars:32 }}</td>

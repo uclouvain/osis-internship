@@ -24,22 +24,55 @@
 #
 ##############################################################################
 from django import forms
+from django.forms import CheckboxSelectMultiple
 
 from internship.models import internship_speciality
 from internship.models.internship import Internship
+from internship.models.internship_modality_period import InternshipModalityPeriod
+from internship.models.period import Period
+from django.utils.translation import gettext_lazy as _
 
 
 class InternshipForm(forms.ModelForm):
+
+    periods = forms.ModelMultipleChoiceField(
+        queryset=Period.objects.all(),
+        required=False,
+        widget=CheckboxSelectMultiple(),
+        help_text=_(
+            'Select which period should be exclusively filled for this modality.'
+            ' No selection means there is no constraint on the period.'
+        )
+    )
+
     class Meta:
         model = Internship
         fields = [
             'name',
             'speciality',
             'length_in_periods',
-            'position'
+            'position',
         ]
 
     def __init__(self, *args, **kwargs):
         super(InternshipForm, self).__init__(*args, **kwargs)
         cohort_id = kwargs['instance'].cohort_id
+
         self.fields['speciality'].queryset = internship_speciality.find_by_cohort(cohort_id)
+        self.fields['periods'].queryset = Period.objects.filter(cohort_id=cohort_id)
+        self.fields['periods'].initial = InternshipModalityPeriod.objects.filter(
+            internship=kwargs['instance']
+        ).values_list('period_id', flat=True)
+
+    def save(self, commit=True):
+        instance = super().save(commit)
+
+        # delete existing modality periods for instance
+        InternshipModalityPeriod.objects.filter(internship=instance).delete()
+
+        # recreate according to data received
+        InternshipModalityPeriod.objects.bulk_create(
+            InternshipModalityPeriod(internship=instance, period=period) for period in self.cleaned_data['periods']
+        )
+
+        return instance

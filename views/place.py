@@ -32,6 +32,7 @@ from django.utils.translation import gettext_lazy as _
 
 from internship import models
 from internship.forms.organization_form import OrganizationForm
+from internship.models.organization import Organization
 from internship.utils.exporting import organization_affectation_hospital
 from internship.utils.exporting import organization_affectation_master
 from internship.views.common import display_report_errors
@@ -44,7 +45,14 @@ from reference.models.country import Country
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
-    organizations = models.organization.Organization.objects.filter(cohort=cohort).order_by('reference')
+
+    if cohort.is_parent:
+        organizations = models.organization.Organization.objects.filter(
+            cohort__in=cohort.subcohorts.all()
+        ).order_by('reference').distinct('reference')
+    else:
+        organizations = models.organization.Organization.objects.filter(cohort=cohort).order_by('reference')
+
     context = {'all_organizations': organizations, 'cohort': cohort}
     return render(request, "places.html", context)
 
@@ -145,22 +153,34 @@ def student_affectation(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
     organization = get_object_or_404(models.organization.Organization, pk=organization_id)
 
-    affectations = models.internship_student_affectation_stat.search(organization=organization)\
+    if cohort.is_parent:
+        organizations = models.organization.Organization.objects.filter(
+            cohort__in=cohort.subcohorts.all(), reference=organization.reference
+        )
+    else:
+        organizations = [organization]
+
+    affectations = models.internship_student_affectation_stat.search(organization__in=organizations)\
                                                              .order_by("student__person__last_name",
                                                                        "student__person__first_name")
-
     for a in affectations:
         a.email = ""
         a.adress = ""
         a.phone_mobile = ""
         internship_student_information = models.internship_student_information.search(
             person=a.student.person,
-            cohort=cohort
+            cohort__in=[org.cohort for org in organizations]
         )
         _add_student_information(a, internship_student_information)
     periods = models.period.search(cohort=cohort)
 
-    internships = models.internship_offer.search(organization = organization, cohort=cohort)
+    if cohort.is_parent:
+        internships = models.internship_offer.search(
+            organization__reference=organization.reference, cohort__in=cohort.subcohorts.all()
+        )
+    else:
+        internships = models.internship_offer.search(organization__reference=organization.reference, cohort=cohort)
+
     all_speciality = get_all_specialities(internships)
     all_speciality = models.internship_speciality.set_speciality_unique(all_speciality)
     set_tabs_name(all_speciality)
@@ -178,14 +198,24 @@ def student_affectation(request, cohort_id, organization_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_organisation_affectation_master(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    cohorts = cohort.subcohorts.all() if cohort.is_parent else [cohort]
+    affec_by_specialties, organization = _get_affec_by_specialties_for_cohorts(cohorts, organization_id)
+    return _export_xls_master(cohort, organization, affec_by_specialties)
+
+
+def _get_affec_by_specialties_for_cohorts(cohorts, organization_id):
     organization = models.organization.get_by_id(organization_id)
-    internships = models.internship_offer.search(organization=organization)
-    specialities = list({offer.speciality for offer in internships})
-    specialities = sorted(specialities, key=lambda spec: spec.name)
-    affec_by_specialties = [(internship_speciality,
-                             list(models.internship_student_affectation_stat.search(organization=organization,
-                                                                                    speciality=internship_speciality)))
-                            for internship_speciality in specialities]
+    organizations = Organization.objects.filter(
+        cohort__in=cohorts, reference=organization.reference
+    )
+    internships = models.internship_offer.search(organization__in=organizations)
+    specialities = list({offer.speciality.name for offer in internships})
+    specialities = sorted(specialities, key=lambda spec_name: spec_name)
+    affec_by_specialties = [
+        (internship_speciality, list(models.internship_student_affectation_stat.search(
+            organization__in=organizations, speciality__name=internship_speciality)))
+        for internship_speciality in specialities
+    ]
     for speciality, affectations in affec_by_specialties:
         for affectation in affectations:
             affectation.email = ""
@@ -193,13 +223,16 @@ def export_organisation_affectation_master(request, cohort_id, organization_id):
             affectation.phone_mobile = ""
             affectation.master = ""
             internship_student_info = models.internship_student_information.search(person=affectation.student.person)
-            master_allocation = models.master_allocation.search(cohort=cohort, hospital=affectation.organization,
-                                                              specialty=affectation.speciality)
+            master_allocation = models.master_allocation.search(
+                cohort=affectation.organization.cohort,
+                hospital=affectation.organization,
+                specialty=affectation.speciality
+            )
             _add_student_information(affectation, internship_student_info)
             if master_allocation:
                 allocation = master_allocation.first()
                 affectation.master = allocation.master
-    return _export_xls_master(cohort, organization, affec_by_specialties)
+    return affec_by_specialties, organization
 
 
 @login_required

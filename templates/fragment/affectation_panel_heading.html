@@ -25,6 +25,7 @@
 {% endcomment %}
 
 <div class="panel-heading">
+    {% if not cohort.is_parent %}
     <div class="row">
         <div class="col-md-3">
             {% if not cohort.is_published  %}
@@ -50,4 +51,5 @@
             </span>
         </div>
     </div>
+    {% endif %}
 </div>

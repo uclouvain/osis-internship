@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.test.testcases import TestCase
+from freezegun import freeze_time
 
 from internship.models import master_allocation
 from internship.models.internship_master import InternshipMaster
@@ -31,6 +32,7 @@ from internship.models.master_allocation import MasterAllocation
 from internship.tests.factories.master import MasterFactory
 from internship.tests.factories.master_allocation import MasterAllocationFactory
 from internship.tests.factories.organization import OrganizationFactory
+from internship.tests.factories.period import PeriodFactory
 from internship.tests.factories.speciality import SpecialtyFactory
 
 
@@ -63,6 +65,36 @@ class TestInternshipMaster(TestCase):
     def test_clean_allocations(self):
         allocation = MasterAllocationFactory(master=self.master)
         cohort = allocation.specialty.cohort
-        master_allocation.clean_allocations(cohort, self.master)
+        master_allocation.clean_allocations(cohort, self.master, postpone=False)
         allocations = master_allocation.find_by_master(cohort, self.master)
         self.assertEqual(0, allocations.count())
+
+    @freeze_time("2023-10-09")
+    def test_clean_allocations_with_postponement(self):
+        allocation = MasterAllocationFactory(master=self.master)
+        cohort1 = allocation.organization.cohort
+        PeriodFactory(name='P1cohort1', date_start='2023-10-10', date_end='2023-10-20', cohort=cohort1)
+
+        allocation = MasterAllocationFactory(master=self.master)
+        cohort2 = allocation.organization.cohort
+        PeriodFactory(name='P1cohort2', date_start='2023-10-10', date_end='2023-10-20', cohort=cohort2)
+
+        master_allocation.clean_allocations(cohort1, self.master, postpone=True)
+
+        allocations = MasterAllocation.objects.filter(master=self.master)
+        self.assertEqual(0, allocations.count())
+
+    @freeze_time("2023-10-09")
+    def test_clean_allocations_without_postponement(self):
+        allocation = MasterAllocationFactory(master=self.master)
+        cohort1 = allocation.organization.cohort
+        PeriodFactory(name='P1cohort1', date_start='2023-10-10', date_end='2023-10-20', cohort=cohort1)
+
+        allocation = MasterAllocationFactory(master=self.master)
+        cohort2 = allocation.organization.cohort
+        PeriodFactory(name='P1cohort2', date_start='2023-10-10', date_end='2023-10-20', cohort=cohort2)
+
+        master_allocation.clean_allocations(cohort1, self.master, postpone=False)
+
+        allocations = MasterAllocation.objects.filter(master=self.master)
+        self.assertEqual(1, allocations.count())

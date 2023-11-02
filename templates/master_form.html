@@ -29,6 +29,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
     <li><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
@@ -101,6 +102,7 @@
                             </tr>
                         </thead>
                         <tbody>
+                            <input id="input-postpone" type="hidden" name="postpone-allocations">
                             {% for allocation in allocations %}
                                 <tr id="allocation_row_{{ forloop.counter0 }}">
                                     <td>
@@ -179,10 +181,10 @@
                     </table>
                 </div>
 
-                <button type="submit" class="btn btn-primary">
+                <a data-toggle="modal" data-target="#postponeAllocationsModal" class="btn btn-primary">
                     <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
                     {% trans "Save" %}
-                </button>
+                </a>
                 {% if master_id %}
                 <a href="{% url 'master' cohort_id=current_cohort.id master_id=master_id%}" class="btn btn-default">
                 {% else %}
@@ -207,6 +209,8 @@
 
     <!-- Modal -->
     {% include 'fragment/fill_master_person_info_modal.html' %}
+
+    {% include 'fragment/postpone_allocations_modal.html' %}
 
 {% endblock %}
 
@@ -313,6 +317,16 @@
                 }
             });
         }
+
+        document.querySelector('#not-postpone-allocations').addEventListener('click', (e) => {
+            document.querySelector('#input-postpone').value = 0;
+            document.querySelector('#master-form').submit();
+        });
+
+        document.querySelector('#postpone-allocations').addEventListener('click', (e) => {
+            document.querySelector('#input-postpone').value = 1;
+            document.querySelector('#master-form').submit();
+        });
 
 
 

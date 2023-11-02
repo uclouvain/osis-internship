@@ -27,6 +27,15 @@ from rest_framework import generics
 
 from internship.api.serializers.organization import OrganizationSerializer
 from internship.models.organization import Organization
+from django_filters import rest_framework as filters
+
+
+class OrganizationFilter(filters.FilterSet):
+    cohort_name = filters.CharFilter(field_name="cohort__name")
+
+    class Meta:
+        model = Organization
+        fields = ['cohort_name']
 
 
 class OrganizationList(generics.ListAPIView):
@@ -35,7 +44,7 @@ class OrganizationList(generics.ListAPIView):
     """
     name = 'organization-list'
     serializer_class = OrganizationSerializer
-    queryset = Organization.objects.all()
+    queryset = Organization.objects.all().order_by('reference')
     filterset_fields = (
         'cohort',
         'city',
@@ -49,6 +58,8 @@ class OrganizationList(generics.ListAPIView):
     ordering = (
         'reference',
     )  # Default ordering
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = OrganizationFilter
 
 
 class OrganizationDetail(generics.RetrieveAPIView):

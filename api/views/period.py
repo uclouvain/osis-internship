@@ -27,6 +27,15 @@ from rest_framework import generics
 
 from internship.api.serializers.period import PeriodSerializer
 from internship.models.period import Period
+from django_filters import rest_framework as filters
+
+
+class PeriodFilter(filters.FilterSet):
+    cohort_name = filters.CharFilter(field_name="cohort__name")
+
+    class Meta:
+        model = Period
+        fields = ['cohort_name']
 
 
 class PeriodList(generics.ListAPIView):
@@ -44,6 +53,8 @@ class PeriodList(generics.ListAPIView):
     ordering = (
         'date_start',
     )  # Default ordering
+    filter_backends = [filters.DjangoFilterBackend]
+    filterset_class = PeriodFilter
 
     def get_queryset(self):
         active = self.request.query_params.get('active', False)

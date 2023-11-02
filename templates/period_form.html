@@ -30,6 +30,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li><a href="{% url 'internships_periods' cohort_id=cohort.id %}">{% trans 'Periods' %}</a></li>
@@ -51,6 +52,7 @@
                     {% bootstrap_field form.date_start form_group_class="form-group col-md-4" label=_("Start date") %}
                     {% bootstrap_field form.date_end form_group_class="form-group col-md-4" label=_("End date") %}
                     {% bootstrap_field form.remedial form_group_class="form-group col-md-4" label=_("Remedial") %}
+                    {% bootstrap_field form.exclude_from_assignment form_group_class="form-group col-md-4" label=_("Exclude from assignment") %}
             </div>
 
             <a href="{% url 'internships_periods' cohort_id=cohort.id %}" class="btn btn-default">

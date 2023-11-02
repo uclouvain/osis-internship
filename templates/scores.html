@@ -38,6 +38,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li class="active">{% trans 'Scores encoding' %}</li>
@@ -98,7 +99,7 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li>
+                                    <li {% if cohort.is_parent %} class="disabled" {% endif %}>
                                         <a href="#" data-toggle="modal"
                                                 data-target="#upload_scores" id="bt_upload_score_modal">
                                             <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
@@ -106,7 +107,7 @@
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li {% if affectations_count < 1 %} class="disabled" {% endif %}>
+                                    <li {% if affectations_count < 1 or cohort.is_parent %} class="disabled" {% endif %}>
                                         <a {% if affectations_count < 1 %}
                                                 title="{% trans 'No assignment available' %}"
                                             {% else %}
@@ -195,7 +196,6 @@
                          <tr>
                              {% with rowspan_no_remedial=mandatory_periods|length|add:1 %}
                              {% with rowspan_remedial=student.remedial_periods_count %}
-
                               <td
                                 {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
@@ -530,8 +530,8 @@
         }
     }
 
-    $('input:checkbox[name="period"]').click(()=>{
-        const selected_periods_count = $('input:checkbox[name="period"]:checked').length;
+    $('#form_export_scores input:checkbox[name="period"]').click(()=>{
+        const selected_periods_count = $('#form_export_scores input:checkbox[name="period"]:checked').length;
         switchEvolutionScoreModalMsg(selected_periods_count);
     });
 

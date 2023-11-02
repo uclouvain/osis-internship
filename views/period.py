@@ -54,7 +54,7 @@ def period_create(request, cohort_id):
     context = {
         'form': period_form, 'cohort': cohort, 'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
     }
-    return render(request, "period_create.html", context)
+    return render(request, "period_form.html", context)
 
 
 @login_required
@@ -64,7 +64,7 @@ def period_save(request, cohort_id, period_id):
     period = get_object_or_404(Period, pk=period_id, cohort_id=cohort_id)
     form = PeriodForm(data=request.POST, instance=period)
     errors = []
-    if(form.is_valid()):
+    if form.is_valid():
         form.save()
         messages.add_message(request, messages.SUCCESS, "{} : {}".format(_('Period edited'), period.name),
                              "alert-success")
@@ -74,9 +74,9 @@ def period_save(request, cohort_id, period_id):
         context = {
             'form': form,
             'cohort': cohort,
-            'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
+            'url_form': reverse('period_save', kwargs={'cohort_id': cohort.id, 'period_id': period_id}),
         }
-        return render(request, "period_create.html", context)
+        return render(request, "period_form.html", context)
     kwargs = {
         'cohort_id': cohort.id
     }
@@ -103,7 +103,7 @@ def period_new(request, cohort_id):
             'cohort': cohort,
             'url_form': reverse('period_new', kwargs={'cohort_id': cohort.id}),
         }
-        return render(request, "period_create.html", context)
+        return render(request, "period_form.html", context)
     kwargs = {
         'cohort_id': cohort.id
     }
@@ -133,6 +133,11 @@ def period_get(request, cohort_id, period_id):
         'cohort_id': cohort.id,
         'period_id': period.id,
     }
-    context = {'form': form, 'period': period, 'cohort': cohort, 'url_form': reverse('period_save', kwargs=kwargs)}
+    context = {
+        'form': form,
+        'period': period,
+        'cohort': cohort,
+        'url_form': reverse('period_save', kwargs=kwargs)
+    }
 
-    return render(request, "period_create.html", context)
+    return render(request, "period_form.html", context)

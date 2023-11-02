@@ -65,7 +65,10 @@ def search(**kwargs):
 
 
 def find_by_cohort(cohort):
-    return InternshipStudentInformation.objects.filter(cohort=cohort)
+    if cohort.is_parent:
+        return InternshipStudentInformation.objects.filter(cohort__in=cohort.subcohorts.all())
+    else:
+        return InternshipStudentInformation.objects.filter(cohort=cohort)
 
 
 def find_by_person(person, cohort):

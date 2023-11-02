@@ -27,6 +27,7 @@ import re
 from collections import OrderedDict
 from collections import defaultdict
 from operator import itemgetter
+from statistics import mean, stdev
 
 from base.models.student import Student
 from internship import models
@@ -35,8 +36,8 @@ from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
-from internship.models.period import get_assignable_periods, get_effective_periods
-from statistics import mean, stdev
+from internship.models.internship_speciality import InternshipSpeciality
+from internship.models.period import get_assignable_periods, get_subcohorts_periods
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
@@ -58,12 +59,20 @@ def compute_stats(cohort, sol):
     others_specialities_students = {}
 
     # Retrieve all specialities
-    specialities = models.internship_speciality.InternshipSpeciality.objects.filter(cohort=cohort).select_related()
+    specialities = InternshipSpeciality.objects.filter(cohort=cohort).select_related()
+    if cohort.is_parent:
+        specialities = InternshipSpeciality.objects.filter(cohort__in=cohort.subcohorts.all())
+        for subcohort in cohort.subcohorts.all():
+            others_specialities[subcohort.name] = {}
+            others_specialities_students[subcohort.name] = {}
+    else:
+        others_specialities[cohort.name] = {}
+        others_specialities_students[cohort.name] = {}
 
     # Initialize the others_specialities and others_specialities_students
     for speciality in specialities:
-        others_specialities[speciality] = 0
-        others_specialities_students[speciality] = set()
+        others_specialities[speciality.cohort.name][speciality] = 0
+        others_specialities_students[speciality.cohort.name][speciality] = set()
 
     # Total number of internships
     first, second, third, fourth = 0, 0, 0, 0
@@ -137,8 +146,10 @@ def compute_stats(cohort, sol):
                     # we will use this set to find the number of students
                     # with imposed choices
                     others_students.add(student)
-                    others_specialities[affectation.speciality] += 1
-                    others_specialities_students[affectation.speciality].add(student)
+                    others_specialities[affectation.speciality.cohort.name][affectation.speciality] += 1
+                    others_specialities_students[affectation.speciality.cohort.name][affectation.speciality].add(
+                        student
+                    )
                 # Hostpital error
                 if int(affectation.organization.reference) == HOSPITAL_ERROR:
                     hospital_error_count += 1
@@ -240,9 +251,8 @@ def compute_stats(cohort, sol):
     return stats
 
 
-def load_solution_table(data, cohort):
-    periods = get_assignable_periods(cohort_id=cohort.id)
-    period_ids = periods.values_list("id", flat=True)
+def load_solution_table(data, periods):
+    period_ids = [period.id for period in periods]
     prd_internship_places = period_internship_places.PeriodInternshipPlaces.objects.filter(
         period_id__in=period_ids
     ).order_by("period_id").select_related(
@@ -253,45 +263,53 @@ def load_solution_table(data, cohort):
     # This object store the number of available places for given organization, speciality, period
     temp_internship_table = defaultdict(dict)
 
-    keys = periods.values_list("name", flat=True)
+    keys = [period.name for period in periods]
 
     for pid in prd_internship_places:
-        organization = pid.internship_offer.organization
+        organization_ref = pid.internship_offer.organization.reference
         acronym = pid.internship_offer.speciality.acronym
         period_name = pid.period.name
-        if acronym not in temp_internship_table[organization]:
-            temp_internship_table[organization][acronym] = OrderedDict()
-            _fill_periods_default_values(acronym, keys, organization, temp_internship_table)
+        if acronym not in temp_internship_table[organization_ref]:
+            temp_internship_table[organization_ref][acronym] = OrderedDict()
+            _fill_periods_default_values(acronym, keys, organization_ref, temp_internship_table)
 
-        temp_internship_table[organization][acronym][period_name]['before'] += pid.number_places
-        temp_internship_table[organization][acronym][period_name]['after'] += pid.number_places
+        temp_internship_table[organization_ref][acronym][period_name]['before'] += pid.number_places
+        temp_internship_table[organization_ref][acronym][period_name]['after'] += pid.number_places
 
     for item in data:
         # Update the number of available places for given organization, speciality, period
-        if item.organization not in temp_internship_table or \
-                item.speciality.acronym not in temp_internship_table[item.organization]:
+        if item.organization.reference not in temp_internship_table or \
+                item.speciality.acronym not in temp_internship_table[item.organization.reference]:
             continue
-        temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] -= 1
+        temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['after'] -= 1
         # Update the % of takes places
-        if temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] > 0:
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = \
-                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['after'] / \
-                temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['before'] * 100
+        if temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] > 0:
+            temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = \
+                temp_internship_table[
+                    item.organization.reference
+                ][item.speciality.acronym][item.period.name]['after'] / \
+                temp_internship_table[
+                    item.organization.reference
+                ][item.speciality.acronym][item.period.name]['before'] * 100
         else:
-            temp_internship_table[item.organization][item.speciality.acronym][item.period.name]['pc'] = 0
+            temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = 0
     # Sort all student by the score (descending order)
     sorted_internship_table = []
-    for organization, specialities in temp_internship_table.items():
+    for organization_ref, specialities in temp_internship_table.items():
         for speciality, periods in specialities.items():
-            sorted_internship_table.append((int(organization.reference), speciality, periods))
+            sorted_internship_table.append((int(organization_ref), speciality, periods))
     sorted_internship_table.sort(key=itemgetter(0))
 
     return sorted_internship_table
 
 
 def load_solution_sol(cohort, student_affectations):
-    keys = get_effective_periods(cohort_id=cohort.id).values_list("name", flat=True)
-    internships = Internship.objects.filter(cohort=cohort)
+    periods = get_subcohorts_periods(cohort) if cohort.is_parent else get_assignable_periods(cohort_id=cohort.id)
+    keys = [period.name for period in periods]
+    if cohort.is_parent:
+        internships = Internship.objects.filter(cohort__in=cohort.subcohorts.all())
+    else:
+        internships = Internship.objects.filter(cohort=cohort)
     priority_choices = InternshipChoice.objects.filter(internship__in=internships, priority=True)
     students = Student.objects.filter(id__in=priority_choices.values("student").distinct())
     sol = {}

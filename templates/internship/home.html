@@ -28,6 +28,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li class="active">{{ cohort.name }}</li>
 {% endblock %}
@@ -39,6 +40,25 @@
 
     <div class="panel panel-default">
         <div class="panel-body">
+        {% if cohort.is_parent %}
+            <div class="row">
+                <div class="col-md-1"><i class="far fa-hospital" style="font-size: 400%; color: #6699FF;"></i></div>
+                <div class="col-md-5">
+                    <h4 class="media-heading"><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'Hospitals' %}</a></h4>
+                </div>
+                <div class="col-md-1"><i class="fas fa-ticket-alt" style="font-size: 400%; color: #6699FF;"></i></div>
+                <div class="col-md-5">
+                    <h4 class="media-heading"><a href="{% url 'internship_affectation_hospitals' cohort_id=cohort.id %}">{% trans 'Internship affectation' %}</a></h4>
+                </div>
+            </div>
+            <br/>
+            <div class="row">
+                <div class="col-md-1"><i class="fa fa-pen-square" style="font-size: 400%; color: #6699FF;"></i></div>
+                <div class="col-md-5">
+                    <h4 class="media-heading"><a href="{% url 'internship_scores_encoding' cohort_id=cohort.id %}">{% trans "Scores encoding" %}</a></h4>
+                </div>
+            </div>
+        {% else %}
             <div class="row">
                 <div class="col-md-1"><i class="fa fa-archive" style="font-size: 400%; color: #6699FF;"></i></div>
                 <div class="col-md-5">
@@ -104,6 +124,7 @@
                 </div>
             </div>
             <br>
+        {% endif %}
         </div>
     </div>
 {% endblock %}

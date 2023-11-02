@@ -28,6 +28,7 @@
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
     <li class="active">{% trans "Affectation's result" %}</li>
@@ -82,7 +83,7 @@
       </div>
     </div>
 
-    <div class="panel panel-default">
+    <div class="panel panel-default panel-affectation">
         {% include "fragment/affectation_panel_heading.html" %}
 
         <div class="panel-body">
