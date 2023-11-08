@@ -1,8 +1,5 @@
 {% extends "layout.html" %}
 {% load static %}
-    {% block header %}
-        <link href="{% static 'css/internship_style.css' %}" rel="stylesheet" type="text/css" >
-    {% endblock %}
 {% load i18n %}
 
 {% comment "License" %}
@@ -28,6 +25,8 @@
     * at the root of the source code of this program.  If not,
     * see http://www.gnu.org/licenses/.
 {% endcomment %}
+
+<link href="{% static 'css/internship_style.css' %}" rel="stylesheet" type="text/css">
 
 {% block breadcrumb %}
     <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
