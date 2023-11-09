@@ -43,6 +43,8 @@ def _copy_periods(cohort_from, cohort_to):
         prd.pk = None
         prd.uuid = uuid.uuid4()
         prd.cohort = cohort_to
+        prd.reminder_mail_sent = False
+        prd.place_evaluation_active = False
         prd.save()
 
 
