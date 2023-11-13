@@ -25,6 +25,7 @@
 ##############################################################################
 from rest_framework import serializers
 from rest_framework.fields import SerializerMethodField
+from rest_framework.validators import UniqueValidator
 
 from internship.models.cohort import Cohort
 
@@ -52,3 +53,10 @@ class CohortSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_parent_cohort(self, obj):
         return CohortSerializer(obj.parent_cohort, context={'request': None}).data if obj.parent_cohort else None
+
+    def get_fields(self):
+        fields = super().get_fields()
+        fields['name'].validators = [
+            validator for validator in fields['name'].validators if not isinstance(validator, UniqueValidator)
+        ]
+        return fields
