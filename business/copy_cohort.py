@@ -1,4 +1,5 @@
 import uuid
+from datetime import timedelta
 
 from internship.models import internship
 from internship.models import internship_speciality
@@ -43,6 +44,8 @@ def _copy_periods(cohort_from, cohort_to):
         prd.pk = None
         prd.uuid = uuid.uuid4()
         prd.cohort = cohort_to
+        prd.date_start = prd.date_start + timedelta(days=365)
+        prd.date_end = prd.date_end + timedelta(days=365)
         prd.reminder_mail_sent = False
         prd.place_evaluation_active = False
         prd.save()
