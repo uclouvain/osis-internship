@@ -85,12 +85,16 @@ def internship_place_evaluation_config(request, cohort_id):
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_results(request, cohort_id):
     cohort = Cohort.objects.get(pk=cohort_id)
-    affectations = InternshipStudentAffectationStat.objects.filter(organization__cohort=cohort).values_list(
+    affectations = InternshipStudentAffectationStat.objects.filter(
+        organization__cohort=cohort,
+        organization__fake=False,
+    ).values_list(
         'pk', 'period_id', 'organization_id', 'speciality_id',
         'speciality__acronym', 'organization__reference', named=True
     )
     evaluations = PlaceEvaluation.objects.filter(
-        affectation_id__in=[affectation.pk for affectation in affectations]
+        affectation_id__in=[affectation.pk for affectation in affectations],
+        affectation__organization__fake=False,
     ).values_list(
         'affectation__period_id', 'affectation__organization_id', 'affectation__speciality_id', named=True
     )
