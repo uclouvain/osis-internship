@@ -41,8 +41,8 @@ class MasterAllocationSerializer(serializers.HyperlinkedModelSerializer):
         lookup_field='uuid'
     )
     master = InternshipMasterSerializer()
-    organization = OrganizationSerializer()
-    specialty = InternshipSpecialtySerializer()
+    organization = OrganizationSerializer(read_only=True)
+    specialty = InternshipSpecialtySerializer(read_only=True)
 
     class Meta:
         model = MasterAllocation
