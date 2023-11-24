@@ -430,13 +430,6 @@ def _assign_student(assignment, student, internship):
                             "choice"
                         )
                         affectations = assign_choices_to_student(assignment, student, choices, chosen_internship, last)
-                        # logger.info("{} -- {}".format(student, chosen_internship))
-            # else:
-            #     choices = assignment.choices.filter(student=student, internship=internship).order_by(
-            #         "choice"
-            #     )
-            #     affectations = assign_choices_to_student(assignment, student, choices, internship)
-
         if affectations:
             assignment.affectations.extend(affectations)
         logger.info("Student {} affected to {} in period {}".format(student, internship, affectations))

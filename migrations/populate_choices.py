@@ -62,5 +62,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(populate_internship_choices, reverse_code=RunPython.noop),
+        # disable test migration
+        # migrations.RunPython(populate_internship_choices, reverse_code=RunPython.noop),
     ]

@@ -199,6 +199,7 @@ def _create_ldap_user_account(master):
             "prenom": master.person.first_name,
             "nom": master.person.last_name,
             "email": master.person.email,
+            "type": "M",
             "active": True,
         }),
         url=settings.LDAP_ACCOUNT_CREATION_URL
