@@ -546,7 +546,7 @@
 
     // sticky table header
     $(document).on('scroll', ()=>{
-        if(window.scrollY >= tableHeader.position().top - tableHeader.height()){
+        if(window.scrollY >= tableHeader.offset().top - tableHeader.height()){
             clone.prependTo($('.table-fix-header tbody'));
             clone.css('position','fixed');
             clone.css('width', $('tbody').width());
