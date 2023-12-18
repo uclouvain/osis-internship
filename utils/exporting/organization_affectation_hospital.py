@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db.models import OuterRef, Subquery
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
@@ -30,6 +31,7 @@ from openpyxl.styles import Font
 from internship import models
 from internship.models.enums import organization_report_fields
 from internship.models.internship_student_information import InternshipStudentInformation
+from internship.models.master_allocation import MasterAllocation
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 from osis_common.document.xls_build import save_virtual_workbook
 
@@ -57,6 +59,7 @@ def _add_header(worksheet, organization):
 
 
 def _add_students(worksheet, cohort, organization):
+
     if cohort.is_parent:
         students_stat = models.internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(
             organization__cohort__in=cohort.subcohorts.all(), organization__reference=organization.reference
@@ -65,6 +68,16 @@ def _add_students(worksheet, cohort, organization):
         students_stat = models.internship_student_affectation_stat.find_by_organization(
             cohort, organization
         ).select_related('student__person')
+
+    master_allocation_subquery = MasterAllocation.objects.filter(
+        organization_id=OuterRef('organization_id'),
+        specialty_id=OuterRef('speciality_id')
+    )
+
+    students_stat = students_stat.annotate(
+        master_last_name=Subquery(master_allocation_subquery.values('master__person__last_name')[:1]),
+        master_first_name=Subquery(master_allocation_subquery.values('master__person__first_name')[:1])
+    )
 
     rep_seq = list(organization.report_sequence())
 
@@ -86,6 +99,8 @@ def _add_students(worksheet, cohort, organization):
                     organization_report_fields.FIRST_NAME: student_info.person.first_name,
                     organization_report_fields.GENDER: student_info.person.gender,
                     organization_report_fields.SPECIALTY: student_stat.speciality.name,
+                    organization_report_fields.MASTER:
+                        f"{student_stat.master_first_name[0].upper()}. {student_stat.master_last_name.upper()}",
                     organization_report_fields.BIRTHDATE: student_info.person.birth_date.strftime("%d-%m-%Y")
                     if student_info.person.birth_date else None,
                     organization_report_fields.EMAIL: student_info.person.email,
@@ -105,7 +120,7 @@ def _add_students(worksheet, cohort, organization):
 def _resize_columns(worksheet, organization):
     # Take all allowed fields and associate their spreadsheet sizes.
     report_fields = organization_report_fields.REPORT_FIELDS
-    fields_size = dict(zip(report_fields, [8, 13, 11, 32, 16, 5, 32, 16, 36, 11, 11, 11, 11, 11]))
+    fields_size = dict(zip(report_fields, [8, 13, 11, 32, 16, 5, 32, 16, 36, 11, 11, 11, 11, 11, 32]))
 
     # Take the sequence of fields selected by the user and generate a list of their sizes
     selected_fields = list(organization.report_sequence())
