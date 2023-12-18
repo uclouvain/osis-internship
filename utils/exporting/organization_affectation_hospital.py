@@ -69,18 +69,14 @@ def _add_students(worksheet, cohort, organization):
             cohort, organization
         ).select_related('student__person')
 
-    students_stat = students_stat.annotate(master_last_name=Subquery(
-            MasterAllocation.objects.filter(
-                organization_id=OuterRef('organization_id'),
-                specialty_id=OuterRef('speciality_id')
-            ).values('master__person__last_name')[:1]
-        ),
-        master_first_name=Subquery(
-            MasterAllocation.objects.filter(
-                organization_id=OuterRef('organization_id'),
-                specialty_id=OuterRef('speciality_id')
-            ).values('master__person__first_name')[:1]
-        )
+    master_allocation_subquery = MasterAllocation.objects.filter(
+        organization_id=OuterRef('organization_id'),
+        specialty_id=OuterRef('speciality_id')
+    )
+
+    students_stat = students_stat.annotate(
+        master_last_name=Subquery(master_allocation_subquery.values('master__person__last_name')[:1]),
+        master_first_name=Subquery(master_allocation_subquery.values('master__person__first_name')[:1])
     )
 
     rep_seq = list(organization.report_sequence())
