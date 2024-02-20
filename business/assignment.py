@@ -135,7 +135,6 @@ class Assignment:
             self._assign_students_in_subcohorts()
         else:
             self._assign_students_in_standalone_cohort()
-            _assign_non_mandatory_internships(self)
 
         _balance_assignments(self)
         self.stop = timeit.default_timer()
@@ -222,6 +221,7 @@ class Assignment:
 
     def _assign_students_in_standalone_cohort(self):
         self._assign_priority_internships()
+        _assign_non_mandatory_internships(self)
         for internship in self.mandatory_internships:
             _assign_regular_students(self, internship)
             logger.info("Assigned regular students to {}.".format(internship.name))
