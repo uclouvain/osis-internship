@@ -87,6 +87,11 @@ class AssignmentTest(TestCase):
 
         cls.prior_student = _block_prior_student_choices(cls)
 
+        # force Stages au choix in first period
+        for sc_internship in cls.non_mandatory_internships:
+            p1 = Period.objects.get(name='P1')
+            InternshipModalityPeriod(internship=sc_internship, period=p1).save()
+
         _execute_assignment_algorithm(cls.cohort)
         cls.affectations = InternshipStudentAffectationStat.objects.all()
 
@@ -219,11 +224,13 @@ def _create_mandatory_internships(cls):
 
 
 def _create_non_mandatory_internships(cls):
-    non_mandatory_specialties = [SpecialtyFactory(mandatory=False) for _ in range(0, N_NON_MANDATORY_INTERNSHIPS)]
+    non_mandatory_specialties = [
+        SpecialtyFactory(name=f"chosen-speciality-{_}", mandatory=False) for _ in range(0, N_NON_MANDATORY_INTERNSHIPS)
+    ]
     non_mandatory_internships = [
         InternshipFactory(
             cohort=cls.cohort,
-            name="Chosen internship {}".format(i + 1)
+            name=f"chosenint_{i+1}"
         )
         for i in range(0, 4)
     ]
@@ -523,3 +530,63 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
         affectations = InternshipStudentAffectationStat.objects.all()
         for student in Student.objects.all():
             self.assertTrue([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None])
+
+
+class AssignmentWithPeriodModalityTest(TestCase):
+    def setUp(self):
+        self.client.force_login(self.user)
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
+        cls.periods = [PeriodFactory(name=f"P{_}", cohort=cls.cohort) for _ in range(1, N_PERIODS)]
+
+        cls.mandatory_internships, cls.mandatory_specialties = _create_mandatory_internships(cls)
+        cls.non_mandatory_internships, cls.non_mandatory_specialties = _create_non_mandatory_internships(cls)
+        cls.students = _create_internship_students(cls)
+
+        cls.hospital_error = OrganizationFactory(name='Hospital Error', cohort=cls.cohort, reference=999)
+        cls.organizations = [OrganizationFactory(cohort=cls.cohort) for _ in range(0, N_ORGANIZATIONS)]
+
+        cls.specialties = cls.mandatory_specialties + cls.non_mandatory_specialties
+        cls.internships = cls.mandatory_internships + cls.non_mandatory_internships
+
+        cls.offers = _create_internship_offers(cls)
+        cls.places = _declare_offer_places(cls)
+        _make_student_choices(cls)
+
+        # force Stages au choix in first period
+        for sc_internship in cls.non_mandatory_internships:
+            p1 = Period.objects.get(name='P1')
+            InternshipModalityPeriod(internship=sc_internship, period=p1).save()
+
+        _execute_assignment_algorithm(cls.cohort)
+        cls.affectations = InternshipStudentAffectationStat.objects.all()
+
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
+
+    def test_all_periods_affected_for_each_student(self):
+        self.affectations = InternshipStudentAffectationStat.objects.all()
+        periods_count = get_effective_periods(self.cohort.id).count()
+        for student in Student.objects.all():
+            self.assertEqual(self.affectations.filter(student=student).count(), periods_count)
+
+    def test_should_assign_chosen_internship_only_in_P1(self):
+        chosen_internship_affectations = self.affectations.filter(internship__in=self.non_mandatory_internships)
+        self.assertGreater(len(chosen_internship_affectations), 0)
+        for aff in chosen_internship_affectations:
+            self.assertIn(aff.period.name, ["P1"])
+
+    @skip('print algorithm execution results')
+    def test_algorithm_execution_print_results(self):
+        periods = Period.objects.all().order_by('name')
+        for student in Student.objects.all():
+            for period in periods:
+                try:
+                    aff = self.affectations.get(student=student, period=period)
+                    print(aff.student, aff.internship, aff.period, aff.organization, aff.period.cohort)
+                except InternshipStudentAffectationStat.DoesNotExist:
+                    print(student, "-----------", period, "-", "-")
+            print('--')
