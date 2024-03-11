@@ -86,6 +86,12 @@ class AssignmentTest(TestCase):
         _make_student_choices(cls)
 
         cls.prior_student = _block_prior_student_choices(cls)
+        cls.prior_non_mandatory_student = _block_prior_student_choice_non_mandatory(cls)
+
+        # force Stages au choix in first period
+        for sc_internship in cls.non_mandatory_internships:
+            p1 = Period.objects.get(name='P1')
+            InternshipModalityPeriod(internship=sc_internship, period=p1).save()
 
         _execute_assignment_algorithm(cls.cohort)
         cls.affectations = InternshipStudentAffectationStat.objects.all()
@@ -96,6 +102,16 @@ class AssignmentTest(TestCase):
         cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         cls.user.user_permissions.add(permission)
+
+    @skip('print algorithm execution results')
+    def test_algorithm_execution_print_results(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        for student in Student.objects.all():
+            if student in [self.prior_student, self.prior_non_mandatory_student]:
+                print('PRIOR STUDENT')
+            for aff in affectations.filter(student=student).order_by('period__name'):
+                print(aff.student, aff.internship, aff.period, aff.organization, aff.period.cohort)
+            print('--')
 
     def test_algorithm_execution_all_periods_assigned(self):
         for student in [student for student in self.students if student != self.prior_student]:
@@ -127,7 +143,7 @@ class AssignmentTest(TestCase):
         solution = load_solution_sol(self.cohort, self.affectations)
         stats = compute_stats(self.cohort, solution)
         self.assertEqual(stats['tot_stud'], N_STUDENTS)
-        self.assertEqual(stats['erasmus_students'], 1)
+        self.assertEqual(stats['erasmus_students'], 2)
 
     def test_should_constraint_mandatory_internship_to_defined_periods_if_any(self):
         for student in [student for student in self.students if student != self.prior_student]:
@@ -138,6 +154,13 @@ class AssignmentTest(TestCase):
                 )
                 if aff_constraint_periods:
                     self.assertTrue(aff.period.name in aff_constraint_periods)
+
+    def test_one_non_mandatory_internship_by_student(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        for student in Student.objects.all():
+            self.assertTrue(
+                len([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None]) == 1
+            )
 
 
 def _make_student_choices(cls):
@@ -158,7 +181,7 @@ def _make_student_choices(cls):
 
 
 def _block_prior_student_choices(cls):
-    prior_student = random.choice(cls.students)
+    prior_student = cls.students[0]
     prior_internships = cls.mandatory_internships + [cls.non_mandatory_internships[0]]
     student_choices = InternshipChoice.objects.filter(
         student=prior_student,
@@ -172,6 +195,22 @@ def _block_prior_student_choices(cls):
             internship=choice.internship,
             period=cls.periods[index]
         )
+
+    return prior_student
+
+
+def _block_prior_student_choice_non_mandatory(cls):
+    # force non mandatory internship on first period
+    prior_student = cls.students[1]
+
+    non_mandatory = cls.non_mandatory_internships[0]
+    student_choice = InternshipChoice.objects.get(student=prior_student, choice=1, internship=non_mandatory)
+    InternshipEnrollmentFactory(
+        student=prior_student,
+        place=student_choice.organization,
+        internship=student_choice.internship,
+        period=cls.periods[0]
+    )
     return prior_student
 
 
@@ -219,11 +258,13 @@ def _create_mandatory_internships(cls):
 
 
 def _create_non_mandatory_internships(cls):
-    non_mandatory_specialties = [SpecialtyFactory(mandatory=False) for _ in range(0, N_NON_MANDATORY_INTERNSHIPS)]
+    non_mandatory_specialties = [
+        SpecialtyFactory(name=f"chosen-speciality-{_}", mandatory=False) for _ in range(0, N_NON_MANDATORY_INTERNSHIPS)
+    ]
     non_mandatory_internships = [
         InternshipFactory(
             cohort=cls.cohort,
-            name="Chosen internship {}".format(i + 1)
+            name=f"chosenint_{i+1}"
         )
         for i in range(0, 4)
     ]
@@ -522,4 +563,66 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
     def test_one_non_mandatory_internship_by_student(self):
         affectations = InternshipStudentAffectationStat.objects.all()
         for student in Student.objects.all():
-            self.assertTrue([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None])
+            self.assertTrue(
+                len([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None]) == 1
+            )
+
+
+class AssignmentWithPeriodModalityTest(TestCase):
+    def setUp(self):
+        self.client.force_login(self.user)
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.cohort = CohortFactory()
+        cls.periods = [PeriodFactory(name=f"P{_}", cohort=cls.cohort) for _ in range(1, N_PERIODS)]
+
+        cls.mandatory_internships, cls.mandatory_specialties = _create_mandatory_internships(cls)
+        cls.non_mandatory_internships, cls.non_mandatory_specialties = _create_non_mandatory_internships(cls)
+        cls.students = _create_internship_students(cls)
+
+        cls.hospital_error = OrganizationFactory(name='Hospital Error', cohort=cls.cohort, reference=999)
+        cls.organizations = [OrganizationFactory(cohort=cls.cohort) for _ in range(0, N_ORGANIZATIONS)]
+
+        cls.specialties = cls.mandatory_specialties + cls.non_mandatory_specialties
+        cls.internships = cls.mandatory_internships + cls.non_mandatory_internships
+
+        cls.offers = _create_internship_offers(cls)
+        cls.places = _declare_offer_places(cls)
+        _make_student_choices(cls)
+
+        # force Stages au choix in first period
+        for sc_internship in cls.non_mandatory_internships:
+            p1 = Period.objects.get(name='P1')
+            InternshipModalityPeriod(internship=sc_internship, period=p1).save()
+
+        _execute_assignment_algorithm(cls.cohort)
+        cls.affectations = InternshipStudentAffectationStat.objects.all()
+
+        cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
+        permission = Permission.objects.get(codename='is_internship_manager')
+        cls.user.user_permissions.add(permission)
+
+    def test_all_periods_affected_for_each_student(self):
+        self.affectations = InternshipStudentAffectationStat.objects.all()
+        periods_count = get_effective_periods(self.cohort.id).count()
+        for student in Student.objects.all():
+            self.assertEqual(self.affectations.filter(student=student).count(), periods_count)
+
+    def test_should_assign_chosen_internship_only_in_P1(self):
+        chosen_internship_affectations = self.affectations.filter(internship__in=self.non_mandatory_internships)
+        self.assertGreater(len(chosen_internship_affectations), 0)
+        for aff in chosen_internship_affectations:
+            self.assertIn(aff.period.name, ["P1"])
+
+    @skip('print algorithm execution results')
+    def test_algorithm_execution_print_results(self):
+        periods = Period.objects.all().order_by('name')
+        for student in Student.objects.all():
+            for period in periods:
+                try:
+                    aff = self.affectations.get(student=student, period=period)
+                    print(aff.student, aff.internship, aff.period, aff.organization, aff.period.cohort)
+                except InternshipStudentAffectationStat.DoesNotExist:
+                    print(student, "-----------", period, "-", "-")
+            print('--')

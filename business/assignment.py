@@ -135,7 +135,6 @@ class Assignment:
             self._assign_students_in_subcohorts()
         else:
             self._assign_students_in_standalone_cohort()
-            _assign_non_mandatory_internships(self)
 
         _balance_assignments(self)
         self.stop = timeit.default_timer()
@@ -222,6 +221,7 @@ class Assignment:
 
     def _assign_students_in_standalone_cohort(self):
         self._assign_priority_internships()
+        _assign_non_mandatory_internships(self)
         for internship in self.mandatory_internships:
             _assign_regular_students(self, internship)
             logger.info("Assigned regular students to {}.".format(internship.name))
@@ -232,6 +232,8 @@ class Assignment:
             _assign_students_with_priority_choices(self, internship)
             logger.info("Assigned students with priority choices to {}.".format(internship.name))
             self.internship_count += 1
+        _assign_students_with_priority_choices(self, self.non_mandatory_internships)
+        logger.info("Assigned students with priority choices to stages au choix.")
 
 
 def _sort_by_cost_after_random_shuffle(assignment, students_list):
@@ -247,8 +249,6 @@ def _sort_by_cost_after_random_shuffle(assignment, students_list):
 
 def _assign_non_mandatory_internships(self):
     self.total_count = len(self.students_information)
-    _assign_students_with_priority_choices(self, self.non_mandatory_internships)
-    logger.info("Assigned students with priority choices to stages au choix.")
     _assign_regular_students(self, self.non_mandatory_internships)
     logger.info("Assigned regular students to stages au choix")
 
@@ -414,6 +414,8 @@ def _assign_student(assignment, student, internship):
 
     affectations = None
 
+    student_affectations = get_student_affectations(student, assignment.affectations)
+
     if student_not_fully_assigned(assignment, student):
         if is_mandatory_internship(internship):
             # Deal with mandatory internship
@@ -421,7 +423,7 @@ def _assign_student(assignment, student, internship):
                 affectations = assign_choices_to_student(assignment, student, choices, internship)
         # Deal with internship at choice
         else:
-            if isinstance(internship, Iterable):
+            if isinstance(internship, Iterable) and not _has_affected_non_mandatory_internship(student_affectations):
                 for chosen_internship in internship:
                     if affectations is None or affectations == []:
                         last = chosen_internship == list(internship)[:-1]
@@ -433,6 +435,10 @@ def _assign_student(assignment, student, internship):
         if affectations:
             assignment.affectations.extend(affectations)
         logger.info("Student {} affected to {} in period {}".format(student, internship, affectations))
+
+
+def _has_affected_non_mandatory_internship(student_affectations):
+    return len([aff for aff in student_affectations if aff.internship.speciality is None]) > 0
 
 
 def assign_choices_to_student(assignment, student, choices, internship, last=False):
@@ -696,7 +702,15 @@ def find_offers_for_internship_choice(assignment, choice):
 
 def get_student_affectations(student, affectations):
     """ From a list of affectations, it returns a new list containing only the affectations related to the student. """
-    return list(filter(lambda affectation: affectation.student == student, affectations))
+    unique_periods = set()
+    filtered_affectations = []
+
+    for affectation in affectations:
+        if affectation.student == student and affectation.period not in unique_periods:
+            filtered_affectations.append(affectation)
+            unique_periods.add(affectation.period)
+
+    return filtered_affectations
 
 
 def difference(first_list, second_list):
