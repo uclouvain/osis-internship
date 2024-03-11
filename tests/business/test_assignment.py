@@ -86,6 +86,7 @@ class AssignmentTest(TestCase):
         _make_student_choices(cls)
 
         cls.prior_student = _block_prior_student_choices(cls)
+        cls.prior_non_mandatory_student = _block_prior_student_choice_non_mandatory(cls)
 
         # force Stages au choix in first period
         for sc_internship in cls.non_mandatory_internships:
@@ -101,6 +102,16 @@ class AssignmentTest(TestCase):
         cls.user = User.objects.create_user('demo', 'demo@demo.org', 'passtest')
         permission = Permission.objects.get(codename='is_internship_manager')
         cls.user.user_permissions.add(permission)
+
+    @skip('print algorithm execution results')
+    def test_algorithm_execution_print_results(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        for student in Student.objects.all():
+            if student in [self.prior_student, self.prior_non_mandatory_student]:
+                print('PRIOR STUDENT')
+            for aff in affectations.filter(student=student).order_by('period__name'):
+                print(aff.student, aff.internship, aff.period, aff.organization, aff.period.cohort)
+            print('--')
 
     def test_algorithm_execution_all_periods_assigned(self):
         for student in [student for student in self.students if student != self.prior_student]:
@@ -132,7 +143,7 @@ class AssignmentTest(TestCase):
         solution = load_solution_sol(self.cohort, self.affectations)
         stats = compute_stats(self.cohort, solution)
         self.assertEqual(stats['tot_stud'], N_STUDENTS)
-        self.assertEqual(stats['erasmus_students'], 1)
+        self.assertEqual(stats['erasmus_students'], 2)
 
     def test_should_constraint_mandatory_internship_to_defined_periods_if_any(self):
         for student in [student for student in self.students if student != self.prior_student]:
@@ -143,6 +154,13 @@ class AssignmentTest(TestCase):
                 )
                 if aff_constraint_periods:
                     self.assertTrue(aff.period.name in aff_constraint_periods)
+
+    def test_one_non_mandatory_internship_by_student(self):
+        affectations = InternshipStudentAffectationStat.objects.all()
+        for student in Student.objects.all():
+            self.assertTrue(
+                len([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None]) == 1
+            )
 
 
 def _make_student_choices(cls):
@@ -163,7 +181,7 @@ def _make_student_choices(cls):
 
 
 def _block_prior_student_choices(cls):
-    prior_student = random.choice(cls.students)
+    prior_student = cls.students[0]
     prior_internships = cls.mandatory_internships + [cls.non_mandatory_internships[0]]
     student_choices = InternshipChoice.objects.filter(
         student=prior_student,
@@ -177,6 +195,22 @@ def _block_prior_student_choices(cls):
             internship=choice.internship,
             period=cls.periods[index]
         )
+
+    return prior_student
+
+
+def _block_prior_student_choice_non_mandatory(cls):
+    # force non mandatory internship on first period
+    prior_student = cls.students[1]
+
+    non_mandatory = cls.non_mandatory_internships[0]
+    student_choice = InternshipChoice.objects.get(student=prior_student, choice=1, internship=non_mandatory)
+    InternshipEnrollmentFactory(
+        student=prior_student,
+        place=student_choice.organization,
+        internship=student_choice.internship,
+        period=cls.periods[0]
+    )
     return prior_student
 
 
@@ -529,7 +563,9 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
     def test_one_non_mandatory_internship_by_student(self):
         affectations = InternshipStudentAffectationStat.objects.all()
         for student in Student.objects.all():
-            self.assertTrue([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None])
+            self.assertTrue(
+                len([aff for aff in affectations.filter(student=student) if aff.internship.speciality is None]) == 1
+            )
 
 
 class AssignmentWithPeriodModalityTest(TestCase):
