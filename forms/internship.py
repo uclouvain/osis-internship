@@ -28,10 +28,14 @@ from django.forms import CheckboxSelectMultiple
 
 from internship.models import internship_speciality
 from internship.models.internship import Internship
+from internship.models.internship_modality_apd import InternshipModalityApd
 from internship.models.internship_modality_period import InternshipModalityPeriod
+from internship.models.internship_score import APD_NUMBER
 from internship.models.period import Period
 from django.utils.translation import gettext_lazy as _
 
+def _apd_choices():
+    return [(index, f"APD {index}") for index in range(1, APD_NUMBER + 1)]
 
 class InternshipForm(forms.ModelForm):
 
@@ -42,6 +46,15 @@ class InternshipForm(forms.ModelForm):
         help_text=_(
             'Select which period should be exclusively filled for this modality.'
             ' No selection means there is no constraint on the period.'
+        )
+    )
+
+    apds = forms.MultipleChoiceField(
+        choices=_apd_choices(),
+        required=False,
+        widget=CheckboxSelectMultiple(),
+        help_text=_(
+            'Select which APDs are required for this modality.'
         )
     )
 
@@ -59,10 +72,16 @@ class InternshipForm(forms.ModelForm):
         cohort_id = kwargs['instance'].cohort_id
 
         self.fields['speciality'].queryset = internship_speciality.find_by_cohort(cohort_id)
+
         self.fields['periods'].queryset = Period.objects.filter(cohort_id=cohort_id)
         self.fields['periods'].initial = InternshipModalityPeriod.objects.filter(
             internship=kwargs['instance']
         ).values_list('period_id', flat=True)
+
+        self.fields['apds'].choices = _apd_choices()
+        self.fields['apds'].initial = [apd for apd in InternshipModalityApd.objects.filter(
+            internship=kwargs['instance']
+        ).values_list('apd', flat=True)]
 
     def save(self, commit=True):
         instance = super().save(commit)
@@ -73,6 +92,14 @@ class InternshipForm(forms.ModelForm):
         # recreate according to data received
         InternshipModalityPeriod.objects.bulk_create(
             InternshipModalityPeriod(internship=instance, period=period) for period in self.cleaned_data['periods']
+        )
+
+        # delete existing modality apds for instance
+        InternshipModalityApd.objects.filter(internship=instance).delete()
+
+        # recreate according to data received
+        InternshipModalityApd.objects.bulk_create(
+            InternshipModalityApd(internship=instance, apd=apd) for apd in self.cleaned_data['apds']
         )
 
         return instance
