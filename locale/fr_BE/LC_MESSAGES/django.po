@@ -110,6 +110,9 @@ msgstr ""
 msgid "APD description"
 msgstr "Description des APD"
 
+msgid "APDs"
+msgstr "APDs"
+
 msgid "Accept"
 msgstr "Accepter"
 
@@ -409,7 +412,8 @@ msgid "Do not postpone"
 msgstr "Ne pas reporter"
 
 msgid "Do you want to postpone allocations modifications on these cohorts ?"
-msgstr "Voulez-vous reporter les modifications d'affectations sur ces cohortes ?"
+msgstr ""
+"Voulez-vous reporter les modifications d'affectations sur ces cohortes ?"
 
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
@@ -747,6 +751,9 @@ msgstr "Faire/recevoir le rapport de transmission"
 
 msgid "Male"
 msgstr "Homme"
+
+msgid "Mandatory APDs"
+msgstr "APDs obligatoires"
 
 msgid "Mandatory internship"
 msgstr "Stages obligatoires"
@@ -1103,6 +1110,9 @@ msgid "Select the periods for which evaluations are open"
 msgstr ""
 "Sélectionnez les périodes pour lesquelles les évaluations des lieux de stage "
 "sont ouvertes"
+
+msgid "Select which APDs are required for this modality."
+msgstr "Sélectionnez les APDs obligatoires pour cette modalité de stage."
 
 msgid ""
 "Select which period should be exclusively filled for this modality. No "

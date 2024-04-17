@@ -159,7 +159,8 @@ def save_period_places(request, cohort_id, internship_id):
 def internship_list(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
     internships = mdl_int.internship.Internship.objects.filter(cohort_id=cohort_id).annotate(
-        periods=ArrayAgg('internshipmodalityperiod__period__name', ordering='internshipmodalityperiod__period__name')
+        periods=ArrayAgg('internshipmodalityperiod__period__name', ordering='internshipmodalityperiod__period__name', distinct=True),
+        apds=ArrayAgg('internshipmodalityapd__apd', distinct=True),
     )
     context = {
         'cohort': cohort,

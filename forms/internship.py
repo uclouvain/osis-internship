@@ -28,14 +28,14 @@ from django.forms import CheckboxSelectMultiple
 
 from internship.models import internship_speciality
 from internship.models.internship import Internship
-from internship.models.internship_modality_apd import InternshipModalityApd
+from internship.models.internship_modality_apd import InternshipModalityApd, APDS_DESCRIPTIONS
 from internship.models.internship_modality_period import InternshipModalityPeriod
 from internship.models.internship_score import APD_NUMBER
 from internship.models.period import Period
 from django.utils.translation import gettext_lazy as _
 
 def _apd_choices():
-    return [(index, f"APD {index}") for index in range(1, APD_NUMBER + 1)]
+    return [(index, f"APD {index} : {APDS_DESCRIPTIONS[str(index)]}") for index in range(1, APD_NUMBER + 1)]
 
 class InternshipForm(forms.ModelForm):
 
