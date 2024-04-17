@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.contrib.postgres.aggregates import ArrayAgg
 from django_filters import rest_framework as filters
 from rest_framework import generics
 
@@ -44,7 +45,13 @@ class InternshipList(generics.ListAPIView):
     """
     name = 'internship-list'
     serializer_class = InternshipSerializer
-    queryset = Internship.objects.all().order_by('speciality__name', 'name')
+    queryset = Internship.objects.all().order_by('speciality__name', 'name').annotate(
+        periods=ArrayAgg('internshipmodalityperiod__period__name',
+            ordering='internshipmodalityperiod__period__name',
+            distinct=True
+        ),
+        apds=ArrayAgg('internshipmodalityapd__apd', distinct=True),
+    )
     search_fields = (
         'name', 'speciality'
     )
@@ -64,5 +71,11 @@ class InternshipDetail(generics.RetrieveAPIView):
     """
     name = 'internship-detail'
     serializer_class = InternshipSerializer
-    queryset = Internship.objects.all()
+    queryset = Internship.objects.all().annotate(
+        periods=ArrayAgg('internshipmodalityperiod__period__name',
+            ordering='internshipmodalityperiod__period__name',
+            distinct=True
+        ),
+        apds=ArrayAgg('internshipmodalityapd__apd', distinct=True),
+    )
     lookup_field = 'uuid'
