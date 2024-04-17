@@ -27,7 +27,7 @@ from django.contrib import admin
 
 from internship.models import *
 from internship.models import internship_score_reason, internship_place_evaluation_item, internship_certifier, \
-    internship_place_evaluation, internship_modality_period
+    internship_place_evaluation, internship_modality_period, internship_modality_apd
 
 admin.site.register(cohort.Cohort, cohort.CohortAdmin)
 
@@ -81,3 +81,6 @@ admin.site.register(internship_place_evaluation.PlaceEvaluation,
 
 admin.site.register(internship_modality_period.InternshipModalityPeriod,
                     internship_modality_period.InternshipModalityPeriodAdmin)
+
+admin.site.register(internship_modality_apd.InternshipModalityApd,
+                    internship_modality_apd.InternshipModalityApdAdmin)

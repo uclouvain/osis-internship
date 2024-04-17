@@ -38,6 +38,9 @@ class InternshipSerializer(serializers.HyperlinkedModelSerializer):
     cohort = CohortSerializer()
     speciality = InternshipSpecialtySerializer()
 
+    periods = serializers.ListField()
+    apds = serializers.ListField()
+
     class Meta:
         model = Internship
         fields = (
@@ -47,5 +50,7 @@ class InternshipSerializer(serializers.HyperlinkedModelSerializer):
             'speciality',
             'cohort',
             'length_in_periods',
-            'position'
+            'position',
+            'periods',
+            'apds',
         )

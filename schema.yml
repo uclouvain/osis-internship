@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.15"
+  version: "1.1.16"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -1338,6 +1338,12 @@ components:
         position:
           type: integer
           example: 1
+        periods:
+          type: array
+          example: ["P1", "P2"]
+        apds:
+          type: array
+          example: [1, 2, 3]
     StudentGet:
       type: object
       properties:
