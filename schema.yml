@@ -1340,9 +1340,13 @@ components:
           example: 1
         periods:
           type: array
+          items:
+            type: string
           example: ["P1", "P2"]
         apds:
           type: array
+          items:
+            type: integer
           example: [1, 2, 3]
     StudentGet:
       type: object
