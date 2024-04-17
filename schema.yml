@@ -1338,6 +1338,12 @@ components:
         position:
           type: integer
           example: 1
+        periods:
+          type: array
+          example: ["P1", "P2"]
+        apds:
+          type: array
+          example: [1, 2, 3]
     StudentGet:
       type: object
       properties:
