@@ -47,6 +47,7 @@ APDS_DESCRIPTIONS = {
     "15": _("Contribute to quality of care and patient safety"),
 }
 
+
 class InternshipModalityApdAdmin(SerializableModelAdmin):
     list_display = ('internship', 'apd')
 
