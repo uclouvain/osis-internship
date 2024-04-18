@@ -1437,6 +1437,8 @@ components:
           $ref: '#/components/schemas/Uuid'
         period:
           $ref: '#/components/schemas/PeriodGet'
+        internship_uuid:
+          $ref: '#/components/schemas/Uuid'
         internship:
           type: string
         score:
