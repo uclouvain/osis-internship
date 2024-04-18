@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.contrib.postgres.aggregates import ArrayAgg
+from django.db.models import Q
 from django_filters import rest_framework as filters
 from rest_framework import generics
 
@@ -48,9 +49,14 @@ class InternshipList(generics.ListAPIView):
     queryset = Internship.objects.all().order_by('speciality__name', 'name').annotate(
         periods=ArrayAgg('internshipmodalityperiod__period__name',
             ordering='internshipmodalityperiod__period__name',
-            distinct=True
+            distinct=True,
+            filter=Q(internshipmodalityperiod__period__name__isnull=False),
         ),
-        apds=ArrayAgg('internshipmodalityapd__apd', distinct=True),
+        apds=ArrayAgg(
+            'internshipmodalityapd__apd',
+            distinct=True,
+            filter=Q(internshipmodalityapd__apd__isnull=False),
+        ),
     )
     search_fields = (
         'name', 'speciality'
@@ -74,8 +80,13 @@ class InternshipDetail(generics.RetrieveAPIView):
     queryset = Internship.objects.all().annotate(
         periods=ArrayAgg('internshipmodalityperiod__period__name',
             ordering='internshipmodalityperiod__period__name',
-            distinct=True
+            distinct=True,
+            filter=Q(internshipmodalityperiod__period__name__isnull=False)
         ),
-        apds=ArrayAgg('internshipmodalityapd__apd', distinct=True),
+        apds=ArrayAgg(
+            'internshipmodalityapd__apd',
+            distinct=True,
+            filter=Q(internshipmodalityapd__apd__isnull=False)
+        ),
     )
     lookup_field = 'uuid'
