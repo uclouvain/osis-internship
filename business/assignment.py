@@ -135,7 +135,6 @@ class Assignment:
             self._assign_students_in_subcohorts()
         else:
             self._assign_students_in_standalone_cohort()
-            _assign_non_mandatory_internships(self)
 
         _balance_assignments(self)
         self.stop = timeit.default_timer()
@@ -222,6 +221,7 @@ class Assignment:
 
     def _assign_students_in_standalone_cohort(self):
         self._assign_priority_internships()
+        _assign_non_mandatory_internships(self)
         for internship in self.mandatory_internships:
             _assign_regular_students(self, internship)
             logger.info("Assigned regular students to {}.".format(internship.name))
@@ -482,7 +482,7 @@ def find_best_affectation_outside_of_choices(assignment, student, internship, ch
         else:
             return []
     else:
-        student_periods = get_student_periods(assignment, student, internship)
+        student_periods = get_student_periods(assignment, student, internship, force_hospital_error=True)
         speciality = choices.first().speciality
         return affect_hospital_error(assignment, student, internship, student_periods, speciality)
 
@@ -496,13 +496,15 @@ def affect_hospital_error(assignment, student, internship, periods, speciality=N
                                          speciality, ChoiceType.IMPOSED.value, False, internship)
 
 
-def get_student_periods(assignment, student, internship):
+def get_student_periods(assignment, student, internship, force_hospital_error=False):
     if is_mandatory_internship(internship):
         student_periods = all_available_periods(
-            assignment, student, internship.length_in_periods, assignment.periods, internship
+            assignment, student, internship.length_in_periods, assignment.periods, internship, force_hospital_error
         )
     else:
-        student_periods = all_available_periods(assignment, student, 1, assignment.periods, internship)
+        student_periods = all_available_periods(
+            assignment, student, 1, assignment.periods, internship, force_hospital_error
+        )
     random.shuffle(student_periods)
     return student_periods
 
@@ -533,7 +535,7 @@ def first_relevant_periods(assignment, student, internship_length, periods, inte
         return available_periods
 
 
-def all_available_periods(assignment, student, internship_length, periods, internship):
+def all_available_periods(assignment, student, internship_length, periods, internship, force_in_hospital_error=False):
     """ Difference between the authorized periods and the already affected periods from the student."""
     existing_affectations = [] + assignment.affectations
     if assignment.parent_cohort:
@@ -542,7 +544,7 @@ def all_available_periods(assignment, student, internship_length, periods, inter
     unavailable_periods = get_periods_from_affectations(student_affectations)
     available_periods = difference(periods, unavailable_periods)
     modality_periods = get_modality_periods_for_internship(internship)
-    if modality_periods:
+    if modality_periods and not force_in_hospital_error:
         available_periods = [period for period in available_periods if period.name in modality_periods]
     return list(group_periods_by_consecutives(available_periods, leng=internship_length))
 

@@ -65,6 +65,7 @@ class Organization(SerializableModel):
     report_address = models.IntegerField(default=12, blank=True, null=True)
     report_postal_code = models.IntegerField(default=13, blank=True, null=True)
     report_city = models.IntegerField(default=14, blank=True, null=True)
+    report_master = models.IntegerField(default=15, blank=True, null=True)
 
     fake = models.BooleanField(default=False)
 
@@ -85,7 +86,7 @@ class Organization(SerializableModel):
     def report_sequence(self):
         """ Returns only the report fields that are numered and ordered as numered."""
         sequence = [None, None, None, None, None, None, None,
-                    None, None, None, None, None, None, None]
+                    None, None, None, None, None, None, None, None]
 
         for field_name in organization_report_fields.REPORT_FIELDS:
             field = getattr(self, "report_{}".format(field_name))

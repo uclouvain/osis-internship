@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.14"
+  version: "1.1.16"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -437,6 +437,16 @@ paths:
           name: selectable
           schema:
             type: boolean
+          required: false
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+        - in: query
+          name: offset
+          schema:
+            type: integer
           required: false
         - $ref: '#/components/parameters/Accept-Language'
         - $ref: '#/components/parameters/X-User-FirstName'
@@ -1328,6 +1338,16 @@ components:
         position:
           type: integer
           example: 1
+        periods:
+          type: array
+          items:
+            type: string
+          example: ["P1", "P2"]
+        apds:
+          type: array
+          items:
+            type: integer
+          example: [1, 2, 3]
     StudentGet:
       type: object
       properties:
@@ -1417,6 +1437,8 @@ components:
           $ref: '#/components/schemas/Uuid'
         period:
           $ref: '#/components/schemas/PeriodGet'
+        internship_uuid:
+          $ref: '#/components/schemas/Uuid'
         internship:
           type: string
         score:

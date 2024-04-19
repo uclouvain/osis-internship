@@ -92,11 +92,7 @@ class InternshipPeriodEncodingReminderTest(TestCase):
             'link': settings.INTERNSHIP_SCORE_ENCODING_URL,
             'period': self.period.name
         })
-        self.assertEqual(args['message_content']['receivers'][0], {
-            **args['message_content']['receivers'][0],
-            'receiver_email': self.active_master_allocation.master.person.email,
-            'receiver_person_id': self.active_master_allocation.master.person_id,
-        })
+        self.assertEqual(args['message_content']['cc'][0], self.active_master_allocation.master.person.email)
         self.period.refresh_from_db()
         self.assertTrue(self.period.reminder_mail_sent)
 

@@ -200,7 +200,7 @@
                                 {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -211,10 +211,10 @@
                                     />
                               </td>
                               <td
-                                {% if has_remedial and periods.count < mandatory_periods.count %}
+                                {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -228,20 +228,20 @@
                                   {% endif %}
                               </td>
                               <td style="max-width: 10vw;" class="overflow-cell"
-                                {% if has_remedial and periods.count < mandatory_periods.count %}
+                                {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
                                 {{ student }}
                               </td>
                               <td
-                                {% if has_remedial and periods.count < mandatory_periods.count %}
+                                {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods.count %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods.count|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
