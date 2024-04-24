@@ -82,6 +82,8 @@ class ScoresFilterForm(Form):
         # disable clean on periods to retrieve periods pk
         self.fields['period'].clean = lambda x: x
 
+        self.fields['organization'].label_from_instance = self.label_from_organization
+
     def get_students(self, cohort):
         free_text = self.cleaned_data.get('free_text')
 
@@ -150,6 +152,9 @@ class ScoresFilterForm(Form):
         if filter == "":
             return None
         return filter
+
+    def label_from_organization(self, obj):
+        return f"{obj.reference} - {obj.name}"
 
 
 def search_students_with_free_text(free_text, qs):

@@ -90,6 +90,9 @@ msgstr ""
 msgid "APD description"
 msgstr ""
 
+msgid "APDs"
+msgstr ""
+
 msgid "Accept"
 msgstr ""
 
@@ -713,6 +716,9 @@ msgstr ""
 msgid "Male"
 msgstr ""
 
+msgid "Mandatory APDs"
+msgstr ""
+
 msgid "Mandatory internship"
 msgstr ""
 
@@ -1057,6 +1063,9 @@ msgid "Select parent cohort"
 msgstr ""
 
 msgid "Select the periods for which evaluations are open"
+msgstr ""
+
+msgid "Select which APDs are required for this modality."
 msgstr ""
 
 msgid ""

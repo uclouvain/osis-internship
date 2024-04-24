@@ -39,6 +39,7 @@
                             <th>{% trans 'Number of periods' %}</th>
                             <th>{% trans 'Position' %}</th>
                             <th>{% trans 'Periods' %}</th>
+                            <th>{% trans 'Mandatory APDs' %}</th>
                             <th>&nbsp;</th>
                         </tr>
                         </thead>
@@ -52,6 +53,13 @@
                                 <td>
                                     {% if internship.periods.0 %}
                                         {{ internship.periods|join:', ' }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if internship.apds.0 %}
+                                        {{ internship.apds|join:', ' }}
                                     {% else %}
                                         -
                                     {% endif %}
