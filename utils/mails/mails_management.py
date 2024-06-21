@@ -63,21 +63,21 @@ def send_internship_period_encoding_reminder(period):
     active_user_allocations = _get_active_user_allocations(organizations, specialties)
     deduplicated_active_masters = _get_deduplicated_active_masters(active_user_allocations)
 
-    message_content = message_config.create_message_content(
-        html_template_ref='internship_end_period_reminder_html',
-        txt_template_ref='internship_end_period_reminder_txt',
-        tables=[],
-        receivers=[
-            message_config.create_receiver(master_person_id, master_email, None)
-            for master_person_id, master_email in deduplicated_active_masters
-        ],
-        template_base_data={
-            'period': period.name,
-            'link': settings.INTERNSHIP_SCORE_ENCODING_URL
-        },
-        subject_data={'period': period.name}
-    )
-    send_messages(message_content=message_content)
+    for master_person_id, master_email in deduplicated_active_masters:
+        message_content = message_config.create_message_content(
+            html_template_ref='internship_end_period_reminder_html',
+            txt_template_ref='internship_end_period_reminder_txt',
+            tables=[],
+            receivers=[
+                message_config.create_receiver(master_person_id, master_email, None)
+            ],
+            template_base_data={
+                'period': period.name,
+                'link': settings.INTERNSHIP_SCORE_ENCODING_URL
+            },
+            subject_data={'period': period.name}
+        )
+        send_messages(message_content=message_content)
     period.reminder_mail_sent = True
     period.save()
 
