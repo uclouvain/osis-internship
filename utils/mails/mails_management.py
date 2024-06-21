@@ -67,13 +67,15 @@ def send_internship_period_encoding_reminder(period):
         html_template_ref='internship_end_period_reminder_html',
         txt_template_ref='internship_end_period_reminder_txt',
         tables=[],
-        receivers=[],
+        receivers=[
+            message_config.create_receiver(master_person_id, master_email, None)
+            for master_person_id, master_email in deduplicated_active_masters
+        ],
         template_base_data={
             'period': period.name,
             'link': settings.INTERNSHIP_SCORE_ENCODING_URL
         },
-        subject_data={'period': period.name},
-        cc=[master_email for _, master_email in deduplicated_active_masters],
+        subject_data={'period': period.name}
     )
     send_messages(message_content=message_content)
     period.reminder_mail_sent = True
