@@ -41,12 +41,12 @@
     <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'Scores encoding' %}</li>
+    <li class="active">{% trans 'Scores encoding' context "internship" %}</li>
 {% endblock %}
 
 {% block content %}
     <div class="page-header">
-        <h2>{% trans 'Scores encoding' %}</h2>
+        <h2>{% trans 'Scores encoding' context "internship" %}</h2>
     </div>
 
     <ul id="tabs" class="nav nav-tabs">
@@ -167,7 +167,7 @@
                       <tr class="header-row">
                         {% if students %}
                             <th>
-                                <input id="id_check_all" type="checkbox" name="check_all" title="{% trans 'Check All' %}"/>
+                                <input id="id_check_all" type="checkbox" name="check_all" title="{% trans 'Check All' context 'internship' %}"/>
                             </th>
                         {% endif %}
                         <th></th>

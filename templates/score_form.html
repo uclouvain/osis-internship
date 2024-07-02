@@ -32,7 +32,7 @@
     <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
     <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
     <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internship_scores_encoding' cohort_id=cohort.id %}">{% trans 'Scores encoding' %}</a></li>
+    <li><a href="{% url 'internship_scores_encoding' cohort_id=cohort.id %}">{% trans 'Scores encoding' context "internship" %}</a></li>
     <li class="active">
         {{ score.student_affectation.student.person.last_name }}, {{ score.student_affectation.student.person.first_name }} - {{ score.student_affectation.period.name }} </li>
 {% endblock %}
