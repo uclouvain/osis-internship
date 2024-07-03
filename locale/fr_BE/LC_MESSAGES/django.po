@@ -1000,7 +1000,7 @@ msgid "Priority"
 msgstr "Prioritaire"
 
 msgid "Private email"
-msgstr "Email Privé"
+msgstr "Email privé"
 
 msgid "Proceed"
 msgstr "Continuer"
