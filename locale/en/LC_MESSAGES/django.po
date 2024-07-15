@@ -246,6 +246,7 @@ msgstr ""
 msgid "Certified in conformity with registered evaluations. Brussels, {}."
 msgstr ""
 
+msgctxt "internship"
 msgid "Check All"
 msgstr ""
 
@@ -541,6 +542,7 @@ msgstr ""
 msgid "Fourth choice"
 msgstr ""
 
+msgctxt "internship"
 msgid "Full name"
 msgstr ""
 
@@ -1021,6 +1023,7 @@ msgstr ""
 msgid "Scores"
 msgstr ""
 
+msgctxt "internship"
 msgid "Scores encoding"
 msgstr ""
 
