@@ -123,10 +123,10 @@ msgid "Account expiry"
 msgstr "Expiration"
 
 msgid "Acronym"
-msgstr "Acronyme"
+msgstr "Sigle"
 
 msgid "Acronym already exists"
-msgstr "Sigle déjà existant"
+msgstr "Le sigle existe déjà"
 
 msgid "Actions"
 msgstr "Actions"
@@ -273,6 +273,7 @@ msgstr "Capacité maximale"
 msgid "Certified in conformity with registered evaluations. Brussels, {}."
 msgstr "Certifié conforme aux évaluations encodées. Bruxelles, le {}."
 
+msgctxt "internship"
 msgid "Check All"
 msgstr "Cocher tout"
 
@@ -543,7 +544,7 @@ msgid "Fake hospital"
 msgstr "Hôpital fictif"
 
 msgid "Female"
-msgstr "Femme"
+msgstr "Féminin"
 
 msgid "File extension must be .xlsx"
 msgstr "L'extension de fichier doit être .xlsx"
@@ -572,6 +573,7 @@ msgstr "Formuler des questions cliniques"
 msgid "Fourth choice"
 msgstr "4ème choix"
 
+msgctxt "internship"
 msgid "Full name"
 msgstr "Nom"
 
@@ -750,7 +752,7 @@ msgid "Make/receive transmission report"
 msgstr "Faire/recevoir le rapport de transmission"
 
 msgid "Male"
-msgstr "Homme"
+msgstr "Masculin"
 
 msgid "Mandatory APDs"
 msgstr "APDs obligatoires"
@@ -998,7 +1000,7 @@ msgid "Priority"
 msgstr "Prioritaire"
 
 msgid "Private email"
-msgstr "Email Privé"
+msgstr "Email privé"
 
 msgid "Proceed"
 msgstr "Continuer"
@@ -1037,7 +1039,7 @@ msgid "Return"
 msgstr "Retour"
 
 msgid "Role"
-msgstr "Role"
+msgstr "Rôle"
 
 msgid "Save"
 msgstr "Enregistrer"
@@ -1061,6 +1063,7 @@ msgstr "Évaluation mise à jour pour {}"
 msgid "Scores"
 msgstr "Notes"
 
+msgctxt "internship"
 msgid "Scores encoding"
 msgstr "Encodage des notes"
 
@@ -1201,7 +1204,7 @@ msgid "Student does not exist"
 msgstr "L'étudiant n'existe pas."
 
 msgid "Student path"
-msgstr "Parcours étudiant"
+msgstr "Parcours de l'étudiant.e"
 
 msgid "Student sumup"
 msgstr "Bilan des étudiants"
@@ -1210,7 +1213,7 @@ msgid "Student's choices"
 msgstr "Choix des étudiants"
 
 msgid "Students"
-msgstr "Étudiants"
+msgstr "Étudiant.e.s"
 
 msgid "Students list"
 msgstr "Liste des étudiants"
@@ -1325,7 +1328,7 @@ msgstr ""
 "encodée"
 
 msgid "Url"
-msgstr "Url"
+msgstr "URL"
 
 msgid "User account"
 msgstr "Compte utilisateur"

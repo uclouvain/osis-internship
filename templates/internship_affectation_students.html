@@ -123,6 +123,8 @@
                                             <td style="background-color: #00ff95">
                                         {% elif enrollment.choice == 'X' %}
                                             <td style="background-color: #ffa8a8">
+                                        {% elif forloop.counter < periods.items|length and not enrollment.choice.lower %}
+                                            <td style="background-color: #ffc1aa">
                                         {% else %}
                                             <td>
                                         {% endif %}

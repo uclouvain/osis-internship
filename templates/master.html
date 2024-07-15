@@ -56,7 +56,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label for="first_name">{% trans 'Full name' %}</label>
+                        <label for="first_name">{% trans 'Full name' context 'internship' %}</label>
                         <div id="first_name">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name | default_if_none:'-'}}</div>
                     </div>
                 </div>
