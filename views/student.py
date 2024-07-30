@@ -107,15 +107,17 @@ def get_student(request):
         cohort = Cohort.objects.get(pk=cohort_id)
         existing_student = mdl_int.internship_student_information.find_by_person(student.person, cohort)
         if not existing_student:
-            data = {'id': student.person.id,
-                    'first_name': student.person.first_name,
-                    'last_name': student.person.last_name,
-                    'gender': student.person.gender,
-                    'email': student.person.email,
-                    'phone_mobile': student.person.phone_mobile,
-                    'birth_date': student.person.birth_date.strftime("%Y-%m-%d") if student.person.birth_date else None}
+            data = {
+                'id': student.person.id,
+                'first_name': student.person.first_name,
+                'last_name': student.person.last_name,
+                'gender': student.person.gender,
+                'email': student.person.email,
+                'phone_mobile': student.person.phone_mobile,
+                'birth_date': student.person.birth_date.strftime("%Y-%m-%d") if student.person.birth_date else None
+            }
 
-            student_address = mdl.person_address.find_by_person(student.person)
+            student_address = PersonAddress.objects.filter(person=student.person)
             if student_address:
                 address = student_address[0]
                 data['location'] = address.location
@@ -173,7 +175,12 @@ def internships_student_read(request, cohort_id, student_id):
     affectations = InternshipStudentAffectationStat.objects.filter(
         student=student, period__cohort=cohort
     ).select_related(
-        'speciality', 'organization', 'period', 'period__cohort', 'internship', 'internship__speciality'
+        'speciality',
+        'organization',
+        'period',
+        'period__cohort',
+        'internship',
+        'internship__speciality',
     ).order_by(
         "period__date_start"
     ).annotate(
@@ -290,16 +297,19 @@ def student_save_affectation_modification(request, cohort_id, student_id):
 
     update_data = _build_update_data(cohort, organizations, specialties, internships)
 
-    if _has_validated_score(request, student_affectations_to_update) or \
-            not _chosen_internships_available(request, cohort, periods, update_data):
+    if (
+        _has_validated_score(request, student_affectations_to_update)
+        or not _chosen_internships_available(request, cohort, periods, update_data)
+    ):
         redirect_url = reverse('internship_student_affectation_modification', kwargs={
-            "cohort_id": cohort.id, "student_id": student.id
+            "cohort_id": cohort.id,
+            "student_id": student.id,
         })
     else:
         update_selected_student_affectations(request, student_affectations_to_update, update_data, student_choices)
         redirect_url = reverse('internships_student_read', kwargs={
             "cohort_id": cohort.id, "student_id": student.id
-        })+"?tab=affectations"
+        }) + "?tab=affectations"
 
     return HttpResponseRedirect(redirect_url)
 
@@ -341,18 +351,25 @@ def _chosen_internships_available(request, cohort, periods, update_data):
         organization, specialty = update_data[period]['organization'], update_data[period]['specialty']
         if organization and specialty and not _is_internship_available(cohort, organization, specialty):
             availability = False
-            messages.add_message(request, messages.ERROR, "{} : {}-{} ({})=> error".format(
-                specialty.name, organization.reference, organization.name, period
-            ))
+            messages.add_message(
+                request,
+                messages.ERROR,
+                "{} : {}-{} ({})=> error".format(
+                    specialty.name,
+                    organization.reference,
+                    organization.name,
+                    period,
+                )
+            )
     return availability
 
 
 def _has_validated_score(request, affectations):
     if any([affectation.score.validated for affectation in affectations if hasattr(affectation, 'score')]):
         messages.add_message(
-            request, messages.ERROR, _(
-                "Cannot edit affectations because at least one affectation has a linked validated score"
-            )
+            request,
+            messages.ERROR,
+            _("Cannot edit affectations because at least one affectation has a linked validated score"),
         )
         return True
     return False
@@ -377,9 +394,9 @@ def update_selected_student_affectations(request, affectations_to_update, update
     updated_periods = [affectation.period.name for affectation in affectations_to_update]
     if updated_periods:
         messages.add_message(
-            request, messages.SUCCESS, _(
-                "Internship's detail successfully edited for the following periods: {}"
-            ).format(updated_periods)
+            request,
+            messages.SUCCESS,
+            _("Internship's detail successfully edited for the following periods: {}").format(updated_periods)
         )
 
 
@@ -389,7 +406,9 @@ def _build_update_data(cohort, organizations, specialties, internships):
         period.name: {
             'internship': cohort.internship_set.get(id=internships[index]) if internships[index] else None,
             'specialty': cohort.internshipspeciality_set.get(name=specialties[index]) if specialties[index] else None,
-            'organization': cohort.organization_set.get(reference=organizations[index]) if organizations[index] else None  # noqa
+            'organization': cohort.organization_set.get(
+                reference=organizations[index],
+            ) if organizations[index] else None
         }
         for index, period in enumerate(cohort_periods)
     }
@@ -439,9 +458,10 @@ def internships_student_import_update(request, cohort_id, differences=None):
 
 
 def _get_students_with_status(request, cohort, filters):
-
     active_period = Period.objects.filter(
-        cohort=cohort, date_start__lte=date.today(), date_end__gte=date.today()
+        cohort=cohort,
+        date_start__lte=date.today(),
+        date_end__gte=date.today(),
     ).first()
 
     internship_ids = Internship.objects.filter(cohort=cohort).values_list('pk', flat=True)
@@ -457,20 +477,21 @@ def _get_students_with_status(request, cohort, filters):
         student__person=OuterRef('person')
     ).values('student').annotate(count=Count('internship')).values('count')
 
-    students_info = InternshipStudentInformation.objects\
-        .filter(cohort=cohort)\
-        .prefetch_related(Prefetch('person__student_set', to_attr='students'))\
-        .order_by('person__last_name', 'person__first_name')\
-        .annotate(
-            current_internship=Concat(
-                Subquery(current_internship_subquery.values('speciality__acronym')),
-                Subquery(current_internship_subquery.values('organization__reference'))
-            ),
-            chosen_internships_count=Subquery(student_internships_count, output_field=models.IntegerField()),
-            total_count=Value(internship_ids.count(), output_field=models.IntegerField())
-        ).annotate(
-            status=F('chosen_internships_count')-F('total_count')
-        )
+    students_info = InternshipStudentInformation.objects.filter(cohort=cohort).prefetch_related(
+        Prefetch('person__student_set', to_attr='students')
+    ).order_by(
+        'person__last_name',
+        'person__first_name'
+    ).annotate(
+        current_internship=Concat(
+            Subquery(current_internship_subquery.values('speciality__acronym')),
+            Subquery(current_internship_subquery.values('organization__reference'))
+        ),
+        chosen_internships_count=Subquery(student_internships_count, output_field=models.IntegerField()),
+        total_count=Value(internship_ids.count(), output_field=models.IntegerField())
+    ).annotate(
+        status=F('chosen_internships_count') - F('total_count')
+    )
 
     status_stats = {
         'OK': students_info.filter(status__gte=0).count(),
@@ -481,8 +502,10 @@ def _get_students_with_status(request, cohort, filters):
     if filters:
         filter_name, filter_current_internship = filters
         if filter_name:
-            students_info = students_info.filter(person__last_name__unaccent__icontains=filter_name) | \
-                            students_info.filter(person__first_name__unaccent__icontains=filter_name)
+            students_info = (
+                students_info.filter(person__last_name__unaccent__icontains=filter_name)
+                | students_info.filter(person__first_name__unaccent__icontains=filter_name)
+            )
         if filter_current_internship:
             students_info = students_info.exclude(Q(current_internship__isnull=True) | Q(current_internship__exact=''))
 
