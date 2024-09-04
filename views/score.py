@@ -265,7 +265,7 @@ def send_mail_recap_per_student(person, persons_dict, **kwargs):
 
 
 def generate_query_string(request):
-    prev_url = request.META['HTTP_REFERER'] if 'HTTP_REFERER' in request.META else ''
+    prev_url = request.headers['referer'] if 'referer' in request.headers else ''
     query_string = prev_url.split('?')[1] if prev_url and '?' in prev_url else ''
     return query_string
 
