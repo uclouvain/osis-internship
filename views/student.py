@@ -32,8 +32,8 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
-from django.db.models import Prefetch, OuterRef, Subquery, Value, Q, Count, F
-from django.db.models.functions import Concat
+from django.db.models import Prefetch, OuterRef, Subquery, Value, Q, Count, F, Sum
+from django.db.models.functions import Concat, Coalesce
 from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
@@ -471,10 +471,32 @@ def _get_students_with_status(request, cohort, filters):
         period=active_period
     )
 
+    already_done_internships_in_parent_cohort_count = InternshipStudentAffectationStat.objects.filter(
+        speciality__cohort__parent_cohort=cohort.parent_cohort,
+        student__person=OuterRef('person')
+    ).values('student').annotate(count=Count('internship')).values('count')
+
+    all_non_mandatory = Internship.objects.filter(cohort=cohort, speciality__isnull=True).values_list('pk', flat=True)
+
+    all_non_mandatory_chosen_count = InternshipChoice.objects.filter(
+        internship__pk__in=internship_ids,
+        internship__speciality=None,
+        choice=1,
+        student__person=OuterRef('person'),
+    ).values('student').annotate(count=Count('internship')).values('count')
+
     student_internships_count = InternshipChoice.objects.filter(
         internship__pk__in=internship_ids,
         choice=1,
         student__person=OuterRef('person')
+    ).values('student').annotate(count=Count('internship')).values('count')
+
+    internship_abroad_count = InternshipChoice.objects.filter(
+        internship__name__contains='1',
+        internship__speciality__isnull=True,
+        organization__reference__in=['500', '510', '515', '520'],
+        choice=1,
+        student__person=OuterRef('person'),
     ).values('student').annotate(count=Count('internship')).values('count')
 
     students_info = InternshipStudentInformation.objects.filter(cohort=cohort).prefetch_related(
@@ -487,16 +509,46 @@ def _get_students_with_status(request, cohort, filters):
             Subquery(current_internship_subquery.values('speciality__acronym')),
             Subquery(current_internship_subquery.values('organization__reference'))
         ),
+        already_done_internships_in_parent_cohort_count=Subquery(
+            already_done_internships_in_parent_cohort_count, output_field=models.IntegerField()
+        ),
         chosen_internships_count=Subquery(student_internships_count, output_field=models.IntegerField()),
-        total_count=Value(internship_ids.count(), output_field=models.IntegerField())
+        total_count=Value(internship_ids.count(), output_field=models.IntegerField()),
+        all_non_mandatory_chosen=Coalesce(
+            Sum(Subquery(all_non_mandatory_chosen_count, output_field=models.IntegerField())),  Value(0)
+        ),
+        all_non_mandatory_count=Value(all_non_mandatory.count(), output_field=models.IntegerField()),
+        internship_abroad_count=Coalesce(
+            Sum(Subquery(internship_abroad_count, output_field=models.IntegerField())), Value(0)
+        ),
     ).annotate(
-        status=F('chosen_internships_count') - F('total_count')
+        already_done_internships_in_parent_cohort_count=Coalesce(
+            Sum('already_done_internships_in_parent_cohort_count'), Value(0)
+        )
+    ).annotate(
+        status=F('chosen_internships_count') - F('total_count') + F('already_done_internships_in_parent_cohort_count')
     )
 
     status_stats = {
-        'OK': students_info.filter(status__gte=0).count(),
-        'NOK': students_info.filter(status__lt=0).count(),
-        'UNKNOWN': students_info.filter(status__isnull=True).count(),
+        'OK': students_info.filter(
+            Q(status__gte=0) & (
+                Q(all_non_mandatory_chosen__gte=all_non_mandatory.count())
+            ) |
+            Q(status__gte=1-all_non_mandatory.count()) & (
+                Q(internship_abroad_count__gt=0) & Q(all_non_mandatory_chosen__gte=1)
+            )
+        ).count(),
+        'NOK': students_info.filter(
+            Q(status__isnull=False) & ~Q(
+                    Q(status__gte=0) & (
+                        Q(all_non_mandatory_chosen__gte=all_non_mandatory.count())
+                    ) |
+                    Q(status__gte=1 - all_non_mandatory.count()) & (
+                        Q(internship_abroad_count__gt=0) & Q(all_non_mandatory_chosen__gte=1)
+                    )
+            )
+        ).count(),
+        'UNKNOWN': students_info.filter(Q(status__isnull=True) | Q(all_non_mandatory_chosen__isnull=True)).count(),
     }
 
     if filters:

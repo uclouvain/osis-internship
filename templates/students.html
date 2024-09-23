@@ -176,13 +176,23 @@
                             {{ student.current_internship|default:"-" }}
                         </td>
                         <td>
-                            {% if student.status == 0 %}
+                            {% if student.status >= 0 and student.all_non_mandatory_chosen >= student.all_non_mandatory_count %}
+                                <span class="label label-success">
+                                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                    <span style="color: red; display: none;" id="notok">1</span>
+                                </span>
+                            {% elif student.status|add:student.all_non_mandatory_count|add:"-1" >= 0  and student.internship_abroad_count > 0 and student.all_non_mandatory_chosen >= 1 %}
                                 <span class="label label-success">
                                     <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
                                     <span style="color: red; display: none;" id="notok">1</span>
                                 </span>
                             {% else %}
-                                {% if student.status < 0 %}
+                                {% if student.status != None and student.status < 0 %}
+                                    <span class="label label-danger">
+                                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                        <span style="color: red; display: none;" id="notok">2</span>
+                                    </span>
+                                {% elif student.status != None and student.all_non_mandatory_chosen < student.all_non_mandatory_count %}
                                     <span class="label label-danger">
                                         <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
                                         <span style="color: red; display: none;" id="notok">2</span>
