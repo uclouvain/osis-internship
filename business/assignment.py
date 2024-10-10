@@ -410,7 +410,10 @@ def _assign_regular_students(assignment, internship):
 def _assign_student(assignment, student, internship):
     assignment.count += 1
     """ Assign offer to student for specific internship."""
-    choices = assignment.choices.filter(student=student, internship=internship).order_by("choice")
+    if isinstance(internship, Iterable):
+        choices = assignment.choices.filter(student=student, internship__in=internship).order_by("choice")
+    else:
+        choices = assignment.choices.filter(student=student, internship=internship).order_by("choice")
 
     affectations = None
 
