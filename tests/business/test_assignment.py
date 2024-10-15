@@ -445,19 +445,20 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
         for name in non_mandatory_specialties_names:
             all_specialties.add(name)
 
+        # non mandatory internship only in last cohort
+        non_mandatory_internship = InternshipFactory(cohort=cls.cohorts[2], name="Stage au choix 1", speciality=None)
+        non_mandatory_specialties = [
+            SpecialtyFactory(name=_, cohort=cls.cohorts[2], mandatory=False) for _ in non_mandatory_specialties_names
+        ]
+
         for cohort in cls.cohorts:
             mandatory_specialties = [
                 SpecialtyFactory(name=_, cohort=cohort, mandatory=True) for _ in specialties_names[cohort.name]
-            ]
-            non_mandatory_specialties = [
-                SpecialtyFactory(name=_, cohort=cohort, mandatory=False) for _ in non_mandatory_specialties_names
             ]
             periods = [PeriodFactory(name=_, cohort=cohort) for _ in periods_names[cohort.name]]
             mandatory_internships = [
                 InternshipFactory(cohort=cohort, name=spec.name, speciality=spec) for spec in mandatory_specialties
             ]
-
-            non_mandatory_internship = InternshipFactory(cohort=cohort, name="Stage au choix")
 
             students_info = [
                 InternshipStudentInformationFactory(cohort=cohort, person=student.person) for student in students
@@ -500,13 +501,16 @@ class AlgorithmExecutionOnCohortSiblingsTest(TestCase):
                             choice=choice,
                             speciality=internship.speciality,
                         )
-                create_internship_choice(
-                    organization=random.choice(organizations),
-                    student=student,
-                    internship=non_mandatory_internship,
-                    choice=1,
-                    speciality=random.choice(non_mandatory_specialties),
-                )
+
+                # non mandatory internship choices only in m3
+                if cohort.name == 'm3':
+                    create_internship_choice(
+                        organization=random.choice(organizations),
+                        student=student,
+                        internship=non_mandatory_internship,
+                        choice=1,
+                        speciality=random.choice(non_mandatory_specialties),
+                    )
 
         # force Medecine Generale only in P8
         mg_internship = next(

@@ -198,7 +198,7 @@ class Assignment:
             # shuffle interships, keeps on top specialties that are not available in all cohorts to prioritize on these
             internships = sorted(
                 available_internships,
-                key=lambda i: (self.internships_availability_occurence[i], random.random())
+                key=lambda i: (self.internships_availability_occurence[i], i.position, random.random())
             )
             for internship in internships:
                 _assign_student(self, student, internship)
@@ -423,7 +423,9 @@ def _assign_student(assignment, student, internship):
                 affectations = assign_choices_to_student(assignment, student, choices, internship)
         # Deal with internship at choice
         else:
-            if isinstance(internship, Iterable) and not _has_affected_non_mandatory_internship(student_affectations):
+            if not _has_affected_non_mandatory_internship(student_affectations):
+                if not isinstance(internship, Iterable):
+                    internship = [internship]
                 for chosen_internship in internship:
                     if affectations is None or affectations == []:
                         last = chosen_internship == list(internship)[:-1]
