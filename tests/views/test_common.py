@@ -46,12 +46,12 @@ class CommonTest(TestCase):
     def test_get_object_list_with_default_paginator_size(self):
         objects = [{} for _ in range(0, OBJECTS_LIST_SIZE)]
         request = RequestFactory().get('/')
-        SessionMiddleware().process_request(request)
+        SessionMiddleware(lambda: None).process_request(request)
         self.assertEqual(len(get_object_list(request, objects)), PAGINATOR_SIZE_LIST[0])
 
     def test_get_object_list_with_paginator_size_query_param(self):
         objects = [{} for _ in range(0, OBJECTS_LIST_SIZE)]
         request = RequestFactory().get('/?paginator_size={}'.format(TEST_PAGINATOR_SIZE))
-        SessionMiddleware().process_request(request)
+        SessionMiddleware(lambda: None).process_request(request)
         self.assertEqual(len(get_object_list(request, objects)), TEST_PAGINATOR_SIZE)
         self.assertEqual(request.session['paginator_size'], {request.path: str(TEST_PAGINATOR_SIZE)})
