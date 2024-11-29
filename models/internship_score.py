@@ -28,6 +28,7 @@ import uuid as uuid
 from django.contrib.admin import ModelAdmin
 from django.db import models
 from django.db.models import Model, JSONField
+from django.utils.translation import gettext_lazy as _
 
 APD_NUMBER = 15
 MIN_APDS = 5
@@ -69,7 +70,8 @@ class InternshipScore(Model):
         'internship.InternshipStudentAffectationStat',
         on_delete=models.CASCADE,
         related_name='score',
-        null=True
+        null=True,
+        verbose_name=_('Student Affectation'),
     )
 
     for index in range(1, APD_NUMBER+1):
@@ -79,17 +81,19 @@ class InternshipScore(Model):
             null=True,
             blank=True,
         )
-    score = models.IntegerField(null=True, blank=True)
-    excused = models.BooleanField(default=False)
-    reason = models.CharField(max_length=255, null=True, blank=True)
+    score = models.IntegerField(null=True, blank=True, verbose_name=_('Score'))
+    excused = models.BooleanField(default=False, verbose_name=_('Excused'))
+    reason = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Reason'))
 
-    comments = JSONField(default=dict, blank=True)
-    objectives = JSONField(default=dict, blank=True)
+    comments = JSONField(default=dict, blank=True, verbose_name=_('Comments'))
+    objectives = JSONField(default=dict, blank=True, verbose_name=_('Objectives'))
 
-    validated = models.BooleanField(default=False)
-    validated_by = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.CASCADE)
+    validated = models.BooleanField(default=False, verbose_name=_('Validated'))
+    validated_by = models.ForeignKey(
+        'base.Person', blank=True, null=True, on_delete=models.CASCADE, verbose_name=_('Validated by')
+    )
 
-    student_presence = models.BooleanField(null=True)
+    student_presence = models.BooleanField(null=True, verbose_name=_('Student presence'))
 
     def __str__(self):
         return f'{self.student_affectation} - {self.get_scores()}'

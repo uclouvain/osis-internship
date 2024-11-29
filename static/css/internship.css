@@ -181,32 +181,32 @@ li.disabled a {
 }
 
 .cell-color-gt-66{
-    background-color:rgba(255,219,41,0.6);
+    background-color:rgba(255,219,41,0.6) !important;
     color:rgb(117,98,2);
 }
 
 .cell-color-gt-33{
-    background-color:rgba(255,119,37,0.6);
+    background-color:rgba(255,119,37,0.6) !important;
     color:rgb(162,62,0);
 }
 
 .cell-color-gt-0{
-    background-color:rgba(255,70,37,0.6);
+    background-color:rgba(255,70,37,0.6) !important;
     color:rgb(218,40,0);
 }
 
 .cell-color-null{
-    background-color:rgba(253,67,67,0.6);
+    background-color:rgba(253,67,67,0.6) !important;
     color:rgb(192,0,0);
 }
 
 .cell-color-missing{
-    background-color:rgba(54,54,54,0.8);
+    background-color:rgba(54,54,54,0.8) !important;
     color: white;
 }
 
 .cell-color-overflow{
-    background-color:rgba(54,54,54,0.8);
+    background-color:rgba(54,54,54,0.8) !important;
     color: white;
 }
 
@@ -233,4 +233,28 @@ li.disabled a {
     display: inline;
     vertical-align: middle;
     margin-left: 5px;
+}
+
+.input-score {
+    display: flex;
+    align-items: stretch;
+    .input-group-btn {
+        display: flex;
+        align-items: stretch;
+    }
+    .btn-confirm {
+        border-radius:0;
+    }
+    .btn-cancel {
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+    }
+}
+
+.btn-close{
+    align-self: start;
+}
+
+.modal-title {
+    text-align: left;
 }

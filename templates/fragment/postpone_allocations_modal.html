@@ -1,11 +1,11 @@
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 <div class="modal fade" id="postponeAllocationsModal" tabindex="-1" role="dialog" aria-labelledby="postponeAllocationsModal">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        <h4 class="modal-title" id="postponeAllocationsModalTitle">{% trans 'Postpone allocations ?' %}</h4>
+        <h5 class="modal-title" id="postponeAllocationsModalTitle">{% trans 'Postpone allocations ?' %}</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         {% trans 'The current allocations may exist in the following cohorts:' %}
@@ -17,10 +17,10 @@
         {% trans 'Do you want to postpone allocations modifications on these cohorts ?' %}
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal">{% trans 'Cancel' %}</button>
         <div class="btn-group" role="group">
-            <button id="not-postpone-allocations" type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Do not postpone' %}</button>
-            <button id="postpone-allocations" type="button" class="btn btn-primary" data-dismiss="modal">{% trans 'Postpone' %}</button>
+            <button id="not-postpone-allocations" type="button" class="btn btn-default" data-bs-dismiss="modal">{% trans 'Do not postpone' %}</button>
+            <button id="postpone-allocations" type="button" class="btn btn-primary" data-bs-dismiss="modal">{% trans 'Postpone' %}</button>
         </div>
       </div>
     </div>

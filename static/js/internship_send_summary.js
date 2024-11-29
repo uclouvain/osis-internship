@@ -1,16 +1,16 @@
-$(document).on('click', '[data-target="#send_summary"]', function(){
+$(document).on('click', '[data-bs-target="#send_summary"]', function(){
     $.each($("input[name='selected_student']:checked"), function() {
         $("#selected_students").append(
             '<li>'+$(this).data('student')+'</li>'
         );
     });
-    if(!$("#li_send_summary").hasClass('disabled')){
+    if(!$("#li_send_summary a").hasClass('disabled')){
         $("#send_summary").modal("show");
     }
 });
 
 $("#actions").click(() => {
-    $("#li_send_summary").toggleClass(
+    $("#li_send_summary a").toggleClass(
         'disabled',
         $("input[name='selected_student']:checked").length<1
     );

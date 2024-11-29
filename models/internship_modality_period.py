@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
 
@@ -33,5 +34,5 @@ class InternshipModalityPeriodAdmin(SerializableModelAdmin):
 
 
 class InternshipModalityPeriod(SerializableModel):
-    internship = models.ForeignKey('internship.Internship', on_delete=models.PROTECT)
-    period = models.ForeignKey('internship.Period', on_delete=models.PROTECT)
+    internship = models.ForeignKey('internship.Internship', on_delete=models.PROTECT, verbose_name=_('Internship'))
+    period = models.ForeignKey('internship.Period', on_delete=models.PROTECT, verbose_name=_('Period'))

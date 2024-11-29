@@ -1,13 +1,13 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li class="active">{% trans 'Cohort' %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item active">{% trans 'Cohort' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -16,29 +16,29 @@
         <h2>{% trans 'Cohort' %}</h2>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <form method="POST" class="post-form">
                 {% csrf_token %}
-                {% bootstrap_field form.name label=_("Name") %}
-                {% bootstrap_field form.description label=_("Description") %}
+                {% bootstrap_field form.name %}
+                {% bootstrap_field form.description %}
                 <div class="row">
-                    {% bootstrap_field form.subscription_start_date form_group_class="form-group col-md-4" label=_("Enrolment start") %}
-                    {% bootstrap_field form.subscription_end_date form_group_class="form-group col-md-4" label=_("Enrolment end") %}
-                    {% bootstrap_field form.publication_start_date form_group_class="form-group col-md-4" label=_("Publication date") %}
+                    {% bootstrap_field form.subscription_start_date wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.subscription_end_date wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.publication_start_date wrapper_class="form-group col-md-4" %}
                 </div>
                 {% if form_new %}
-                    {% bootstrap_field form.originated_from label=_("Copy from cohort") %}
+                    {% bootstrap_field form.originated_from  %}
                 {% endif %}
 
-                {% bootstrap_field form.is_parent label=_("Is parent") %}
-                {% bootstrap_field form.parent_cohort label=_("Select parent cohort") form_group_class="form-group select-parent" %}
+                {% bootstrap_field form.is_parent  %}
+                {% bootstrap_field form.parent_cohort  wrapper_class="form-group select-parent" %}
 
                 <button type="submit" class="btn btn-primary" title="{%trans 'Save' %}" id="bt_cohort_save">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save' %}
+                    <span class="fa fa-save" aria-hidden="true"></span> {% trans 'Save' %}
                 </button>
                 <a class="btn btn-default" id="" href="{% url 'internship' %}">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Return' %}
+                    <span class="fa fa-remove" aria-hidden="true"></span> {% trans 'Return' %}
                 </a>
             </form>
         </div>

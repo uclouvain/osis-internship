@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% comment "License" %}
  * OSIS stands for Open Student Information System. It's an application
@@ -28,11 +28,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-  <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-  <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
-  <li><a href="{% url 'internships_specialities' cohort_id=cohort.id %}">{% trans 'Specialties' %}</a></li>
-  <li class="active">{% trans 'Add a specialty' %}</li>
+  <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{% trans 'Internships management' %}</a></li>
+  <li class="breadcrumb-item"><a href="{% url 'internships_specialities' cohort_id=cohort.id %}">{% trans 'Specialties' %}</a></li>
+  <li class="breadcrumb-item active">{% trans 'Add a specialty' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -41,8 +41,8 @@
         <h2>{% trans 'Specialty' %}</h2>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <form action="{% if speciality.id %}
                                 {% url 'speciality_save' cohort_id=cohort.id speciality_id=speciality.id %}
                           {% else %}
@@ -51,28 +51,28 @@
                 {% csrf_token %}
 
                 <div class="row">
-                    {% bootstrap_field form.name form_group_class="form-group col-md-8" label=_("Name") %}
-                    {% bootstrap_field form.sequence form_group_class="form-group col-md-2" label=_("Sequence") %}
-                    {% bootstrap_field form.acronym form_group_class="form-group col-md-2" label=_("Acronym") %}
+                    {% bootstrap_field form.name wrapper_class="form-group col-md-8"  %}
+                    {% bootstrap_field form.sequence wrapper_class="form-group col-md-2"  %}
+                    {% bootstrap_field form.acronym wrapper_class="form-group col-md-2"  %}
                 </div>
 
                 <div class="row">
-                    {% bootstrap_field form.mandatory form_group_class="form-group col-md-2" label=_("Compulsory") %}
-                    {% bootstrap_field form.selectable form_group_class="form-group col-md-10" label=_("Selectable by the student") %}
+                    {% bootstrap_field form.mandatory wrapper_class="form-group col-md-2"  %}
+                    {% bootstrap_field form.selectable wrapper_class="form-group col-md-10"  %}
                 </div>
 
                 <div class="row">
-                    {% bootstrap_field form.parent form_group_class="form-group col-md-2" label=_("Parent specialty") %}
+                    {% bootstrap_field form.parent wrapper_class="form-group col-md-2"  %}
                 </div>
 
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+                    <span class="fa fa-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
 
                 <a href="{% url 'internships_specialities' cohort_id=cohort.id %}" class="btn btn-default" title="{% trans 'Return'%}"
                     id="lnk_internships" >
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span> {% trans 'Return' %}
+                    <span class="fa fa-chevron-left" aria-hidden="true"></span> {% trans 'Return' %}
                 </a>
             </form>
         </div>

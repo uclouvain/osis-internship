@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from base.models.enums import person_source_type
 from base.models.person import Person
@@ -34,6 +35,13 @@ class InternshipPersonForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(InternshipPersonForm, self).__init__(*args, **kwargs)
         self.fields['last_name'].required = True
+
+        self.fields['last_name'].label = _('Last name')
+        self.fields['first_name'].label = _('First name')
+        self.fields['birth_date'].label = _('Birth date')
+        self.fields['gender'].label = _('Gender')
+        self.fields['phone'].label = _('Phone')
+        self.fields['phone_mobile'].label = _('Phone mobile')
 
         # disable fields for instance source not internship
         if self.instance.pk and self.instance.source != person_source_type.INTERNSHIP:

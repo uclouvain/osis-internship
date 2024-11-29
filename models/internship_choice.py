@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from base.models.student import Student
 from internship.models.internship import Internship
@@ -39,13 +40,17 @@ class InternshipChoiceAdmin(SerializableModelAdmin):
 
 
 class InternshipChoice(SerializableModel):
-    student = models.ForeignKey('base.Student', on_delete=models.CASCADE)
-    organization = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
-    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, on_delete=models.CASCADE)
-    choice = models.IntegerField()
-    internship = models.ForeignKey('internship.Internship', on_delete=models.CASCADE)
-    priority = models.BooleanField()
-    registered = models.DateTimeField(null=True)
+    student = models.ForeignKey('base.Student', on_delete=models.CASCADE, verbose_name=_('Student'))
+    organization = models.ForeignKey(
+        'internship.Organization', on_delete=models.CASCADE, verbose_name=_('Organization')
+    )
+    speciality = models.ForeignKey(
+        'internship.InternshipSpeciality', null=True, on_delete=models.CASCADE, verbose_name=_('Specialty')
+    )
+    choice = models.IntegerField(verbose_name=_('Choice'))
+    internship = models.ForeignKey('internship.Internship', on_delete=models.CASCADE, verbose_name=_('Internship'))
+    priority = models.BooleanField(verbose_name=_('Priority'))
+    registered = models.DateTimeField(null=True, verbose_name=_('Registered'))
 
     def __str__(self):
         return u"%s - %s : %s" % (self.organization.acronym, self.speciality.acronym, self.choice)

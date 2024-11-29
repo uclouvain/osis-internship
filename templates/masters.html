@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load pagination %}
 {% load user_account %}
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -33,11 +33,11 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
-    <li class="active">{% trans 'Internships masters' %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans 'Internships masters' %}</li>
 {% endblock %}
 {% block content %}
     <div class="page-header">
@@ -49,7 +49,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="filter_hospital">{% trans 'Hospital' %}</label>
-                    <select name="hospital" id="filter_hospital" class="form-control">
+                    <select name="hospital" id="filter_hospital" class="form-select">
                         <option value="0">--</option>
                         {% for hospital in hospitals %}
                             <option value="{{ hospital.id }}" {% if filter_hospital == hospital.id %}selected{% endif %}>
@@ -62,7 +62,7 @@
             <div class="col-md-2">
                 <div class="form-group">
                     <label for="filter_specialty">{% trans 'Specialty' %}</label>
-                    <select name="specialty" id="filter_specialty" class="form-control">
+                    <select name="specialty" id="filter_specialty" class="form-select">
                         <option value="0">--</option>
                         {% for specialty in specialties %}
                             <option value="{{ specialty.id }}" {% if filter_specialty == specialty.id %}selected{% endif %}>
@@ -81,7 +81,7 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <label for="filter_role">{% trans 'Role' %}</label>
-                    <select name="role" id="filter_role" class="form-control">
+                    <select name="role" id="filter_role" class="form-select">
                         <option value="" {% if filter_role == "" %}selected{% endif %}>--</option>
                         <option value="MASTER" {% if filter_role == "MASTER" %}selected{% endif %}>{% trans 'Master' %}</option>
                         <option value="DELEGATE" {% if filter_role == "DELEGATE" %}selected{% endif %}>{% trans 'Delegate' %}</option>
@@ -91,7 +91,7 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <label for="filter_account">{% trans 'Account' %}</label>
-                    <select name="account" id="filter_account" class="form-control">
+                    <select name="account" id="filter_account" class="form-select">
                         <option value="" {% if filter_account == "" %}selected{% endif %}>--</option>
                         <option value="ACTIVE" {% if filter_account == "ACTIVE" %}selected{% endif %}>{% trans 'Active' %}</option>
                         <option value="PENDING" {% if filter_account == "PENDING" %}selected{% endif %}>{% trans 'Pending' %}</option>
@@ -102,7 +102,7 @@
             <div class="col-md-1">
                 <div class="form-group">
                     <label for="filter_expiry">{% trans 'Expiry' %}</label>
-                    <select name="expiry" id="filter_expiry" class="form-control">
+                    <select name="expiry" id="filter_expiry" class="form-select">
                         <option value="" {% if filter_expiry == "" %}selected{% endif %}>--</option>
                         <option value="<3MONTHS" {% if filter_expiry == "<3MONTHS" %}selected{% endif %}>{% trans '< 3 months' %}</option>
                         <option value=">3MONTHS" {% if filter_expiry == ">3MONTHS" %}selected{% endif %}>{% trans '> 3 months' %}</option>
@@ -112,46 +112,42 @@
             </div>
             <div class="col-md-3">
                 <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    <span class="fa fa-search" aria-hidden="true"></span>
                     {% trans 'Search' %}
                 </button>
-                <button id="actions" type="button" class="btn btn-default pull-right" data-toggle="dropdown" aria-haspopup="true"
+                <button id="actions" type="button" class="btn btn-default dropdown-toggle float-end" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="margin-top: 26px;">
-                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {% trans 'Actions' %}
+                    <span class="fa fa-cog" aria-hidden="true"></span> {% trans 'Actions' %}
                     <span class="caret"></span>
                 </button>
-                <ul class="dropdown-menu dropdown-menu-large row text-right pull-right">
+                <ul class="dropdown-menu dropdown-menu-large row text-right float-end">
                     <li>
-                        <a href="{% url 'master_new' cohort_id=current_cohort.id %}">
-                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <a class="dropdown-item" href="{% url 'master_new' cohort_id=current_cohort.id %}">
+                            <span class="fa fa-plus" aria-hidden="true"></span>
                             {% trans 'Add new master' %}
                         </a>
                     </li>
-                    <li role="separator" class="divider"></li>
                     <li>
-                        <a href="{% url 'master_export' cohort_id=current_cohort.id %}" class="download">
-                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                        <a class="dropdown-item" href="{% url 'master_export' cohort_id=current_cohort.id %}" class="download">
+                            <span class="fa fa-download" aria-hidden="true"></span>
                             {% trans 'Export to XLSX' %}
                         </a>
                     </li>
-                    <li role="separator" class="divider"></li>
-                    <li id="li_create_account" class="disabled">
-                        <a href="#" data-target="#create_account" id="btn_create_account">
-                            <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
+                    <li id="li_create_account">
+                        <a class="dropdown-item disabled" href="#" data-bs-target="#create_account" id="btn_create_account">
+                            <span class="fa fa-user" aria-hidden="true"></span>
                             {% trans 'Create user account' %}
                         </a>
                     </li>
-                    <li role="separator" class="divider"></li>
-                    <li id="li_extend_validity" class="disabled">
-                        <a href="#" data-toggle="modal" data-target="#extend_validity" id="btn_extend_validity">
-                            <span class="glyphicon glyphicon-resize-horizontal" aria-hidden="true"></span>
+                    <li id="li_extend_validity">
+                        <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#extend_validity" id="btn_extend_validity">
+                            <span class="fa fa-left-right" aria-hidden="true"></span>
                             {% trans 'Extend user account validity' %}
                         </a>
                     </li>
-                    <li role="separator" class="divider"></li>
-                    <li id="li_transfer_to_cohort" class="disabled">
-                        <a href="#" data-toggle="modal" data-target="#transfer_cohort" id="btn_transfer">
-                            <span class="glyphicon glyphicon-transfer" aria-hidden="true"></span>
+                    <li id="li_transfer_to_cohort">
+                        <a class="dropdown-item disabled" href="#" data-bs-toggle="modal" data-bs-target="#transfer_cohort" id="btn_transfer">
+                            <span class="fa fa-arrow-up-right" aria-hidden="true"></span>
                             {% trans 'Transfer to cohort' %}
                         </a>
                     </li>
@@ -160,7 +156,7 @@
         </div>
     </form>
 
-    <div class="panel panel-default">
+    <div class="card card-default">
         <table class="table table-hover" id="order_master">
             <thead>
                 <tr>
@@ -201,7 +197,7 @@
                             <td>{{ allocation.master.person.first_name }}</td>
                             <td>
                                 <a class="btn btn-primary" href="{% url 'master' cohort_id=current_cohort.id master_id=allocation.master.id %}">
-                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                    <span class="fa fa-search" aria-hidden="true"></span>
                                 </a>
                             </td>
                             <td>
@@ -220,15 +216,15 @@
                             <td title="{{ allocation.role }}">{{ allocation.role.0 }}</td>
                             {% if allocation.master.user_account_status == account_status.ACTIVE.value %}
                                 <td class="text-center">
-                                    <span title="{% trans 'User account is active' %}" class="text-success glyphicon glyphicon-ok-circle"></span>
+                                    <span title="{% trans 'User account is active' %}" class="text-success fa fa-ok-circle"></span>
                                 </td>
                             {% elif allocation.master.user_account_status == account_status.PENDING.value %}
                                 <td class="text-center">
-                                    <span title="{% trans 'Activation pending' %}" class="text-info glyphicon glyphicon-time"></span>
+                                    <span title="{% trans 'Activation pending' %}" class="text-info fa fa-time"></span>
                                 </td>
                             {% else %}
                                 <td class="text-center">
-                                    <span title="{% trans 'No user account created' %}" class="text-danger glyphicon glyphicon-remove-circle"></span>
+                                    <span title="{% trans 'No user account created' %}" class="text-danger fa fa-remove-circle"></span>
                                 </td>
                             {% endif %}
                             <td class="text-center">
@@ -282,7 +278,7 @@
         );
     });
 
-    $(document).on('click', '[data-target="#create_account"]', function(){
+    $(document).on('click', '[data-bs-target="#create_account"]', function(){
         $.each($("input[name='selected_master']:checked"), function() {
             $("#selected_masters").append(
                 '<li>'+$(this).data('master')+'</li>'
