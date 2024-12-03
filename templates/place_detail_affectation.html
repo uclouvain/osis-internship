@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,12 +27,12 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'All hospitals' %}</a></li>
-    <li class="active">{{ organization.name }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_places' cohort_id=cohort.id  %}">{% trans 'All hospitals' %}</a></li>
+    <li class="breadcrumb-item active">{{ organization.name }}</li>
 {% endblock %}
 
 {% block content %}
@@ -40,26 +40,28 @@
         <h2>{{ organization.name }}</h2>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-heading">
-            <a href="{% url 'export_organisation_affectation_master' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default">
-                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+    <div class="card card-default">
+        <div class="card-heading">
+            <a href="{% url 'export_organisation_affectation_master' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default download">
+                <span class="fa fa-download" aria-hidden="true"></span>
                 {% trans 'Export master affectations' %}
             </a>
-            <a href="{% url 'export_organisation_affectation_hospital' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default">
-                <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+            <a href="{% url 'export_organisation_affectation_hospital' cohort_id=cohort.id organization_id=organization.id %}" class="btn btn-default download">
+                <span class="fa fa-download" aria-hidden="true"></span>
                 {% trans 'Export hospital affectations' %}
             </a>
         </div>
-        <div class="panel-body">
+        <div class="card-body">
             <ul class="nav nav-tabs">
                 {% for speciality in specialities %}
-                    <li {% if forloop.first %}class="active"{% endif %}><a data-toggle="tab" href="#tab_{{speciality.tab}}">{{speciality.name}}</a></li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if forloop.first %}active{% endif %}" data-bs-toggle="tab" data-bs-target="#tab_{{speciality.tab}}" href="#">{{speciality.name}}</a>
+                    </li>
                 {% endfor %}
             </ul>
             <div class="tab-content">
                 {% for speciality in specialities %}
-                    <div id="tab_{{speciality.tab}}" class="tab-pane fade {% if forloop.first %}in active{% endif %}">
+                    <div id="tab_{{speciality.tab}}" class="tab-pane fade {% if forloop.first %}show active{% endif %}">
                         <br>
                         {% for period in periods %}
                             <table class="table table-striped">

@@ -1,4 +1,4 @@
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 <tr style="height: 50px;">
     <td colspan="25" style="text-decoration: underline;" class="text-right">
@@ -11,7 +11,7 @@
             <span id="evolution_score_{{ student.registration_id }}" data-edited="true" data-scores="{{ student.periods_scores }}">
                 {{ student.evolution_score.edited.score }}
             </span>
-            <i id="evolution_score_info_{{ student.registration_id }}" data-html="true" data-toggle="tooltip" data-placement="left" title="
+            <i id="evolution_score_info_{{ student.registration_id }}" data-bs-html="true" data-bs-toggle="tooltip" data-bs-placement="left" title="
                 {% trans "Score edited. Computed score: " %}
                 <strong>{{ student.evolution_score.computed }}</strong>
                 <br/>
@@ -26,7 +26,7 @@
             {{ student.evolution_score }}
         </span>
         {% endif %}
-        <div style="display: none;" id="edit-{{ student.registration_id }}-evolution-score" class="pull-right">
+        <div style="display: none;" id="edit-{{ student.registration_id }}-evolution-score" class="float-end">
         <button onclick="editScore(this)"
                 {% if student.evolution_score|is_edited %}
                     data-computed="{{ student.evolution_score.computed }}"
@@ -35,11 +35,11 @@
                 {% endif %}
                 data-student="{{ student.registration_id }}"
                 class="btn btn-xs btn-warning btn-score">
-            <i class="fas fa-pencil-alt"></i>
+            <i class="fas fa-pencil-alt text-white"></i>
         </button>
         {% if student.evolution_score|is_edited %}
-            <button data-toggle="modal"
-                    data-target="#delete_score"
+            <button type="button" data-bs-toggle="modal"
+                    data-bs-target="#delete_score"
                     data-student="{{ student.registration_id }}"
                     data-computed="{{ student.evolution_score.computed }}"
                     class="btn btn-xs btn-danger btn-score">

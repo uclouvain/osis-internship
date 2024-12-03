@@ -25,6 +25,7 @@
 ##############################################################################
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -34,7 +35,7 @@ class InternshipScoreReasonAdmin(SerializableModelAdmin):
 
 
 class InternshipScoreReason(SerializableModel):
-    text = models.CharField(max_length=255)
+    text = models.CharField(max_length=255, verbose_name=_('Text'))
 
     def __str__(self):
         return u"%s" % self.text

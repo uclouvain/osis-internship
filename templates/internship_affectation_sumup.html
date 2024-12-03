@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,11 +27,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans "Allocation Sum up" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans "Allocation Sum up" %}</li>
 {% endblock %}
 
 {% block content %}
@@ -43,7 +43,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="filter_hospital">{% trans 'Hospital' %}</label>
-                    <select name="hospital" id="filter_hospital" class="form-control">
+                    <select  name="hospital" id="filter_hospital"  class="form-select"  >
                         <option value="0">{% trans "All hospitals" %}</option>
                         {% for hospital in hospitals %}
                             <option value="{{ hospital.id }}" data-ref="{{ hospital.reference }}" {% if active_hospital.id == hospital.id %}selected{% endif %}>
@@ -56,7 +56,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="filter_specialty">{% trans 'Specialty' %}</label>
-                    <select name="specialty" id="filter_specialty" class="form-control">
+                    <select  name="specialty" id="filter_specialty"  class="form-select"  >
                         <option value="0">--</option>
                         {% for specialty in specialties %}
                             <option value="{{ specialty.id }}">
@@ -68,7 +68,7 @@
             </div>
             <div class="col-md-4">
                 <button type="submit" class="btn btn-default" style="margin-top: 26px;">
-                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    <span class="fa fa-search" aria-hidden="true"></span>
                     {% trans 'Search' %}
                 </button>
             </div>
@@ -76,9 +76,9 @@
     </form>
         <div class="tab-content">
                 <div class="tab-pane active">
-                    <div class="panel panel-default">
+                    <div class="card card-default">
                         <div class="tab-content">
-                            <div role="tabpanel" class="table-responsive tab-pane fade in active" id="profile">
+                            <div role="tabpanel" class="table-responsive tab-pane fade show active" id="profile">
                                 <table class="table table-hover table-bordered table-condensed">
                                     <thead class="thead-dark">
                                         <tr>

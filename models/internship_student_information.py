@@ -42,17 +42,19 @@ class InternshipStudentInformationAdmin(SerializableModelAdmin):
 class InternshipStudentInformation(SerializableModel):
     TYPE_CHOICE = (('SPECIALIST', _('Specialist')),
                    ('GENERALIST', _('Generalist')))
-    person = models.ForeignKey('base.Person', on_delete=models.CASCADE)
-    location = models.CharField(max_length=255)
-    postal_code = models.CharField(max_length=20)
-    city = models.CharField(max_length=255)
-    country = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255, blank=True, null=True)
-    phone_mobile = models.CharField(max_length=100, blank=True, null=True)
-    contest = models.CharField(max_length=124, choices=TYPE_CHOICE, null=True, blank=True)
-    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
-    evolution_score = models.IntegerField(null=True, blank=True)
-    evolution_score_reason = models.CharField(max_length=255, null=True, blank=True)
+    person = models.ForeignKey('base.Person', on_delete=models.CASCADE, verbose_name=_('Person'))
+    location = models.CharField(max_length=255, verbose_name=_('Location'))
+    postal_code = models.CharField(max_length=20, verbose_name=_('Postal code'))
+    city = models.CharField(max_length=255, verbose_name=_('City'))
+    country = models.CharField(max_length=255, verbose_name=_('Country'))
+    email = models.EmailField(max_length=255, blank=True, null=True, verbose_name=_('Email'))
+    phone_mobile = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Phone number'))
+    contest = models.CharField(max_length=124, choices=TYPE_CHOICE, null=True, blank=True, verbose_name=_('Contest'))
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, verbose_name=_('Cohort'))
+    evolution_score = models.IntegerField(null=True, blank=True, verbose_name=_('Evolution Score'))
+    evolution_score_reason = models.CharField(
+        max_length=255, null=True, blank=True, verbose_name=_('Evolution Score Reason')
+    )
 
     def __str__(self):
         return '{}'.format(self.person)

@@ -28,6 +28,7 @@ import uuid as uuid
 from django.contrib.admin import ModelAdmin
 from django.db import models
 from django.db.models import JSONField
+from django.utils.translation import gettext_lazy as _
 from ordered_model.models import OrderedModel
 
 from internship.models.enums.response_type import ResponseType
@@ -42,15 +43,19 @@ class PlaceEvaluationItemAdmin(ModelAdmin):
 
 class PlaceEvaluationItem(OrderedModel):
 
-    uuid = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, db_index=True)
+    uuid = models.UUIDField(
+        default=uuid.uuid4, editable=False, unique=True, db_index=True
+    )
 
-    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, null=True)
-    statement = models.CharField(max_length=300)
-    type = models.CharField(choices=ResponseType.choices(), default=ResponseType.OPEN.value, max_length=10)
-    options = JSONField(default=list)
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, null=True, verbose_name=_("Cohort"))
+    statement = models.CharField(max_length=300, verbose_name=_("Statement"))
+    type = models.CharField(
+        choices=ResponseType.choices(), default=ResponseType.OPEN.value, max_length=10, verbose_name=_("Type")
+    )
+    options = JSONField(default=list, verbose_name=_("Options"))
 
-    active = models.BooleanField(default=True)
-    required = models.BooleanField(default=True)
+    active = models.BooleanField(default=True, verbose_name=_("Active"))
+    required = models.BooleanField(default=True, verbose_name=_("Required"))
 
     order_with_respect_to = 'cohort'
 

@@ -66,7 +66,7 @@ function buildScoreInput(score_value) {
 
 function buildScoreFormGroup(input) {
     let formGroup = document.createElement("div");
-    formGroup.classList.add("input-group", "input-group-sm");
+    formGroup.classList.add("input-group", "input-group-sm", "input-score");
     formGroup.append(input);
     return formGroup;
 }
@@ -80,7 +80,7 @@ function buildGroupButton() {
 function buildConfirmButton(input, cell, data) {
     let confirmButton = document.createElement("button");
     confirmButton.innerHTML = "<icon class='fas fa-check'><icon/>";
-    confirmButton.classList.add("btn", "btn-primary");
+    confirmButton.classList.add("btn", "btn-confirm", "btn-primary", "btn-sm");
     confirmButton.addEventListener('click', () => {
         data['edited'] = input.value;
         showJustificationModal(data, cell);
@@ -91,7 +91,7 @@ function buildConfirmButton(input, cell, data) {
 function buildCancelButton(cell, oldCellContent) {
     let cancelButton = document.createElement("button");
     cancelButton.innerHTML = "<icon class='fas fa-times'><icon/>";
-    cancelButton.classList.add("btn", "btn-secondary");
+    cancelButton.classList.add("btn", "btn-cancel", "btn-secondary", "btn-sm");
     cancelButton.addEventListener('click', () => {
         cell.innerHTML = oldCellContent;
         resetPadding(cell);
@@ -155,7 +155,8 @@ function showJustificationModal(data, cell) {
 
 //append data to modal button on modal open
 for(let target of ['#empty_score','#delete_score']){
-    $(document).on('click', `[data-target=${target}]`, function(){
+    $(document).on('click', `[data-bs-target='${target}']`, function(){
+        console.log(target);
         let btn = $(`${target}_btn`);
         btn.data(this.dataset);
         btn.data("cell", $(this).closest('td')[0]);
@@ -187,7 +188,7 @@ function saveEvolutionScore(data, cell){
         data: data,
         success: response => {
             cell.closest('tr').innerHTML = response;
-            $('[data-toggle="tooltip"]').tooltip();
+            $('[data-bs-toggle="tooltip"]').tooltip();
         },
         error: data => {
             showErrorTooltip(cell, data);
@@ -245,15 +246,15 @@ function emptyScore(e){
 function showErrorTooltip(cell, data) {
     let inputGroup = $(cell).find(".input-group")[0];
     inputGroup.classList.add("has-error");
-    inputGroup.setAttribute("data-toggle", "tooltip");
-    inputGroup.setAttribute("data-placement", "top");
+    inputGroup.setAttribute("data-bs-toggle", "tooltip");
+    inputGroup.setAttribute("data-bs-placement", "top");
     if(data.responseJSON && data.responseJSON.error)
         inputGroup.setAttribute("title", data.responseJSON.error);
     $(inputGroup).tooltip('show');
 }
 
 function refreshEvolutionScore(data){
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-bs-toggle="tooltip"]').tooltip();
     let score_element = $(`#evolution_score_${data.student}`);
     let score_info_element = $(`#evolution_score_info_${data.student}`);
     data.scores = score_element.data('scores');
@@ -277,5 +278,5 @@ function buildAndReplaceEvolutionScore(response, score_element, score_info_eleme
     } else {
         score_info_element.attr('data-original-title', response['computed_title_text'] + evolution_score);
     }
-    $('[data-toggle="tooltip"]').tooltip();
+    $('[data-bs-toggle="tooltip"]').tooltip();
 }

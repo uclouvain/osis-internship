@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from internship.models.enums.affectation_type import AffectationType
 from internship.models.enums.choice_type import ChoiceType
@@ -42,19 +43,30 @@ class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
 
 
 class InternshipStudentAffectationStat(SerializableModel):
-    student = models.ForeignKey('base.Student', on_delete=models.CASCADE)
-    organization = models.ForeignKey('internship.Organization', on_delete=models.CASCADE, null=True)
-    speciality = models.ForeignKey('internship.InternshipSpeciality', on_delete=models.CASCADE, null=True)
-    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
+    student = models.ForeignKey('base.Student', on_delete=models.CASCADE, verbose_name=_('Student'))
+    organization = models.ForeignKey(
+        'internship.Organization', on_delete=models.CASCADE, null=True, verbose_name=_('Organization')
+    )
+    speciality = models.ForeignKey(
+        'internship.InternshipSpeciality', on_delete=models.CASCADE, null=True, verbose_name=_('Speciality')
+    )
+    period = models.ForeignKey(
+        'internship.Period', on_delete=models.CASCADE, verbose_name=_('Period')
+    )
     internship = models.ForeignKey(
         'internship.Internship', blank=True, null=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name=_('Internship')
     )
-    choice = models.CharField(max_length=1, choices=ChoiceType.choices(), default=ChoiceType.NO_CHOICE.value)
-    cost = models.IntegerField()
-    consecutive_month = models.BooleanField(default=False)
-    type = models.CharField(max_length=1, choices=AffectationType.choices(), default=AffectationType.NORMAL.value)
-    internship_evaluated = models.BooleanField(default=False)
+    choice = models.CharField(
+        max_length=1, choices=ChoiceType.choices(), default=ChoiceType.NO_CHOICE.value, verbose_name=_('Choice')
+    )
+    cost = models.IntegerField(verbose_name=_('Cost'))
+    consecutive_month = models.BooleanField(default=False, verbose_name=_('Consecutive month'))
+    type = models.CharField(
+        max_length=1, choices=AffectationType.choices(), default=AffectationType.NORMAL.value, verbose_name=_('Type')
+    )
+    internship_evaluated = models.BooleanField(default=False, verbose_name=_('Internship evaluated'))
 
     def __str__(self):
         return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)

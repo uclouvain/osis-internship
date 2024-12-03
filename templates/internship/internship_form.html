@@ -1,16 +1,16 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internship-list' cohort_id=cohort.id %}">{% trans 'Internships modalities' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship-list' cohort_id=cohort.id %}">{% trans 'Internships modalities' %}</a></li>
 
-    <li class="active">{% trans 'Add internship modality' %}</li>
+    <li class="breadcrumb-item active">{% trans 'Add internship modality' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -18,35 +18,35 @@
         <h2>{% trans 'Internship modality' %}</h2>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <form method="POST" class="post-form">
                 {%  csrf_token %}
                 <div class="row">
-                    {% bootstrap_field form.name form_group_class="form-group col-md-6" label=_("Name") %}
-                    {% bootstrap_field form.speciality form_group_class="form-group col-md-6" label=_("Specialty") %}
+                    {% bootstrap_field form.name wrapper_class="form-group col-md-6"  %}
+                    {% bootstrap_field form.speciality wrapper_class="form-group col-md-6"  %}
                 </div>
 
                 <div class="row">
-                    {% bootstrap_field form.length_in_periods form_group_class="form-group col-md-6" label=_("Number of periods") %}
-                    {% bootstrap_field form.position form_group_class="form-group col-md-6" label=_("Order position") %}
+                    {% bootstrap_field form.length_in_periods wrapper_class="form-group col-md-6"  %}
+                    {% bootstrap_field form.position wrapper_class="form-group col-md-6"  %}
                 </div>
 
                 <div class="row">
                     <div class="col-md-6">
-                        {% bootstrap_field form.periods form_group_class="form-group col-md-12" label=_("Periods") %}
+                        {% bootstrap_field form.periods wrapper_class="form-group col-md-12"  %}
                     </div>
                     <div class="col-md-6">
-                        {% bootstrap_field form.apds form_group_class="form-group col-md-12" label=_("APDs") %}
+                        {% bootstrap_field form.apds wrapper_class="form-group col-md-12"  %}
                     </div>
                 </div>
 
                 <button type="submit" class="btn btn-primary" title="{%trans 'Save' %}" id="bt_internship_save">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                    <span class="fa fa-save" aria-hidden="true"></span>
                     {% trans 'Save' %}
                 </button>
                 <a class="btn btn-default" id="bt_internship_delete" href="{% url 'internship-list' cohort_id=cohort.id %}">
-                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="fa fa-chevron-left" aria-hidden="true"></span>
                     {% trans 'Return' %}
                 </a>
             </form>

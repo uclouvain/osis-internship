@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,13 +27,13 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans "All internships" %}</a></li>
-    <li><a href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">{% trans "Choice's Details" %}</a></li>
-    <li class="active">{% trans "Edit places" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans "All internships" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">{% trans "Choice's Details" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Edit places" %}</li>
 {% endblock %}
 
 {% block content %}
@@ -41,18 +41,20 @@
         <h2>{% trans 'Edit places' %}: {{ internship.organization }} - {{ internship.speciality }}</h2>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <form method="post" action="{% url 'save_period_places' cohort_id=cohort.id internship_id=internship.id %}">
+                <div class="row">
                 {% csrf_token %}
                 {% for period_name, number_places in period_places%}
-                    <div class="col-md-3 form-group">
+                    <div class="col-3 form-group">
                         <label for="id_{{ period_name }}">{{ period_name }}</label>:
                         <input type="number" class="form-control" id="id_{{ period_name }}" name="{{ period_name }}" value="{{ number_places }}">
                     </div>
                 {% endfor %}
+                </div>
                 <button type="submit" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+                    <span class="fa fa-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
             </form>
         </div>

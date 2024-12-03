@@ -24,10 +24,9 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
-
-from django.utils.translation import gettext_lazy as _
 
 APDS_DESCRIPTIONS = {
     "1": _("Take a history (anamnesis)"),
@@ -53,5 +52,5 @@ class InternshipModalityApdAdmin(SerializableModelAdmin):
 
 
 class InternshipModalityApd(SerializableModel):
-    internship = models.ForeignKey('internship.Internship', on_delete=models.PROTECT)
-    apd = models.IntegerField()
+    internship = models.ForeignKey('internship.Internship', on_delete=models.PROTECT, verbose_name=_('Internship'))
+    apd = models.IntegerField(verbose_name=_('APD'))

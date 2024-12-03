@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,19 +27,19 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans 'All hospitals' %}</a></li>
-    <li class="active">{{ organization.name }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans 'All hospitals' %}</a></li>
+    <li class="breadcrumb-item active">{{ organization.name }}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
       <h2>{{ organization.name }}</h2>
   </div>
-  <div class="panel panel-default">
-      <div class="panel-body">
+  <div class="card card-default">
+      <div class="card-body">
           {% if organization %}
               {% for speciality in specialities %}
                   {% for offer in offers %}
@@ -48,10 +48,10 @@
                           {% trans 'Capacity' %} : {{offer.maximum_enrollments}} | {% trans 'Number of first choices' %} : {{offer.number_first_choice}}
                           | {% trans 'Number of students who chosed this organization' %} : {{offer.number_all_choice}}
                           <br/>
-                          {% trans 'Students list' %} : <a role="button" data-toggle="collapse" data-target="#{{speciality.tab}}"
+                          {% trans 'Students list' %} : <a role="button" data-bs-toggle="collapse" data-bs-target="#{{speciality.tab}}"
                             aria-expanded="false"
                             aria-controls="{{speciality.tab}}">
-                          <span class="glyphicon glyphicon-list" aria-hidden="true"></span></a>
+                          <span class="fa fa-list" aria-hidden="true"></span></a>
                           <div class="collapse" id="{{speciality.tab}}">
                               <ul>
                                   {% for choice in organization_choice %}

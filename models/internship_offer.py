@@ -25,6 +25,7 @@
 ##############################################################################
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -39,13 +40,17 @@ class InternshipOfferAdmin(SerializableModelAdmin):
 
 
 class InternshipOffer(SerializableModel):
-    organization = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
-    speciality = models.ForeignKey('internship.InternshipSpeciality', null=True, on_delete=models.CASCADE)
-    title = models.CharField(max_length=255)
-    maximum_enrollments = models.IntegerField()
-    master = models.CharField(max_length=100, blank=True, null=True)
-    selectable = models.BooleanField(default=True)
-    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
+    organization = models.ForeignKey(
+        'internship.Organization', on_delete=models.CASCADE, verbose_name=_('Organization')
+    )
+    speciality = models.ForeignKey(
+        'internship.InternshipSpeciality', null=True, on_delete=models.CASCADE, verbose_name=_('Speciality')
+    )
+    title = models.CharField(max_length=255, verbose_name=_('Title'))
+    maximum_enrollments = models.IntegerField(verbose_name=_('Maximum enrollments'))
+    master = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Master'))
+    selectable = models.BooleanField(default=True, verbose_name=_('Selectable'))
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, verbose_name=_('Cohort'))
 
     def __str__(self):
         return self.title

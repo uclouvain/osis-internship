@@ -27,7 +27,7 @@
 from django.contrib.admin import ModelAdmin
 from django.db import models
 from django.db.models import Model
-
+from django.utils.translation import gettext_lazy as _
 
 class PlaceEvaluationAdmin(ModelAdmin):
     list_display = ("student", "organization", "specialty", "period", "evaluation", "cohort")
@@ -54,8 +54,11 @@ class PlaceEvaluationManager(models.Manager):
 
 class PlaceEvaluation(Model):
 
-    affectation = models.ForeignKey('internship.InternshipStudentAffectationStat', on_delete=models.CASCADE, null=True)
-    evaluation = models.JSONField(null=True)
+    affectation = models.ForeignKey(
+        'internship.InternshipStudentAffectationStat', on_delete=models.CASCADE, null=True,
+        verbose_name=_("Affectation")
+    )
+    evaluation = models.JSONField(null=True, verbose_name=_("Evaluation"))
 
     objects = PlaceEvaluationManager()
 

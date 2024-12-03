@@ -63,14 +63,14 @@ class FuturePeriod(models.Manager):
 
 
 class Period(SerializableModel):
-    name = models.CharField(max_length=255)
-    date_start = models.DateField()
-    date_end = models.DateField()
+    name = models.CharField(max_length=255, verbose_name=_('Name'))
+    date_start = models.DateField(verbose_name=_('Start date'))
+    date_end = models.DateField(verbose_name=_('End date'))
     cohort = models.ForeignKey('internship.cohort', on_delete=models.CASCADE)
     reminder_mail_sent = models.BooleanField(default=False)
-    remedial = models.BooleanField(default=False)
+    remedial = models.BooleanField(default=False, verbose_name=_('Remedial'))
     place_evaluation_active = models.BooleanField(default=False)
-    exclude_from_assignment = models.BooleanField(default=False)
+    exclude_from_assignment = models.BooleanField(default=False, verbose_name=_('Exclude from assignment'))
 
     objects = models.Manager()
     active = ActivePeriod()

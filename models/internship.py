@@ -25,6 +25,7 @@
 ##############################################################################
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModelAdmin, SerializableModel
 
@@ -36,15 +37,16 @@ class InternshipAdmin(SerializableModelAdmin):
 
 
 class Internship(SerializableModel):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, verbose_name=_('Name'))
     speciality = models.ForeignKey(
         'internship.InternshipSpeciality',
         null=True, blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name=_('Specialty'),
     )
-    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
-    length_in_periods = models.IntegerField(default=1)
-    position = models.IntegerField(default=0)
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, verbose_name=_('Cohort'))
+    length_in_periods = models.IntegerField(default=1, verbose_name=_('Length in periods'))
+    position = models.IntegerField(default=0, verbose_name=_('Position'))
 
     def choice(self):
         if not self.speciality:

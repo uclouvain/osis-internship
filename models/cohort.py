@@ -44,19 +44,21 @@ class CohortAdmin(SerializableModelAdmin):
 
 
 class Cohort(SerializableModel):
-    name = models.CharField(max_length=255, unique=True)
-    description = models.TextField()
-    publication_start_date = models.DateField(null=True, blank=True)
-    subscription_start_date = models.DateField(null=True, blank=True)
-    subscription_end_date = models.DateField(null=True, blank=True)
+    name = models.CharField(max_length=255, unique=True, verbose_name=_('Name'))
+    description = models.TextField(verbose_name=_('Description'))
+    publication_start_date = models.DateField(null=True, blank=True, verbose_name=_('Publication start date'))
+    subscription_start_date = models.DateField(null=True, blank=True, verbose_name=_('Subscription start date'))
+    subscription_end_date = models.DateField(null=True, blank=True, verbose_name=_('Subscription end date'))
     originated_from = models.ForeignKey(
         'Cohort', null=True, blank=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name=_('Originated from'),
     )
 
-    is_parent = models.BooleanField(default=False)
+    is_parent = models.BooleanField(default=False, verbose_name=_('Is parent'))
     parent_cohort = models.ForeignKey(
-        'Cohort', null=True, blank=True, on_delete=models.PROTECT, related_name='subcohorts'
+        'Cohort', null=True, blank=True, on_delete=models.PROTECT, related_name='subcohorts',
+        verbose_name=_('Parent cohort'),
     )
 
     def clean(self):

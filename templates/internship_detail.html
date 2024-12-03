@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 {% load list %}
@@ -28,45 +28,46 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans "All internships" %}</a></li>
-    <li class="active">{% trans "Choice's Details" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships' cohort_id=cohort.id %}">{% trans "All internships" %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Choice's Details" %}</li>
 {% endblock %}
 {% block content %}
     <div class="page-header">
         <h2>{{ internship.organization.name }}</h2>
     </div>
-    <div class="panel-group">
-    <div class="panel panel-default">
-        <div class="panel-heading">
+    <div class="card-group">
+    <div class="card card-default">
+        <div class="card-heading">
             <h3>{% trans 'Choices distribution for' %} <b>{{ internship.speciality.name }}</b></h3>
         </div>
-        <div class="panel-body">
+        <div class="card-body p-5">
+        <div class="row">
         {% if mandatory_internships_choices %}
-            <div class="col-lg-2">
-            <div class="panel panel-primary">
-                <div class="panel-heading">
-                    <h4>{% trans 'Mandatory internship' %}</h4>
+            <div class="col-2">
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5>{% trans 'Mandatory internship' %}</h5>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                 {% for i in number_choices %}
                     {% with forloop as choices_loop %}
                     <label> {{ choices_labels|get_item_at_index:choices_loop.counter0}}</label> {{i}} <br/>
                         {% trans 'Students list' %} :
-                        <a role="button" data-toggle="collapse" data-target="#choice{{ choices_loop.counter0 }}"
+                        <a role="button" data-bs-toggle="collapse" data-bs-target="#choice{{ choices_loop.counter0 }}"
                            aria-expanded="false" aria-controls="choice{{ choices_loop.counter0 }}"
                            title="{% trans 'Display students' %}">
-                            <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                            <span class="fa fa-list" aria-hidden="true"></span>
                         </a>
                         <div class="collapse" id="choice{{ choices_loop.counter0 }}">
                             <ul style="list-style:none; padding-left: 0;">
                                 {% for student in students %}
                                     {% if student.choice == choices_loop.counter %}
                                         <li>
-                                            <span style="margin-right: 5px;" class="glyphicon glyphicon-user text-primary"></span>
+                                            <span style="margin-right: 5px;" class="fa fa-user text-primary"></span>
                                             {{ student.student.person.first_name.0 }}. {{ student.student.person.last_name }}
                                         </li>
                                     {% endif %}
@@ -84,27 +85,27 @@
             {% if non_mandatory_internships_choices %}
             {% for i in number_choices_non_mandatory %}
                 {% with forloop as nm_internships_loop %}
-                <div class="col-lg-2">
-                <div class="panel panel-info">
-                <div class="panel-heading">
-                <h4>{% trans 'Non mandatory internship' %} - {{ nm_internships_loop.counter }}</h4>
+                <div class="col-2">
+                <div class="card">
+                <div class="card-header">
+                    <h5>{% trans 'Non mandatory internship' %} - {{ nm_internships_loop.counter }}</h5>
                 </div>
-                <div class="panel-body">
+                <div class="card-body">
                 {% for j in i %}
                     {% with forloop as choices_loop %}
                     <label> {{ choices_labels|get_item_at_index:choices_loop.counter0}}</label> {{j}} <br/>
                     {% trans 'Students list' %} :
-                    <a role="button" data-toggle="collapse" data-target="#nm-choice-{{nm_internships_loop.counter0}}-{{ choices_loop.counter0 }}"
+                    <a role="button" data-bs-toggle="collapse" data-bs-target="#nm-choice-{{nm_internships_loop.counter0}}-{{ choices_loop.counter0 }}"
                        aria-expanded="false" aria-controls="nmchoice-{{nm_internships_loop.counter0}}{{ choices_loop.counter0 }}"
                        title="{% trans 'Display students' %}">
-                        <span class="glyphicon glyphicon-list" aria-hidden="true"></span>
+                        <span class="fa fa-list" aria-hidden="true"></span>
                     </a>
                     <div class="collapse" id="nm-choice-{{nm_internships_loop.counter0}}-{{ choices_loop.counter0 }}">
                         <ul style="list-style:none; padding-left: 0;">
                             {% for student in nm_students %}
                                     {% if student.internship.name|slice:"-1:"|add:0 == nm_internships_loop.counter and student.choice == choices_loop.counter %}
                                         <li>
-                                            <span style="margin-right: 5px;" class="glyphicon glyphicon-user text-primary"></span>
+                                            <span style="margin-right: 5px;" class="fa fa-user text-primary"></span>
                                             {{ student.student.person.first_name.0 }}. {{ student.student.person.last_name }}
                                         </li>
                                     {% endif %}
@@ -122,8 +123,9 @@
             {% endfor %}
             {% endif %}
         </div>
-        <div class="row">
-            <div class="col-lg-6" style="margin-left: 30px; margin-top: 20px; margin-bottom:20px;">
+        </div>
+        <div class="row ps-5 pb-5">
+            <div class="col-6">
                 <a href="{% url 'edit_period_places' cohort_id=cohort.id internship_id=internship.id %}" class="btn btn-primary" role="button">{% trans 'Edit places' %}</a>
             </div>
         </div>

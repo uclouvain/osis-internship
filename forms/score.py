@@ -28,28 +28,28 @@ class ScoresFilterForm(Form):
         queryset=None,
         required=False,
         empty_label=None,
-        widget=forms.SelectMultiple(attrs={"class": "form-control", "multiple": "multiple"})
+        widget=forms.SelectMultiple(attrs={"class": "form-select", "multiple": "multiple"})
     )
 
     specialty = forms.ModelChoiceField(
         queryset=None,
         required=False,
         empty_label='-',
-        widget=forms.Select(attrs={"class": "form-control"})
+        widget=forms.Select(attrs={"class": "form-select"})
     )
 
     organization = forms.ModelChoiceField(
         queryset=None,
         required=False,
         empty_label='-',
-        widget=forms.Select(attrs={"class": "form-control"})
+        widget=forms.Select(attrs={"class": "form-select"})
     )
 
     yes_no_typed_choice_field = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
         required=False,
         choices=EMPTY_YES_NO_CHOICES,
-        widget=forms.Select(attrs={"class": "form-control"})
+        widget=forms.Select(attrs={"class": "form-select"})
     )
 
     all_grades_submitted_filter = yes_no_typed_choice_field

@@ -22,7 +22,7 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="cell-actions pull-right">
+<div class="cell-actions float-end">
 
     <button onclick="editScore(this)"
             {% if period_score|is_edited %}
@@ -32,10 +32,10 @@
             {% endif %}
             data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
             class="btn btn-xs btn-warning btn-score">
-        <i class="fas fa-pencil-alt"></i>
+        <i class="fas fa-pencil-alt text-white"></i>
     </button>
 
-    <button class="btn btn-xs btn-danger" data-toggle="modal" data-target="#empty_score"
+    <button class="btn btn-xs btn-danger" data-bs-toggle="modal" data-bs-target="#empty_score"
             data-student="{{ student.registration_id }}" data-period="{{ period.name }}">
         <icon class="fas fa-ban"></icon>
     </button>

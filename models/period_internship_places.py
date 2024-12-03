@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -37,9 +38,11 @@ class PeriodInternshipPlacesAdmin(SerializableModelAdmin):
 
 
 class PeriodInternshipPlaces(SerializableModel):
-    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
-    internship_offer = models.ForeignKey('internship.InternshipOffer', on_delete=models.CASCADE)
-    number_places = models.IntegerField()
+    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE, verbose_name=_('Period'))
+    internship_offer = models.ForeignKey(
+        'internship.InternshipOffer', on_delete=models.CASCADE, verbose_name=_('Internship Offer')
+    )
+    number_places = models.IntegerField(verbose_name=_('Number places'))
 
     def __str__(self):
         return u"%s (%s)" % (self.internship_offer, self.period)

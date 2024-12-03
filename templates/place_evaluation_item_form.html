@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -32,15 +32,15 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans "Internship's place evaluation"  %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans "Internship's place evaluation"  %}</a></li>
     {% if item %}
-        <li class="active">{% trans 'Item' %} {{ item.order }}</li>
+        <li class="breadcrumb-item active">{% trans 'Item' %} {{ item.order }}</li>
     {% else %}
-        <li class="active">{% trans 'New item' %}</li>
+        <li class="breadcrumb-item active">{% trans 'New item' %}</li>
     {% endif %}
 {% endblock %}
 
@@ -52,14 +52,14 @@
 
 {% block content %}
     <form method="post">
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
         {% csrf_token %}
             <div class="row">
-                {% bootstrap_field form.statement form_group_class="form-group col-md-11" %}
+                {% bootstrap_field form.statement wrapper_class="form-group col-md-11" %}
             </div>
             <div class="row">
-                {% bootstrap_field form.type form_group_class="form-group col-md-2" %}
+                {% bootstrap_field form.type wrapper_class="form-group col-md-2" %}
             </div>
             <div id="options-row" class="row">
                 <div class="col-md-6">
@@ -85,13 +85,13 @@
                 </div>
             </div>
             <div class="row">
-                {% bootstrap_field form.required form_group_class="form-group col-md-2" %}
+                {% bootstrap_field form.required wrapper_class="form-group col-md-2" %}
             </div>
             <div class="row">
-                {% bootstrap_field form.active form_group_class="form-group col-md-2" %}
+                {% bootstrap_field form.active wrapper_class="form-group col-md-2" %}
             </div>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <div class="row form-group">
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary    ">

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,15 +27,15 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
-    <li class="active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student_id %}">
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
+    <li class="breadcrumb-item active"><a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student_id %}">
         {{ student.person.last_name }} {{ student.person.first_name }}</a>
     </li>
-    <li>{% trans 'Student affectation' %}</li>
+    <li class="breadcrumb-item">{% trans 'Student affectation' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -63,7 +63,7 @@
                             <input id="period-input-{{ period }}" class="hidden" name="period" value="{{ period }}" disabled>
                         </td>
                         <td>
-                            <select name="internship" class="form-control" data-period="{{ period }}">
+                            <select  name="internship"  class="form-select"  data-period="{{ period }}" >
                                 <option value="">--</option>
                                 {% for modality in modalities %}
                                     <option value="{{modality.id}}"
@@ -76,7 +76,7 @@
                             </select>
                         </td>
                         <td>
-                            <select name="specialty" class="form-control" data-period="{{ period }}">
+                            <select  name="specialty"  class="form-select"  data-period="{{ period }}" >
                                 <option value="">--</option>
                                 {% for specialty in specialties %}
                                     <option value="{{specialty.name}}"
@@ -93,7 +93,7 @@
                             </select>
                         </td>
                         <td>
-                            <select name="organization" class="form-control" data-period="{{ period }}">
+                            <select  name="organization"  class="form-select"  data-period="{{ period }}" >
                                 <option value="">--</option>
                                 {% for organization in organizations %}
                                     <option value="{{organization.reference}}"
@@ -114,7 +114,7 @@
             </tbody>
         </table>
         <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-            <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+            <span class="fa fa-save" aria-hidden="true"></span> {% trans 'Save'%}
         </button>
     </form>
     <br>

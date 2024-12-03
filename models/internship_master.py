@@ -26,6 +26,7 @@
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from internship.models.enums.civility import Civility
 from internship.models.enums.user_account_status import UserAccountStatus
@@ -48,21 +49,28 @@ class InternshipMasterAdmin(SerializableModelAdmin):
 
 
 class InternshipMaster(SerializableModel):
-    person = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.CASCADE)
+    person = models.ForeignKey(
+        'base.Person', blank=True, null=True, on_delete=models.CASCADE, verbose_name=_('Person')
+    )
 
-    email_private = models.EmailField(max_length=255, blank=True, null=True, verbose_name='Private email')
-    email_additional = models.CharField(max_length=255, blank=True, null=True, verbose_name='Additional email')
-    civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
+    email_private = models.EmailField(max_length=255, blank=True, null=True, verbose_name=_('Private email'))
+    email_additional = models.CharField(max_length=255, blank=True, null=True, verbose_name=_('Additional email'))
+    civility = models.CharField(
+        max_length=50, blank=True, null=True, choices=Civility.choices(), verbose_name=_('Civility')
+    )
 
-    start_activities = models.DateField(blank=True, null=True)
+    start_activities = models.DateField(blank=True, null=True, verbose_name=_('Start activities'))
 
     user_account_status = models.CharField(
         max_length=50,
         choices=UserAccountStatus.choices(),
         default=UserAccountStatus.INACTIVE.name,
+        verbose_name=_('User account status'),
     )
 
-    user_account_expiration_date = models.DateField(blank=True, null=True)
+    user_account_expiration_date = models.DateField(
+        blank=True, null=True, verbose_name=_('User account expiration date')
+    )
 
     def civility_acronym(self):
         if self.civility:

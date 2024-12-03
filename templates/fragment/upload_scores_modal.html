@@ -1,4 +1,4 @@
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 <div class="modal fade" id="upload_scores" tabindex="-1" role="dialog" aria-labelledby="uploadScoresLabel">
     <div class="modal-dialog" role="document">
@@ -6,13 +6,13 @@
             <form id="upload-form" method="post" enctype="multipart/form-data" action="{% url 'internship_upload_scores' cohort_id=cohort.id %}">
                 {% csrf_token %}
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="uploadScoresLabel">{% trans 'Import' %}</h4>
+                    <h5 class="modal-title" id="uploadScoresLabel">{% trans 'Import' %}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="bt_close_upload_students_modal"></button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="period-select">{% trans 'Period' %}</label>
-                        <select name="period" class="form-control" id="period-select">
+                        <select  name="period"  class="form-select"  id="period-select" >
                             {% for period in all_periods %}
                                 <option>{{ period }}</option>
                             {% endfor %}
@@ -29,7 +29,7 @@
                         <div class="button-loader" style="display: none;"></div>
                         {% trans 'Import' %}
                     </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_scores_modal">{% trans 'Cancel' %}</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" id="bt_cancel_upload_scores_modal">{% trans 'Cancel' %}</button>
                 </div>
             </form>
         </div>

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 {% load place_evaluation %}
@@ -32,26 +32,26 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans "Internship's place evaluation"  %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans "Internship's place evaluation"  %}</li>
 {% endblock %}
 {% block content %}
   <div class="page-header">
       <h2>{% trans "Internship's place evaluation"  %}</h2>
   </div>
     <ul id="tabs" class="nav nav-tabs">
-        <li role="form"><a href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans 'Form' %}</a></li>
-        <li role="results"><a href="{% url 'place_evaluation_results' cohort_id=cohort.id %}">{% trans 'Results' %}</a></li>
-        <li role="config" class="active"><a href="{% url 'place_evaluation_config' cohort_id=cohort.id %}">{% trans 'Configuration' %}</a></li>
+        <li role="form" class="nav-item"><a class="nav-link" href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans 'Form' %}</a></li>
+        <li role="results" class="nav-item"><a class="nav-link" href="{% url 'place_evaluation_results' cohort_id=cohort.id %}">{% trans 'Results' %}</a></li>
+        <li role="config" class="nav-item"><a class="nav-link active" href="{% url 'place_evaluation_config' cohort_id=cohort.id %}">{% trans 'Configuration' %}</a></li>
     </ul>
-    <div class="tab-content">
+    <div class="tab-content bg-body">
         <form action="{% url 'place_evaluation_config' cohort_id=cohort.id %}" method="POST">
         {% csrf_token %}
-        <div id="form" class="tab-pane fade in active">
-            <div class="panel panel-body">
+        <div id="form" class="tab-pane fade show active">
+            <div class="card-body">
             <div class="alert alert-info">
                 {% trans 'Select the periods for which evaluations are open' %}
             </div>

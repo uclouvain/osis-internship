@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 {% load place_evaluation %}
@@ -33,42 +33,42 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans "Internship's place evaluation"  %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans "Internship's place evaluation"  %}</li>
 {% endblock %}
 
 {% block content %}
   <div class="page-header">
       <h2>{% trans "Internship's place evaluation"  %}</h2>
   </div>
-    <ul id="tabs" class="nav nav-tabs">
-      <li role="form"><a href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans 'Form' %}</a></li>
-      <li role="results" class="active"><a href="{% url 'place_evaluation_results' cohort_id=cohort.id %}">{% trans 'Results' %}</a></li>
-      <li role="config"><a href="{% url 'place_evaluation_config' cohort_id=cohort.id %}">{% trans 'Configuration' %}</a></li>
-    </ul>
-    <div class="tab-content">
-        <div id="results" class="tab-pane fade in active">
-            <div class="panel panel-body">
-                <div class="pull-right">
-                    <a href="{% url 'export_place_evaluation_results' cohort_id=cohort.id %}" class="btn btn-primary download">
-                        <span class="fa fa-download"></span>
-                        {% trans 'Export results' %}
-                    </a>
-                </div>
+    <div class="d-flex justify-content-between nav-tabs">
+        <ul id="tabs" class="nav">
+            <li role="form" class="nav-item"><a class="nav-link" href="{% url 'place_evaluation' cohort_id=cohort.id %}">{% trans 'Form' %}</a></li>
+            <li role="results" class="nav-item"><a class="nav-link active" href="{% url 'place_evaluation_results' cohort_id=cohort.id %}">{% trans 'Results' %}</a></li>
+            <li role="config" class="nav-item"><a class="nav-link" href="{% url 'place_evaluation_config' cohort_id=cohort.id %}">{% trans 'Configuration' %}</a></li>
+        </ul>
+        <div>
+            <a href="{% url 'export_place_evaluation_results' cohort_id=cohort.id %}" class="btn btn-primary download">
+                <span class="fa fa-download"></span>
+                {% trans 'Export results' %}
+            </a>
+        </div>
+    </div>
+    <div class="tab-content bg-body">
+        <div id="results" class="tab-pane fade show active">
+            <div class="card card-body">
 
-                <div class="row">
+                <div class="row py-4">
                     <div class="col-md-4">
-                        <h4>{% trans 'Global statistics' %}</h4>
+                        <h5>{% trans 'Global statistics' %}</h5>
                         <div class="evaluation-stats">
                             <label>{% trans '# of Evaluations' %}</label>
                             <div class="progress">
-                                <span class="progress-value text-center">{{ evaluations|length }} / {{ affectations|length }}</span>
-                                <div class="progress-bar" role="progressbar" aria-valuenow="{{ evaluations|length }}"
-                                aria-valuemin="0" aria-valuemax="{{ affectations|length }}"
-                                style="width: {% widthratio evaluations|length affectations|length 100 %}%;">
+                                <div class="progress-bar" role="progressbar" style="width: {% widthratio evaluations|length affectations|length 100 %}%;" aria-valuenow="{{ evaluations|length }}" aria-valuemin="0" aria-valuemax="{{ affectations|length }}">
+                                    {{ evaluations|length }} / {{ affectations|length }}
                                 </div>
                             </div>
                         </div>
@@ -77,12 +77,12 @@
 
                 <hr/>
 
-                <div class="row">
+                <div class="row py-4">
                     <div class="col-md-4">
-                        <h4>{% trans 'Period statistics' %}</h4>
+                        <h5>{% trans 'Period statistics' %}</h5>
                         <div class="form-group">
                             <label for="period-select">{% trans 'Select a period:' %}</label>
-                            <select class="form-control" name="periods" id="period-select">
+                            <select   class="form-select"  name="periods" id="period-select" >
                                 {% for period in periods %}
                                     <option value="{{ period.name }}">{{ period.name }}</option>
                                 {% endfor %}
@@ -90,13 +90,11 @@
                         </div>
                         {% for period in periods %}
                             {% with period_stats=periods_items|get_item:period.name %}
-                            <div class="evaluation-stats-period {% if forloop.counter0 == 0 %} show {% endif %}" id="evaluation-stats-{{ period.name }}">
+                            <div class="evaluation-stats-period {% if forloop.counter0 == 0 %} d-block {% endif %}" id="evaluation-stats-{{ period.name }}">
                                 <label>{% trans '# of Evaluations for ' %} {{ period.name }}</label>
                                 <div class="progress">
-                                    <span class="progress-value text-center">{{ period_stats.evaluations|length }} / {{ period_stats.affectations|length }}</span>
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{ period_stats.evaluations|length }}"
-                                    aria-valuemin="0" aria-valuemax="{{ period_stats.affectations|length }}"
-                                    style="width: {% widthratio period_stats.evaluations|length period_stats.affectations|length 100 %}%;">
+                                    <div class="progress-bar" role="progressbar" style="width: {% widthratio period_stats.evaluations|length period_stats.affectations|length 100 %}%;" aria-valuenow="{{ period_stats.evaluations|length }}" aria-valuemin="0" aria-valuemax="{{ period_stats.affectations|length }}">
+                                        {{ period_stats.evaluations|length }} / {{ period_stats.affectations|length }}
                                     </div>
                                 </div>
                             </div>
@@ -107,12 +105,12 @@
 
                 <hr/>
 
-                <div class="row">
+                <div class="row py-4">
                     <div class="col-md-4">
-                        <h4>{% trans 'Place statistics' %}</h4>
+                        <h5>{% trans 'Place statistics' %}</h5>
                         <div class="form-group">
                             <label for="place-select">{% trans 'Select a place:' %}</label>
-                            <select class="form-control" name="places" id="place-select">
+                            <select   class="form-select"  name="places" id="place-select">
                                 <option value="">-</option>
                                 {% for place in places %}
                                     <option value="{{ place.reference }}">{{ place.reference }} - {{ place.name }}</option>
@@ -122,7 +120,7 @@
                         {% for place in places %}
                         <div class="form-group place-specialties-select" id="place-specialties-select-{{ place.reference }}">
                             <label for="specialty-select">{% trans 'Select a specialty for ' %} {{ place.name }} :</label>
-                            <select class="form-control" name="specialties" class="specialty-select" id="specialty-select-{{ place.reference }}">
+                            <select class="form-select"  name="specialties" class="specialty-select" id="specialty-select-{{ place.reference }}" >
                                 <option value="">-</option>
                                 {% for specialty in specialties %}
                                     {% if specialty.acronym in specialties_available_by_hospital|get_item:place.reference %}
@@ -139,10 +137,8 @@
                                 <div class="evaluation-stats-place" id="evaluation-stats-{{ place.reference }}-{{ specialty.acronym }}">
                                     <label>{% trans '# of Evaluations for ' %} {{ specialty.name }} - {{ place.name }}</label>
                                     <div class="progress">
-                                        <span class="progress-value text-center">{{ places_stats.evaluations|length }} / {{ places_stats.affectations|length }}</span>
-                                        <div class="progress-bar" role="progressbar" aria-valuenow="{{ places_stats.evaluations|length }}"
-                                        aria-valuemin="0" aria-valuemax="{{ places_stats.affectations|length }}"
-                                        style="width: {% widthratio places_stats.evaluations|length places_stats.affectations|length 100 %}%;">
+                                        <div class="progress-bar" role="progressbar" style="width: {% widthratio places_stats.evaluations|length places_stats.affectations|length 100 %}%;" aria-valuenow="{{ places_stats.evaluations|length }}" aria-valuemin="0" aria-valuemax="{{ places_stats.affectations|length }}">
+                                            {{ places_stats.evaluations|length }} / {{ places_stats.affectations|length }}
                                         </div>
                                     </div>
                                 </div>
@@ -167,22 +163,22 @@
     <script type="text/javascript" src="{% static "js/internship.js" %}?version={{ js }}"></script>
     <script>
         document.querySelector('#period-select').addEventListener('change', (e) => {
-            document.querySelector('.evaluation-stats-period.show').classList.remove('show');
-            document.querySelector(`#evaluation-stats-${e.target.value}`).classList.add('show');
+            document.querySelector('.evaluation-stats-period.d-block')?.classList.remove('d-block');
+            document.querySelector(`#evaluation-stats-${e.target.value}`)?.classList.add('d-block');
         });
 
         document.querySelector('#place-select').addEventListener('change', (e) => {
             const placeRef = e.target.value;
 
-            document.querySelector('.evaluation-stats-place.show')?.classList.remove('show');
-            document.querySelector('.place-specialties-select.show')?.classList.remove('show');
-            document.querySelector(`#place-specialties-select-${placeRef}`).classList.add('show');
+            document.querySelector('.evaluation-stats-place.d-block')?.classList.remove('d-block');
+            document.querySelector('.place-specialties-select.d-block')?.classList.remove('d-block');
+            document.querySelector(`#place-specialties-select-${placeRef}`)?.classList.add('d-block');
 
             document.querySelector(`#specialty-select-${placeRef}`).addEventListener('change', (e) => {
                 const specialtyAcronym = e.target.value;
 
-                document.querySelector('.evaluation-stats-place.show')?.classList.remove('show');
-                document.querySelector(`#evaluation-stats-${placeRef}-${specialtyAcronym}`).classList.add('show');
+                document.querySelector('.evaluation-stats-place.d-block')?.classList.remove('d-block');
+                document.querySelector(`#evaluation-stats-${placeRef}-${specialtyAcronym}`)?.classList.add('d-block');
             });
         });
 

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,12 +27,12 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
-    <li class="active">{% trans "Choices modification" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_student_resume' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
+    <li class="breadcrumb-item active">{% trans "Choices modification" %}</li>
 {% endblock %}
 {% block content %}
 
@@ -46,15 +46,15 @@
             <strong>{% trans 'Attention' %} !</strong> {% trans 'You are in the period of inscriptions. It is not recommended to change choices during this period.' %}
         </div>
     {% endif %}
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <div class="row">
                 <ul class="nav nav-tabs">
                     {% for internship_item in internships %}
                       {% if internship_item.speciality != None %}
-                        <li role="presentation" class="{% if internship_item.id == internship.id %} active {% endif %}"><a href="{% url 'specific_internship_student_modification' cohort_id=cohort.id student_id=student.id internship_id=internship_item.id speciality_id=internship_item.speciality_id %}">{{ internship_item.name }}</a></li>
+                        <li role="presentation" class="nav-item"><a class="nav-link {% if internship_item.id == internship.id %} active {% endif %}" href="{% url 'specific_internship_student_modification' cohort_id=cohort.id student_id=student.id internship_id=internship_item.id speciality_id=internship_item.speciality_id %}">{{ internship_item.name }}</a></li>
                       {% else %}
-                        <li role="presentation" class="{% if internship_item.id == internship.id  %} active {% endif %}"><a href="{% url 'switch_internship' cohort_id=cohort.id student_id=student.id internship_id=internship_item.id %}">{{ internship_item.name }}</a></li>
+                        <li role="presentation" class="nav-item"><a class="nav-link {% if internship_item.id == internship.id  %} active {% endif %}" href="{% url 'switch_internship' cohort_id=cohort.id student_id=student.id internship_id=internship_item.id %}">{{ internship_item.name }}</a></li>
                       {% endif %}
                     {% endfor %}
                 </ul>
@@ -74,7 +74,7 @@
                     <div class="col-md-2">
                         <br>
                         <button type="submit" class="btn btn-primary">
-                            <span class="glyphicon glyphicon-ok"></span>
+                            <span class="fa fa-ok"></span>
                         </button>
                     </div>
                 </form>
@@ -87,8 +87,8 @@
                    {% csrf_token %}
                     {{ formset.management_form }}
                     {% if offers_forms  %}
-                        <button type="submit" class="btn btn-primary pull-right">
-                            <span class="glyphicon glyphicon-ok"></span>
+                        <button type="submit" class="btn btn-primary float-end">
+                            <span class="fa fa-ok"></span>
                             {% trans 'Submit choices' %}
                         </button>
                     {% endif %}
@@ -111,14 +111,14 @@
                             <td>{{ number_choices }}</td>
                             <td>
                                 <a class="btn btn-info" target="_blank" href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=offer.id %}">
-                                    <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                    <span class="fa fa-search text-white" aria-hidden="true"></span>
                                 </a>
                             </td>
                             <td hidden>
                                 <input type="number" id="{{ form.offer.id_for_label }}" name="{{ form.offer.html_name }}" class="form-control" value="{{ offer.pk }}">
                             </td>
                             <td>
-                                <select id="{{ form.preference.id_for_label }}" name="{{ form.preference.html_name }}" class="form-control">
+                                <select  id="{{ form.preference.id_for_label }}" name="{{ form.preference.html_name }}"  class="form-select"  >
                                     {% for x,y in form.fields.preference.choices %}
                                         <option value="{{ x }}"
                                                 {% if x == offer_value %} selected {% endif %}>
@@ -128,7 +128,7 @@
                                 </select>
                             </td>
                             <td>
-                                <select multiple id="{{ form.periods.id_for_label }}" name="{{ form.periods.html_name }}" class="form-control">
+                                <select  multiple id="{{ form.periods.id_for_label }}" name="{{ form.periods.html_name }}"  class="form-select"  >
                                     {% for x, y in form.fields.periods.choices %}
                                         <option value="{{ x }}" {% if x in enrollments %}selected{% endif %}>
                                         {{ y }}
@@ -136,7 +136,7 @@
                                     {% endfor %}
                                 </select>
                             </td>
-                            <td><input type="checkbox" id="{{ form.priority.id_for_label }}" name="{{ form.priority.html_name }}" {% if offer_priority %}checked{% endif %} class="form-control"></td>
+                            <td class="text-center"><input class="big-checkbox" type="checkbox" id="{{ form.priority.id_for_label }}" name="{{ form.priority.html_name }}" {% if offer_priority %}checked{% endif %}></td>
                        </tr>
 
                         {% endfor %}

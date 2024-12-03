@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -28,15 +28,15 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
-    <li><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
     {% if allocated_master %}
-        <li class="active">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</li>
+        <li class="breadcrumb-item active">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</li>
     {% else %}
-        <li class="active">{% trans 'Add' %}</li>
+        <li class="breadcrumb-item active">{% trans 'Add' %}</li>
     {% endif %}
 {% endblock %}
 
@@ -53,8 +53,8 @@
         {% endif %}
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <form action="{%url 'master_save' cohort_id=current_cohort.id %}" method="POST" class="form" id="master-form">
                 {% csrf_token %}
                 {% if allocated_master.id %}
@@ -64,34 +64,34 @@
                 <input type="hidden" id="existing-person-id" name="existing-person-id" value="{{ person.pk }}">
                 {% endif %}
                 <div class="row">
-                    {% bootstrap_field person_form.email form_group_class="form-group col-md-3" label=_("Email") %}
+                    {% bootstrap_field person_form.email wrapper_class="form-group col-md-3"  %}
                 </div>
                 <hr/>
                 <div class="row">
-                    {% bootstrap_field master_form.civility form_group_class="form-group col-md-2" label=_("Civility") %}
-                    {% bootstrap_field person_form.last_name form_group_class="form-group col-md-4" label=_("Last name")%}
-                    {% bootstrap_field person_form.first_name form_group_class="form-group col-md-3" label=_("First name") %}
+                    {% bootstrap_field master_form.civility wrapper_class="form-group col-md-2"  %}
+                    {% bootstrap_field person_form.last_name wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field person_form.first_name wrapper_class="form-group col-md-3"  %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field person_form.birth_date form_group_class="form-group col-md-4" label=_("Birth date") %}
-                    {% bootstrap_field person_form.gender form_group_class="form-group col-md-4" label=_("Gender") %}
-                    {% bootstrap_field master_form.start_activities form_group_class="form-group col-md-4" label=_("Start activities") %}
+                    {% bootstrap_field person_form.birth_date wrapper_class="form-group col-md-4"  %}
+                    {% bootstrap_field person_form.gender wrapper_class="form-group col-md-4"  %}
+                    {% bootstrap_field master_form.start_activities wrapper_class="form-group col-md-4"  %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field master_form.email_additional form_group_class="form-group col-md-4" label=_("Additional email") %}
-                    {% bootstrap_field master_form.email_private form_group_class="form-group col-md-4" label=_("Private email") %}
-                    {% bootstrap_field person_form.phone form_group_class="form-group col-md-2" label=_("Phone") %}
-                    {% bootstrap_field person_form.phone_mobile form_group_class="form-group col-md-2" label=_("Phone Number / Mobile Number") %}
+                    {% bootstrap_field master_form.email_additional wrapper_class="form-group col-md-4"  %}
+                    {% bootstrap_field master_form.email_private wrapper_class="form-group col-md-4"  %}
+                    {% bootstrap_field person_form.phone wrapper_class="form-group col-md-2"  %}
+                    {% bootstrap_field person_form.phone_mobile wrapper_class="form-group col-md-2"  %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field person_address_form.location form_group_class="form-group col-md-4" label=_("Address") %}
-                    {% bootstrap_field person_address_form.postal_code form_group_class="form-group col-md-2" label=_("Postal code") %}
-                    {% bootstrap_field person_address_form.city form_group_class="form-group col-md-3" label=_("City") %}
-                    {% bootstrap_field person_address_form.country form_group_class="form-group col-md-3" label=_("Country") %}
+                    {% bootstrap_field person_address_form.location wrapper_class="form-group col-md-4"  %}
+                    {% bootstrap_field person_address_form.postal_code wrapper_class="form-group col-md-2"  %}
+                    {% bootstrap_field person_address_form.city wrapper_class="form-group col-md-3"  %}
+                    {% bootstrap_field person_address_form.country wrapper_class="form-group col-md-3"  %}
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">{% trans 'Allocation' %}</div>
+                <div class="card card-default">
+                    <div class="card-heading">{% trans 'Allocation' %}</div>
                     <table class="table" id="tbl_allocations">
                         <thead>
                             <tr>
@@ -106,7 +106,7 @@
                             {% for allocation in allocations %}
                                 <tr id="allocation_row_{{ forloop.counter0 }}">
                                     <td>
-                                        <select name="hospital" id="hospital_{{ forloop.counter0 }}" class="form-control">
+                                        <select name="hospital" id="hospital_{{ forloop.counter0 }}" class="form-select">
                                             <option value="">--</option>
                                             {% for hospital in hospitals %}
                                                 {% if allocation.organization == hospital %}
@@ -118,7 +118,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="specialty" id="specialty_{{ forloop.counter0 }}" class="form-control">
+                                        <select name="specialty" id="specialty_{{ forloop.counter0 }}" class="form-select">
                                             <option value="">--</option>
                                             {% for specialty in specialties %}
                                                 {% if allocation.specialty.id == specialty.id %}
@@ -130,7 +130,7 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select name="role" id="role" class="form-control">
+                                        <select name="role" id="role" class="form-select">
                                             <option value="">--</option>
                                             {% for role in roles %}
                                                 <option value="{{ role.0 }}" {% if allocation.role == role.0 %} selected {% endif %}>
@@ -141,14 +141,14 @@
                                     </td>
                                         <td>
                                         <button type="button" class="btn btn-default" id="remove_allocation_{{ forloop.counter0 }}">
-                                            <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                            <span class="fa fa-minus" aria-hidden="true"></span>
                                         </button>
                                     </td>
                                 </tr>
                             {% endfor %}
                             <tr id="allocation_row_new">
                                 <td>
-                                    <select name="hospital" id="hospital" class="form-control">
+                                    <select  name="hospital" id="hospital"  class="form-select"  >
                                         <option value="">--</option>
                                         {% for hospital in hospitals %}
                                             <option value="{{ hospital.id }}">{{ hospital.reference }} - {{ hospital.name }}</option>
@@ -156,7 +156,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="specialty" id="specialty" class="form-control">
+                                    <select  name="specialty" id="specialty"  class="form-select"  >
                                         <option value="">--</option>
                                         {% for specialty in specialties %}
                                             <option value="{{ specialty.id }}">{{ specialty.name }}</option>
@@ -164,7 +164,7 @@
                                     </select>
                                 </td>
                                 <td>
-                                    <select name="role" id="role" class="form-control">
+                                    <select  name="role" id="role"  class="form-select"  >
                                         <option value="">--</option>
                                         {% for role in roles %}
                                             <option value="{{ role.0 }}">{{ role.0.0 }}</option>
@@ -173,7 +173,7 @@
                                 </td>
                                 <td>
                                     <button type="button" class="btn btn-default" id="add_allocation">
-                                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                                        <span class="fa fa-plus" aria-hidden="true"></span>
                                     </button>
                                 </td>
                             </tr>
@@ -181,8 +181,8 @@
                     </table>
                 </div>
 
-                <a data-toggle="modal" data-target="#postponeAllocationsModal" class="btn btn-primary">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span>
+                <a data-bs-toggle="modal" data-bs-target="#postponeAllocationsModal" class="btn btn-primary">
+                    <span class="fa fa-save" aria-hidden="true"></span>
                     {% trans "Save" %}
                 </a>
                 {% if master_id %}
@@ -190,12 +190,12 @@
                 {% else %}
                 <a href="{% url 'internships_masters' cohort_id=current_cohort.id %}" class="btn btn-default">
                 {% endif %}
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                    <span class="fa fa-remove" aria-hidden="true"></span>
                     {% trans "Cancel" %}
                 </a>
                 {% if not master_id %}
-                <a href="{% url 'master_new' cohort_id=current_cohort.id %}" id="clear-button" class="btn btn-danger pull-right">
-                    <span class="glyphicon glyphicon-erase" aria-hidden="true"></span>
+                <a href="{% url 'master_new' cohort_id=current_cohort.id %}" id="clear-button" class="btn btn-danger float-end">
+                    <span class="fa fa-erase" aria-hidden="true"></span>
                     {% trans "Clear" %}
                 </a>
                 {% endif %}
@@ -264,7 +264,7 @@
             $('#add_allocation').click(add_allocation);
 
             // Set the remove allocation button.
-            $('#remove_allocation_'+ newId).html('<span class="glyphicon glyphicon-minus" aria-hidden="true"></span>');
+            $('#remove_allocation_'+ newId).html('<span class="fa fa-minus" aria-hidden="true"></span>');
             $('#remove_allocation_'+ newId).click(remove_allocation);
 
             // Reset the fields.

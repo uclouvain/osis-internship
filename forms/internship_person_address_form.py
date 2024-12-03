@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django import forms
+from django.utils.translation import gettext_lazy as _
 
 from base.models.enums import person_source_type
 from base.models.person_address import PersonAddress
@@ -33,6 +34,11 @@ class InternshipPersonAddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super(InternshipPersonAddressForm, self).__init__(*args, **kwargs)
+
+        self.fields['location'].label = _('Street and number')
+        self.fields['postal_code'].label = _('Postal code')
+        self.fields['city'].label = _('City')
+        self.fields['country'].label = _('Country')
 
         # disable fields for instance source not internship
         if self.instance.pk and self.instance.person.source != person_source_type.INTERNSHIP:

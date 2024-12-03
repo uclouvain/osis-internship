@@ -25,6 +25,7 @@
 ##############################################################################
 from django import forms
 from django.forms import TextInput
+from django.utils.translation import gettext_lazy as _
 
 from internship.models import cohort
 from internship.models.cohort import Cohort
@@ -35,13 +36,15 @@ class DateInput(TextInput):
 
 
 class CohortForm(forms.ModelForm):
-    publication_start_date = forms.DateField(widget=DateInput, required=False)
-    subscription_start_date = forms.DateField(widget=DateInput, required=False)
-    subscription_end_date = forms.DateField(widget=DateInput, required=False)
-    originated_from = forms.ModelChoiceField(queryset=Cohort.objects.all(), empty_label="", required=False)
-    is_parent = forms.BooleanField(required=False)
+    publication_start_date = forms.DateField(widget=DateInput, required=False, label=_('Publication date'))
+    subscription_start_date = forms.DateField(widget=DateInput, required=False, label=_('Enrolment start'))
+    subscription_end_date = forms.DateField(widget=DateInput, required=False, label=_('Enrolment end'))
+    originated_from = forms.ModelChoiceField(
+        queryset=Cohort.objects.all(), empty_label="", required=False, label=_('Copy from cohort')
+    )
+    is_parent = forms.BooleanField(required=False, label=_('Is parent'))
     parent_cohort = forms.ModelChoiceField(
-        queryset=Cohort.objects.filter(is_parent=True), empty_label="", required=False
+        queryset=Cohort.objects.filter(is_parent=True), empty_label="", required=False, label=_('Select parent cohort')
     )
 
     class Meta:

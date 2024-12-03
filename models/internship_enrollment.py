@@ -25,7 +25,7 @@
 ##############################################################################
 from django.contrib import admin
 from django.db import models
-
+from django.utils.translation import gettext_lazy as _
 
 class InternshipEnrollmentAdmin(admin.ModelAdmin):
     list_display = ('student', 'internship_offer', 'place', 'period', 'internship')
@@ -34,11 +34,13 @@ class InternshipEnrollmentAdmin(admin.ModelAdmin):
 
 
 class InternshipEnrollment(models.Model):
-    student = models.ForeignKey('base.student', on_delete=models.CASCADE)
-    internship_offer = models.ForeignKey('internship.InternshipOffer', on_delete=models.CASCADE)
-    place = models.ForeignKey('internship.Organization', on_delete=models.CASCADE)
-    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE)
-    internship = models.ForeignKey('internship.Internship', on_delete=models.CASCADE)
+    student = models.ForeignKey('base.student', on_delete=models.CASCADE, verbose_name=_('Student'))
+    internship_offer = models.ForeignKey(
+        'internship.InternshipOffer', on_delete=models.CASCADE, verbose_name=_('Internship Offer')
+    )
+    place = models.ForeignKey('internship.Organization', on_delete=models.CASCADE, verbose_name=_('Place'))
+    period = models.ForeignKey('internship.Period', on_delete=models.CASCADE, verbose_name=_('Period'))
+    internship = models.ForeignKey('internship.Internship', on_delete=models.CASCADE, verbose_name=_('Internship'))
 
     def __str__(self):
         return u"%s - %s" % (self.student, self.internship_offer.title)
