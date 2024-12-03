@@ -355,10 +355,8 @@ msgstr "Réaliser l’examen clinique"
 msgid "Configuration"
 msgstr "Configuration"
 
-#, fuzzy
-#| msgid "Mean of nonconsecutive months"
 msgid "Consecutive month"
-msgstr "Moyenne de mois non consécutifs"
+msgstr "Mois consécutifs"
 
 msgid "Contest"
 msgstr "Concours"
@@ -1034,6 +1032,9 @@ msgstr "Téléphone"
 msgid "Phone Number / Mobile Number"
 msgstr "Numéro de Téléphone / Numéro de portable"
 
+msgid "Phone mobile"
+msgstr "Numéro de portable"
+
 msgid "Phone number"
 msgstr "Numéro de téléphone"
 
@@ -1117,9 +1118,6 @@ msgstr "Rapport date de fin"
 
 msgid "Report first name"
 msgstr "Rapport prénom"
-
-msgid "Report gender"
-msgstr "Rapport genre"
 
 msgid "Report last name"
 msgstr "Rapport nom"
@@ -1584,15 +1582,3 @@ msgstr "réalise parfaitement"
 
 msgid "{} day(s)"
 msgstr "{} jour(s)"
-
-#~ msgid "Moins consécutifs"
-#~ msgstr "Moyenne de mois non consécutifs"
-
-#~ msgid "Fake hospital"
-#~ msgstr "Hôpital fictif"
-
-#~ msgid "Order position"
-#~ msgstr "Position de tri"
-
-#~ msgid "Parent specialty"
-#~ msgstr "Spécialité parente"
