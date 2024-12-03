@@ -49,6 +49,6 @@ class OrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
         fields = ['name', 'website', 'reference', 'location', 'postal_code', 'city', 'country', 'report_period',
-                  'report_start_date', 'report_end_date', 'report_last_name', 'report_first_name', 'report_gender',
+                  'report_start_date', 'report_end_date', 'report_last_name', 'report_first_name',
                   'report_specialty', 'report_birthdate', 'report_email', 'report_noma', 'report_phone',
                   'report_address', 'report_postal_code', 'report_city', 'cohort', 'fake']
