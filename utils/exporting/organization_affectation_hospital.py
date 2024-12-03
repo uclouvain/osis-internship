@@ -52,7 +52,7 @@ def _add_header(worksheet, organization):
         column_titles.append(str(_(item)))
 
     add_row(worksheet, column_titles)
-    cells = worksheet.iter_rows(min_row=1, max_row=1, min_col=1, max_col=14)
+    cells = worksheet.iter_rows(min_row=1, max_row=1, min_col=1, max_col=13)
     for col in cells:
         for cell in col:
             cell.font = Font(bold=True)
@@ -97,7 +97,6 @@ def _add_students(worksheet, cohort, organization):
                     organization_report_fields.END_DATE: student_stat.period.date_end.strftime("%d-%m-%Y"),
                     organization_report_fields.LAST_NAME: student_info.person.last_name,
                     organization_report_fields.FIRST_NAME: student_info.person.first_name,
-                    organization_report_fields.GENDER: student_info.person.gender,
                     organization_report_fields.SPECIALTY: student_stat.speciality.name,
                     organization_report_fields.MASTER:
                         f"{student_stat.master_first_name[0].upper()}. {student_stat.master_last_name.upper()}",
@@ -120,7 +119,7 @@ def _add_students(worksheet, cohort, organization):
 def _resize_columns(worksheet, organization):
     # Take all allowed fields and associate their spreadsheet sizes.
     report_fields = organization_report_fields.REPORT_FIELDS
-    fields_size = dict(zip(report_fields, [8, 13, 11, 32, 16, 5, 32, 16, 36, 11, 11, 11, 11, 11, 32]))
+    fields_size = dict(zip(report_fields, [8, 13, 11, 32, 16, 32, 16, 36, 11, 11, 11, 11, 11, 32]))
 
     # Take the sequence of fields selected by the user and generate a list of their sizes
     selected_fields = list(organization.report_sequence())
