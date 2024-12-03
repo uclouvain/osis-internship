@@ -9,7 +9,7 @@ $(document).on('click', '[data-bs-target="#send_summary"]', function(){
     }
 });
 
-$("#actions").click(() => {
+$("#action-btn").click(() => {
     $("#li_send_summary a").toggleClass(
         'disabled',
         $("input[name='selected_student']:checked").length<1

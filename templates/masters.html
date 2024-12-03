@@ -115,7 +115,7 @@
                     <span class="fa fa-search" aria-hidden="true"></span>
                     {% trans 'Search' %}
                 </button>
-                <button id="actions" type="button" class="btn btn-default dropdown-toggle float-end" data-bs-toggle="dropdown" aria-haspopup="true"
+                <button id="action-btn" type="button" class="btn btn-default dropdown-toggle float-end" data-bs-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false" style="margin-top: 26px;">
                     <span class="fa fa-cog" aria-hidden="true"></span> {% trans 'Actions' %}
                     <span class="caret"></span>
@@ -266,13 +266,13 @@
     });
 
     $('input:checkbox.selected_object').click(function(){
-        const potentially_selectable_checkboxes_number = $('input:checkbox.selected_object').not(':disabled').size();
-        const selected_checkboxes_number = $('input:checkbox.selected_object:checked').size();
+        const potentially_selectable_checkboxes_number = $('input:checkbox.selected_object').not(':disabled').length;
+        const selected_checkboxes_number = $('input:checkbox.selected_object:checked').length;
         $("#id_check_all").prop('checked', selected_checkboxes_number === potentially_selectable_checkboxes_number);
     })
 
-    $("#actions").click(() => {
-        $("#li_create_account, #li_extend_validity, #li_transfer_to_cohort").toggleClass(
+    $("#action-btn").click(() => {
+        $("#li_create_account a, #li_extend_validity a, #li_transfer_to_cohort a").toggleClass(
             'disabled',
             $("input[name='selected_master']:checked").length<1
         );

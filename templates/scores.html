@@ -86,7 +86,7 @@
                         </div>
                         <div class="col-md-2 float-end">
                             <div class="dropdown text-right">
-                                <button id="actions" type="button" class="btn dropdown-toggle btn-default float-end" data-bs-toggle="dropdown" aria-haspopup="true"
+                                <button id="action-btn" type="button" class="btn dropdown-toggle btn-default float-end" data-bs-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false" style="margin-top: 26px;">
                                     <span class="fa fa-cog" aria-hidden="true"></span> {% trans 'Actions' %}
                                     <span class="caret"></span>
@@ -94,21 +94,21 @@
                                 <ul class="dropdown-menu dropdown-menu-large row text-right float-end">
                                     <li>
                                         <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#download_scores">
-                                            <span class="fa fa-download" aria-hidden="true"></span>
+                                            <span class="fa fa-file-download{% if affectations_count < 1 or cohort.is_parent %} disabled {% endif %}" aria-hidden="true"></span>
                                             {% trans 'Export to XLSX' %}
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li {% if cohort.is_parent %} class="disabled" {% endif %}>
-                                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                    <li>
+                                        <a class="dropdown-item {% if cohort.is_parent %} disabled {% endif %}" href="#" data-bs-toggle="modal"
                                                 data-bs-target="#upload_scores" id="bt_upload_score_modal">
                                             <span class="fa fa-upload" aria-hidden="true"></span>
                                             {% trans 'Import internships ratings' %}
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li {% if affectations_count < 1 or cohort.is_parent %} class="disabled" {% endif %}>
-                                        <a class="dropdown-item"
+                                    <li>
+                                        <a class="dropdown-item {% if affectations_count < 1 or cohort.is_parent %} disabled {% endif %}"
                                             {% if affectations_count < 1 %}
                                                 title="{% trans 'No assignment available' %}"
                                             {% else %}
