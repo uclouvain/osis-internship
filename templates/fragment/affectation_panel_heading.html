@@ -24,19 +24,19 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="panel-heading">
+<div class="card-heading">
     {% if not cohort.is_parent %}
     <div class="row">
         <div class="col-md-3">
             {% if not cohort.is_published  %}
                 <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
-                    <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'Generate solution' %}
+                    <span class="fa fa-random" aria-hidden="true"></span> {% trans 'Generate solution' %}
                 </button>
             {% endif %}
         </div>
         <div class="col-md-5">
             <span style="display: inline-block; padding: 6px 0px;">{% trans 'Latest generation start' %} :
-                <span class="badge badge-info">
+                <span class="badge bg-info">
                     {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }}
                     {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}
                 </span>
@@ -44,7 +44,7 @@
         </div>
         <div class="col-md-4">
                         <span style="display: inline-block; padding: 6px 0px;">{% trans 'Latest generation end' %} :
-                <span class="badge badge-info">
+                <span class="badge bg-info">
                     {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }}
                     {{ latest_generation.end_date_time| default_if_none:''|time:"TIME_FORMAT" }}
                 </span>

@@ -24,6 +24,7 @@
 #
 ##############################################################################
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -35,15 +36,17 @@ class InternshipScoreMappingAdmin(SerializableModelAdmin):
 
 class InternshipScoreMapping(SerializableModel):
 
-    period = models.ForeignKey('internship.period', on_delete=models.PROTECT)
-    apd = models.IntegerField()
+    period = models.ForeignKey(
+        'internship.period', on_delete=models.PROTECT, verbose_name=_('Period'),
+    )
+    apd = models.IntegerField(verbose_name=_('APD'))
 
     score_A = models.IntegerField(default=0)
     score_B = models.IntegerField(default=0)
     score_C = models.IntegerField(default=0)
     score_D = models.IntegerField(default=0)
 
-    cohort = models.ForeignKey('internship.cohort', on_delete=models.PROTECT)
+    cohort = models.ForeignKey('internship.cohort', on_delete=models.PROTECT, verbose_name=_('Cohort'))
 
     def __str__(self):
         return '{} - {} - {}'.format(self.period, self.apd, self.score_A, self.score_B, self.score_C, self.score_D)

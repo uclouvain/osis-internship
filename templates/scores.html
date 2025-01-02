@@ -1,11 +1,11 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load dictionary %}
 {% load mapping %}
 {% load grades %}
 {% load pagination %}
 {% load student %}
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -37,11 +37,11 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'Scores encoding' context "internship" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans 'Scores encoding' context "internship" %}</li>
 {% endblock %}
 
 {% block content %}
@@ -50,12 +50,12 @@
     </div>
 
     <ul id="tabs" class="nav nav-tabs">
-      <li role="scores" class="active"><a data-toggle="tab" href="#scores">{% trans 'Scores' %}</a></li>
-      <li role="mapping"><a data-toggle="tab" href="#mapping">{% trans 'Mapping' %}</a></li>
+      <li role="scores" class="nav-item"><a href="#" class="nav-link active" data-bs-toggle="tab" data-bs-target="#scores">{% trans 'Scores' %}</a></li>
+      <li role="mapping" class="nav-item"><a href="#" class="nav-link" data-bs-toggle="tab" data-bs-target="#mapping">{% trans 'Mapping' %}</a></li>
     </ul>
     <div class="tab-content">
-            <div id="scores" class="tab-pane fade in active">
-                <div class="panel panel-body">
+            <div id="scores" class="tab-pane fade show active">
+                <div class="card card-body">
                     <form action="{% url 'internship_scores_encoding' cohort_id=cohort.id %}" method="get" id="search_form">
                     <div style="margin-bottom: 10px;" class="row">
                         <div class="col-md-2">
@@ -76,52 +76,53 @@
                         </div>
                         <div class="col-md-1">
                             <button type="submit" class="btn btn-primary" style="margin-top: 26px;">
-                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                <span class="fa fa-search" aria-hidden="true"></span>
                             </button>
                             <button type="button" id="btn_clear_filter" style="margin-top: 26px;"
                                     class="btn btn-default" role="button"
                                     onclick="$('#form_clear_filter').submit();">
-                                <span class="glyphicon glyphicon-refresh" aria-hidden="true"></span>
+                                <span class="fa fa-refresh" aria-hidden="true"></span>
                             </button>
                         </div>
-                        <div class="col-md-2 pull-right">
+                        <div class="col-md-2 float-end">
                             <div class="dropdown text-right">
-                                <button id="actions" type="button" class="btn btn-default" data-toggle="dropdown" aria-haspopup="true"
+                                <button id="action-btn" type="button" class="btn dropdown-toggle btn-default float-end" data-bs-toggle="dropdown" aria-haspopup="true"
                                         aria-expanded="false" style="margin-top: 26px;">
-                                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span> {% trans 'Actions' %}
+                                    <span class="fa fa-cog" aria-hidden="true"></span> {% trans 'Actions' %}
                                     <span class="caret"></span>
                                 </button>
-                                <ul class="dropdown-menu dropdown-menu-large row text-right pull-right">
+                                <ul class="dropdown-menu dropdown-menu-large row text-right float-end">
                                     <li>
-                                        <a href="#" data-toggle="modal" data-target="#download_scores">
-                                            <span class="glyphicon glyphicon-download" aria-hidden="true"></span>
+                                        <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#download_scores">
+                                            <span class="fa fa-file-download{% if affectations_count < 1 or cohort.is_parent %} disabled {% endif %}" aria-hidden="true"></span>
                                             {% trans 'Export to XLSX' %}
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li {% if cohort.is_parent %} class="disabled" {% endif %}>
-                                        <a href="#" data-toggle="modal"
-                                                data-target="#upload_scores" id="bt_upload_score_modal">
-                                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                    <li>
+                                        <a class="dropdown-item {% if cohort.is_parent %} disabled {% endif %}" href="#" data-bs-toggle="modal"
+                                                data-bs-target="#upload_scores" id="bt_upload_score_modal">
+                                            <span class="fa fa-upload" aria-hidden="true"></span>
                                             {% trans 'Import internships ratings' %}
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li {% if affectations_count < 1 or cohort.is_parent %} class="disabled" {% endif %}>
-                                        <a {% if affectations_count < 1 %}
+                                    <li>
+                                        <a class="dropdown-item {% if affectations_count < 1 or cohort.is_parent %} disabled {% endif %}"
+                                            {% if affectations_count < 1 %}
                                                 title="{% trans 'No assignment available' %}"
                                             {% else %}
-                                                href="#" data-toggle="modal"
+                                                href="#" data-bs-toggle="modal"
                                             {% endif %}
-                                            data-target="#upload_eval" id="bt_upload_eval_modal">
-                                            <span class="glyphicon glyphicon-upload" aria-hidden="true"></span>
+                                            data-bs-target="#upload_eval" id="bt_upload_eval_modal">
+                                            <span class="fa fa-upload" aria-hidden="true"></span>
                                             {% trans 'Import internships evaluations' %}
                                         </a>
                                     </li>
                                     <li role="separator" class="divider"></li>
-                                    <li id="li_send_summary" class="disabled">
-                                        <a href="#" data-target="#send_summary" id="btn_send_summary">
-                                            <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                                    <li id="li_send_summary">
+                                        <a class="dropdown-item disabled" href="#" data-bs-target="#send_summary" id="btn_send_summary">
+                                            <span class="fa fa-envelope" aria-hidden="true"></span>
                                             {% trans 'Send summary' %}
                                         </a>
                                     </li>
@@ -146,7 +147,7 @@
                         </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-offset-4 col-md-2">
+                    <div class="offset-md-4 col-md-2">
                         <label>{% trans 'Show EPA validation' %}</label>
                         {{ search_form.show_apds_validation }}
                     </div>
@@ -182,7 +183,7 @@
                             <th class="hidden-sm hidden-xs text-center">APD {{forloop.counter}}</th>
                           {% endfor %}
                         <th>Com.</th>
-                        <th>{% trans 'Score' %}</th>
+                        <th style="min-width: 100px;">{% trans 'Score' %}</th>
                       </tr>
                         {% if periods.count == 1 %}
                             <form action="{% url 'send_summary' cohort_id=cohort.id period_id=periods.0.id %}" method="post" id="send_summary_form">
@@ -220,11 +221,11 @@
                                 {% endif %}>
                                 {% if not student.fulfill_condition %}
                                     <icon title="{% trans 'Aptitudes conditions not fulfilled' %}"
-                                        class="glyphicon glyphicon-remove-sign text-danger">
+                                        class="fa fa-xmark-circle text-danger">
                                     </icon>
                                 {% else %}
                                       <icon title="{% trans 'Aptitudes conditions fulfilled' %}"
-                                        class="glyphicon glyphicon-ok-sign text-success"></icon>
+                                        class="fa fa-check-circle text-success"></icon>
                                   {% endif %}
                               </td>
                               <td style="max-width: 10vw;" class="overflow-cell"
@@ -245,7 +246,7 @@
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
-                                <a data-toggle="modal" data-target="#download-summary" data-url="{% url 'internship_download_summary' cohort.pk student.pk %}" type="button"
+                                <a data-bs-toggle="modal" data-bs-target="#download-summary" data-url="{% url 'internship_download_summary' cohort.pk student.pk %}" type="button"
                                 class="btn btn-xs btn-default btn-download-summary download" id="btn-summary-{{ student.pk }}"
                                 {% if not student.scores %} disabled {% endif %}
                                 >
@@ -273,7 +274,7 @@
                             <td>
                                 {{ period }}
                             {% if period.is_active %}
-                                  <icon style="font-size: 11px; color: #333;" class="glyphicon glyphicon-time" title="{% trans 'Current period' %}"></icon>
+                                  <icon style="font-size: 11px; color: #333;" class="fa fa-time" title="{% trans 'Current period' %}"></icon>
                             {% endif %}
                             </td>
                             {% with student.specialties|get_item:period.name as specialty %}
@@ -284,7 +285,7 @@
                             {% with student.organizations|get_item:period.name as organization %}
                                 <td title="{{ organization.name | default_if_none:_('No organization') }}">
                                 {% if organization.name %}
-                                    <span class="{% if organization.reference|is_searched_reference:request %}badge badge-primary{% endif %}">
+                                    <span class="{% if organization.reference|is_searched_reference:request %}badge bg-primary{% endif %}">
                                         {{ organization.reference }}
                                     </span>
                                 {% else %}
@@ -326,7 +327,7 @@
                             <td>
                             {% with student.comments|get_item:period.name as comments%}
                                 {% if comments %}
-                                <a data-toggle="modal" data-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comments|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
+                                <a data-bs-toggle="modal" data-bs-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comments|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
                                     <icon class="far fa-comment"></icon>
                                 </a>
                                 {% endif %}
@@ -334,7 +335,7 @@
                             </td>
                             {% with student.periods_scores|get_item:period.name as period_score%}
                                   {% if period_score %}
-                                    <td style="width: 140px;"
+                                    <td style="vertical-align: middle; width: 140px;"
                                         onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                         onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
                                         {% include 'fragment/score_cell.html' %}
@@ -382,78 +383,76 @@
                         {% endwith %}
                         </form>
                     </table>
-                    <div>
-                        <div class="col-md-6">
-                            {% bootstrap_pagination students extra=request.GET.urlencode %}
-                        </div>
-                        <div class="col-md-6">
-                            {% pagination_size_select %}
-                        </div>
+                    <div class="d-flex justify-content-between">
+                        {% bootstrap_pagination students extra=request.GET.urlencode %}
+                        {% pagination_size_select %}
                     </div>
                 </div>
                 </div>
             </div>
-            <div id="mapping" class="tab-pane fade">
+            <div id="mapping" class="tab-pane card fade">
                 <form action="{% url 'save_internship_score_mapping' cohort_id=cohort.id %}" method="post" id="mapping_form">
                     {% csrf_token %}
-                <div class="panel panel-heading">
+                <div class="card-heading">
                     <h3 style="display:inline-block;">{% trans 'Scores equivalence according to periods' %}</h3>
-                    <button type="submit" class="btn btn-primary pull-right" style="margin-top: 20px;" id="btn_submit_mapping">
+                    <button type="submit" class="btn btn-primary float-end" style="margin-top: 20px;" id="btn_submit_mapping">
                         <icon class="fa fa-save"></icon>
                         {% trans 'Save' %}
                     </button>
                 </div>
-                <div class="panel panel-body">
+                <div class="card-body">
                     <ul id="pills" class="nav nav-pills nav-justified">
                         {% for period in all_periods %}
-                          <li name="{{ period.name }}" {% if forloop.counter == 1 %}class="active"{% endif %}>
-                              <a href="#mapping_{{ period.name }}" data-toggle="pill" onclick="pillChanged('{{ period.name }}')">{{ period.name }}</a>
+                          <li name="{{ period.name }}" class="nav-item">
+                              <a class="nav-link{% if forloop.counter == 1 %} active{% endif %}" href="#mapping_{{ period.name }}" data-bs-toggle="pill" onclick="pillChanged('{{ period.name }}')">{{ period.name }}</a>
                           </li>
                         {% endfor %}
                     </ul>
                     <input id="activePeriod" type="hidden" name="activePeriod"/>
                     <div class="tab-content">
                     {% for period in all_periods %}
-                        <div id="mapping_{{ period.name }}" class="tab-pane fade {% if forloop.counter == 1 %}in active{% endif %}">
-                        <div class="row">
-                        <div class="btn-group btn-period-mapping" role="group">
-                          <button onclick="copyPeriodValues('{{ period }}')" type="button" class="btn btn-default">
-                              <icon class="far fa-copy"></icon> {% trans 'Copy Period' %}
-                          </button>
-                          <button onclick="pastePeriodValues('{{ period }}')" type="button" class="btn btn-primary">
-                              <icon class="fa fa-paste"></icon> {% trans 'Paste Period' %}
-                          </button>
+                        <div id="mapping_{{ period.name }}" class="tab-pane fade {% if forloop.counter == 1 %}show active{% endif %}">
+                        <div class="d-flex">
+                            <div class="btn-group btn-period-mapping" role="group">
+                              <button onclick="copyPeriodValues('{{ period }}')" type="button" class="btn btn-default">
+                                  <icon class="far fa-copy"></icon> {% trans 'Copy Period' %}
+                              </button>
+                              <button onclick="pastePeriodValues('{{ period }}')" type="button" class="btn btn-primary">
+                                  <icon class="fa fa-paste"></icon> {% trans 'Paste Period' %}
+                              </button>
+                            </div>
                         </div>
+                        <div class="row mt-5">
+                            <div class="col-1 offset-3">
+                            </div>
+                            {% for grade in grades %}
+                            <div class="col-1">
+                                <span class="badge bg-secondary col-12">{{ grade }}</span>
+                            </div>
+                            {% endfor %}
                         </div>
-                        <div class="row" style="margin-top:30px;">
-                        <div class="col-xs-1 col-xs-offset-3">
-                        </div>
-                        {% for grade in grades %}
-                        <div class="col-xs-1">
-                            <h4><span class="label label-default">{{ grade }}</span></h4>
-                        </div>
-                        {% endfor %}
-                    </div>
                     {% for i in i|rjust:15 %}
-                    <div class="row" onmouseover="showButtons('{{ period }}', '{{ forloop.counter }}')"
+                    <div class="row my-3 align-items-center" onmouseover="showButtons('{{ period }}', '{{ forloop.counter }}')"
                     onmouseout="hideButtons('{{ period }}', '{{ forloop.counter }}')">
-                        <div class="col-xs-1 col-xs-offset-3">
-                            <h4><span class="label label-primary">APD {{forloop.counter}}</span></h4>
+                        <div class="col-1 offset-3">
+                            <span class="badge bg-primary col-12">APD {{forloop.counter}}</span>
                         </div>
                         {% for grade in grades %}
-                            <div class="col-xs-1">
+                            <div class="col-1">
                                 <input type="number" class="form-control" name="mapping{{ grade }}_{{ period }}"
                                        id="mapping{{ grade }}_{{ period }}_{{ forloop.parentloop.counter }}"
                                        value="{% get_mapping_value mapping period forloop.parentloop.counter grade %}">
                             </div>
                         {% endfor %}
-                        <div id="btn_{{ period }}_{{ forloop.counter }}" class="btn-group" role="group" style="display:none;">
-                          <button onclick="copyValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Copy' %}" type="button" class="btn btn-default">
-                              <icon class="far fa-copy"></icon>
-                          </button>
-                          <button onclick="pasteValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Paste' %}" type="button" class="btn btn-primary">
-                              <icon class="fa fa-paste"></icon>
-                          </button>
+                        <div class="col-2">
+                            <div id="btn_{{ period }}_{{ forloop.counter }}" class="btn-group" role="group" style="display:none;">
+                              <button onclick="copyValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Copy' %}" type="button" class="btn btn-default">
+                                  <icon class="far fa-copy"></icon>
+                              </button>
+                              <button onclick="pasteValues('{{ period }}', '{{ forloop.counter }}')" title="{% trans 'Paste' %}" type="button" class="btn btn-primary">
+                                  <icon class="fa fa-paste"></icon>
+                              </button>
+                            </div>
                         </div>
                     </div>
                     {% endfor %}
@@ -593,9 +592,9 @@
 
         for (const [key, comment] of Object.entries(comments)) {
           commentsModalBodyContent.append("" +
-              "<div class='panel panel-default'>" +
-              `<div class='panel-heading'>${key}</div>` +
-              `<div class='panel-body'>${comment}</div>`
+              "<div class='card card-default'>" +
+              `<div class='card-heading'>${key}</div>` +
+              `<div class='card-body'>${comment}</div>`
           );
         }
         commentsModalBody.html(commentsModalBodyContent);

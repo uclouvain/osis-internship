@@ -1,4 +1,4 @@
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -28,8 +28,8 @@
     {% for key, value in other_params.items %}
         <input type="hidden" name="{{ key }}" value="{{ value }}">
     {% endfor %}
-    <div class="pull-right pagination form-group">
-        <select onchange="this.form.submit()" name="paginator_size" class="form-control">
+    <div class="float-end pagination form-group">
+        <select onchange="this.form.submit()" name="paginator_size" class="form-select">
             {% for size in paginator_size_list %}
                 <option {% if size == current_paginator_size|add:0 %} selected {% endif %}>
                     {{ size }}

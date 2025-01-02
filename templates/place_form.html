@@ -1,8 +1,8 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 {% load dictionnary %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -29,11 +29,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans "All hospitals" %}</a></li>
-    <li class="active">{% trans 'Hospital' %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_places' cohort_id=cohort.id %}">{% trans "All hospitals" %}</a></li>
+    <li class="breadcrumb-item active">{% trans 'Hospital' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -46,8 +46,8 @@
         {% endif %}
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <form method="post" action="{% if organization.id %}
                                             {% url 'place_save' cohort_id=cohort.id organization_id=organization.id %}
                                         {% else %}
@@ -55,24 +55,24 @@
                                         {% endif %}">
                 {% csrf_token %}
                 <div class="row">
-                    {% bootstrap_field form.reference form_group_class="form-group col-md-1" label=_("Reference") %}
-                    {% bootstrap_field form.name form_group_class="form-group col-md-5" label=_("Name") %}
-                    {% bootstrap_field form.website form_group_class="form-group col-md-4" label=_("Website") %}
-                    {% bootstrap_field form.fake form_group_class="form-group col-md-2" label=_("Fake hospital") %}
+                    {% bootstrap_field form.reference wrapper_class="form-group col-md-1"  %}
+                    {% bootstrap_field form.name wrapper_class="form-group col-md-5"  %}
+                    {% bootstrap_field form.website wrapper_class="form-group col-md-4"  %}
+                    {% bootstrap_field form.fake wrapper_class="form-group col-md-2"  %}
                 </div>
                 <input type="hidden" value="{{ organization_id }}" name="organization_id"/>
                 <br>
                 <div class="row">
-                    {% bootstrap_field form.location form_group_class="form-group col-md-4" label=_("Address") %}
-                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-2" label=_("Postal code") %}
-                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("Locality") %}
-                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("Country") %}
+                    {% bootstrap_field form.location wrapper_class="form-group col-md-4"  %}
+                    {% bootstrap_field form.postal_code wrapper_class="form-group col-md-2"  %}
+                    {% bootstrap_field form.city wrapper_class="form-group col-md-3"  %}
+                    {% bootstrap_field form.country wrapper_class="form-group col-md-3"  %}
                 </div>
                 <br>
                 <label for="country">{% trans 'Report to the hospital' %}</label>
 
-                <div class="panel panel-default">
-                    <div class="panel-body">
+                <div class="card card-default">
+                    <div class="card-body">
                         <p>{% trans 'Inform the sequence in which the columns must appear in the report to the hospital. Fields without number are not added to the report.' %}</p>
                         <div class="row">
                             <div class="col-md-4">
@@ -97,9 +97,9 @@
                 </div>
 
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_organization_save">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
+                    <span class="fa fa-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
                 <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internships_places' cohort_id=cohort.id  %}">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel'%}</a>
+                    <span class="fa fa-remove" aria-hidden="true"></span> {% trans 'Cancel'%}</a>
             </form>
         </div>
     </div>
