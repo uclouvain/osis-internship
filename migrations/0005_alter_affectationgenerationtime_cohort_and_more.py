@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('base', '0707_django_4_migration'),
         ('reference', '0018_country_active'),
@@ -16,7 +15,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='affectationgenerationtime',
             name='cohort',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='affectationgenerationtime',
@@ -51,12 +51,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='cohort',
             name='originated_from',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Originated from'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.cohort', verbose_name='Originated from'),
         ),
         migrations.AlterField(
             model_name='cohort',
             name='parent_cohort',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='subcohorts', to='internship.cohort', verbose_name='Parent cohort'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT,
+                                    related_name='subcohorts', to='internship.cohort', verbose_name='Parent cohort'),
         ),
         migrations.AlterField(
             model_name='cohort',
@@ -76,7 +78,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internship',
             name='cohort',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='internship',
@@ -96,17 +99,20 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internship',
             name='speciality',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipspeciality', verbose_name='Specialty'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internshipspeciality', verbose_name='Specialty'),
         ),
         migrations.AlterField(
             model_name='internshipcertifier',
             name='civility',
-            field=models.CharField(blank=True, choices=[('PROFESSOR', 'PROFESSOR'), ('DOCTOR', 'DOCTOR')], max_length=50, null=True, verbose_name='Civility'),
+            field=models.CharField(blank=True, choices=[('PROFESSOR', 'PROFESSOR'), ('DOCTOR', 'DOCTOR')],
+                                   max_length=50, null=True, verbose_name='Civility'),
         ),
         migrations.AlterField(
             model_name='internshipcertifier',
             name='person',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.person', verbose_name='Person'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='base.person', verbose_name='Person'),
         ),
         migrations.AlterField(
             model_name='internshipcertifier',
@@ -126,12 +132,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipchoice',
             name='internship',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internship', verbose_name='Internship'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internship',
+                                    verbose_name='Internship'),
         ),
         migrations.AlterField(
             model_name='internshipchoice',
             name='organization',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.organization', verbose_name='Organization'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.organization',
+                                    verbose_name='Organization'),
         ),
         migrations.AlterField(
             model_name='internshipchoice',
@@ -146,47 +154,56 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipchoice',
             name='speciality',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipspeciality', verbose_name='Specialty'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internshipspeciality', verbose_name='Specialty'),
         ),
         migrations.AlterField(
             model_name='internshipchoice',
             name='student',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.student', verbose_name='Student'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.student',
+                                    verbose_name='Student'),
         ),
         migrations.AlterField(
             model_name='internshipenrollment',
             name='internship',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internship', verbose_name='Internship'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internship',
+                                    verbose_name='Internship'),
         ),
         migrations.AlterField(
             model_name='internshipenrollment',
             name='internship_offer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internshipoffer', verbose_name='Internship Offer'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internshipoffer',
+                                    verbose_name='Internship Offer'),
         ),
         migrations.AlterField(
             model_name='internshipenrollment',
             name='period',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.period', verbose_name='Period'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.period',
+                                    verbose_name='Period'),
         ),
         migrations.AlterField(
             model_name='internshipenrollment',
             name='place',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.organization', verbose_name='Place'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.organization',
+                                    verbose_name='Place'),
         ),
         migrations.AlterField(
             model_name='internshipenrollment',
             name='student',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.student', verbose_name='Student'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.student',
+                                    verbose_name='Student'),
         ),
         migrations.AlterField(
             model_name='internshipmaster',
             name='civility',
-            field=models.CharField(blank=True, choices=[('PROFESSOR', 'PROFESSOR'), ('DOCTOR', 'DOCTOR')], max_length=50, null=True, verbose_name='Civility'),
+            field=models.CharField(blank=True, choices=[('PROFESSOR', 'PROFESSOR'), ('DOCTOR', 'DOCTOR')],
+                                   max_length=50, null=True, verbose_name='Civility'),
         ),
         migrations.AlterField(
             model_name='internshipmaster',
             name='person',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.person', verbose_name='Person'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='base.person', verbose_name='Person'),
         ),
         migrations.AlterField(
             model_name='internshipmaster',
@@ -201,7 +218,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipmaster',
             name='user_account_status',
-            field=models.CharField(choices=[('INACTIVE', 'INACTIVE'), ('PENDING', 'PENDING'), ('ACTIVE', 'ACTIVE')], default='INACTIVE', max_length=50, verbose_name='User account status'),
+            field=models.CharField(choices=[('INACTIVE', 'INACTIVE'), ('PENDING', 'PENDING'), ('ACTIVE', 'ACTIVE')],
+                                   default='INACTIVE', max_length=50, verbose_name='User account status'),
         ),
         migrations.AlterField(
             model_name='internshipmodalityapd',
@@ -211,22 +229,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipmodalityapd',
             name='internship',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.internship', verbose_name='Internship'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.internship',
+                                    verbose_name='Internship'),
         ),
         migrations.AlterField(
             model_name='internshipmodalityperiod',
             name='internship',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.internship', verbose_name='Internship'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.internship',
+                                    verbose_name='Internship'),
         ),
         migrations.AlterField(
             model_name='internshipmodalityperiod',
             name='period',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.period', verbose_name='Period'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.period',
+                                    verbose_name='Period'),
         ),
         migrations.AlterField(
             model_name='internshipoffer',
             name='cohort',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='internshipoffer',
@@ -241,7 +263,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipoffer',
             name='organization',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.organization', verbose_name='Organization'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.organization',
+                                    verbose_name='Organization'),
         ),
         migrations.AlterField(
             model_name='internshipoffer',
@@ -251,7 +274,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipoffer',
             name='speciality',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipspeciality', verbose_name='Speciality'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internshipspeciality', verbose_name='Speciality'),
         ),
         migrations.AlterField(
             model_name='internshipoffer',
@@ -286,7 +310,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipscore',
             name='student_affectation',
-            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='score', to='internship.internshipstudentaffectationstat', verbose_name='Student Affectation'),
+            field=models.OneToOneField(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='score',
+                                       to='internship.internshipstudentaffectationstat',
+                                       verbose_name='Student Affectation'),
         ),
         migrations.AlterField(
             model_name='internshipscore',
@@ -301,7 +327,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipscore',
             name='validated_by',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='base.person', verbose_name='Validated by'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='base.person', verbose_name='Validated by'),
         ),
         migrations.AlterField(
             model_name='internshipscoremapping',
@@ -311,12 +338,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipscoremapping',
             name='cohort',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='internshipscoremapping',
             name='period',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.period', verbose_name='Period'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, to='internship.period',
+                                    verbose_name='Period'),
         ),
         migrations.AlterField(
             model_name='internshipscorereason',
@@ -331,7 +360,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipspeciality',
             name='cohort',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='internshipspeciality',
@@ -346,7 +376,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipspeciality',
             name='parent',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipspeciality', verbose_name='Parent'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internshipspeciality', verbose_name='Parent'),
         ),
         migrations.AlterField(
             model_name='internshipspeciality',
@@ -361,7 +392,9 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
             name='choice',
-            field=models.CharField(choices=[('0', '0'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('E', 'E'), ('I', 'I'), ('X', 'X')], default='0', max_length=1, verbose_name='Choice'),
+            field=models.CharField(
+                choices=[('0', '0'), ('1', '1'), ('2', '2'), ('3', '3'), ('4', '4'), ('E', 'E'), ('I', 'I'),
+                         ('X', 'X')], default='0', max_length=1, verbose_name='Choice'),
         ),
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
@@ -376,7 +409,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
             name='internship',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internship', verbose_name='Internship'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internship', verbose_name='Internship'),
         ),
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
@@ -386,27 +420,32 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
             name='organization',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.organization', verbose_name='Organization'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.organization', verbose_name='Organization'),
         ),
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
             name='period',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.period', verbose_name='Period'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.period',
+                                    verbose_name='Period'),
         ),
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
             name='speciality',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipspeciality', verbose_name='Speciality'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internshipspeciality', verbose_name='Speciality'),
         ),
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
             name='student',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.student', verbose_name='Student'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.student',
+                                    verbose_name='Student'),
         ),
         migrations.AlterField(
             model_name='internshipstudentaffectationstat',
             name='type',
-            field=models.CharField(choices=[('S', 'S'), ('N', 'N'), ('X', 'X')], default='N', max_length=1, verbose_name='Type'),
+            field=models.CharField(choices=[('S', 'S'), ('N', 'N'), ('X', 'X')], default='N', max_length=1,
+                                   verbose_name='Type'),
         ),
         migrations.AlterField(
             model_name='internshipstudentinformation',
@@ -416,12 +455,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipstudentinformation',
             name='cohort',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='internshipstudentinformation',
             name='contest',
-            field=models.CharField(blank=True, choices=[('SPECIALIST', 'Specialist'), ('GENERALIST', 'Generalist')], max_length=124, null=True, verbose_name='Contest'),
+            field=models.CharField(blank=True, choices=[('SPECIALIST', 'Specialist'), ('GENERALIST', 'Generalist')],
+                                   max_length=124, null=True, verbose_name='Contest'),
         ),
         migrations.AlterField(
             model_name='internshipstudentinformation',
@@ -451,7 +492,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipstudentinformation',
             name='person',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.person', verbose_name='Person'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='base.person',
+                                    verbose_name='Person'),
         ),
         migrations.AlterField(
             model_name='internshipstudentinformation',
@@ -466,22 +508,26 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='masterallocation',
             name='master',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internshipmaster', verbose_name='Master'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internshipmaster',
+                                    verbose_name='Master'),
         ),
         migrations.AlterField(
             model_name='masterallocation',
             name='organization',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.organization', verbose_name='Organization'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.organization', verbose_name='Organization'),
         ),
         migrations.AlterField(
             model_name='masterallocation',
             name='role',
-            field=models.CharField(choices=[('MASTER', 'MASTER'), ('DELEGATE', 'DELEGATE')], default='MASTER', max_length=50, verbose_name='Role'),
+            field=models.CharField(choices=[('MASTER', 'MASTER'), ('DELEGATE', 'DELEGATE')], default='MASTER',
+                                   max_length=50, verbose_name='Role'),
         ),
         migrations.AlterField(
             model_name='masterallocation',
             name='specialty',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipspeciality', verbose_name='Specialty'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internshipspeciality', verbose_name='Specialty'),
         ),
         migrations.AlterField(
             model_name='organization',
@@ -496,12 +542,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='organization',
             name='cohort',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='organization',
             name='country',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE, to='reference.country', verbose_name='Country'),
+            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='reference.country', verbose_name='Country'),
         ),
         migrations.AlterField(
             model_name='organization',
@@ -636,7 +684,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='periodinternshipplaces',
             name='internship_offer',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internshipoffer', verbose_name='Internship Offer'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.internshipoffer',
+                                    verbose_name='Internship Offer'),
         ),
         migrations.AlterField(
             model_name='periodinternshipplaces',
@@ -646,12 +695,14 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='periodinternshipplaces',
             name='period',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.period', verbose_name='Period'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='internship.period',
+                                    verbose_name='Period'),
         ),
         migrations.AlterField(
             model_name='placeevaluation',
             name='affectation',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.internshipstudentaffectationstat', verbose_name='Affectation'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE,
+                                    to='internship.internshipstudentaffectationstat', verbose_name='Affectation'),
         ),
         migrations.AlterField(
             model_name='placeevaluation',
@@ -666,7 +717,8 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='placeevaluationitem',
             name='cohort',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.cohort', verbose_name='Cohort'),
+            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, to='internship.cohort',
+                                    verbose_name='Cohort'),
         ),
         migrations.AlterField(
             model_name='placeevaluationitem',
@@ -686,6 +738,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='placeevaluationitem',
             name='type',
-            field=models.CharField(choices=[('CHOICE', 'Choice'), ('OPEN', 'Open'), ('NUMBER', 'Number')], default='Open', max_length=10, verbose_name='Type'),
+            field=models.CharField(choices=[('CHOICE', 'Choice'), ('OPEN', 'Open'), ('NUMBER', 'Number')],
+                                   default='Open', max_length=10, verbose_name='Type'),
         ),
     ]
