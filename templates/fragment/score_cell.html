@@ -1,4 +1,4 @@
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 {% if period_score|is_edited %}
     <div class="score-cell-value">
@@ -6,10 +6,10 @@
             <span class="excused">
                 {{ period_score.edited.excused|default_if_none:'-' }}
             </span>
-            <i data-toggle="tooltip" data-placement="left" title="{% trans "Score excused" %}"
+            <i data-bs-toggle="tooltip" data-bs-placement="left" title="{% trans "Score excused" %}"
         {% else %}
             {{ period_score.edited.score|default_if_none:'-' }}
-            <i data-html="true" data-toggle="tooltip" data-placement="left" title="
+            <i data-bs-html="true" data-bs-toggle="tooltip" data-bs-placement="left" title="
                 {% trans "Score edited. Computed score: " %}
                 <strong>{{ period_score.computed }}</strong>
                 <br/>
@@ -23,7 +23,7 @@
     {{ period_score }}
 {% endif %}
 {% if not cohort.is_parent %}
-<div style="display: none;" id="edit-{{ student.registration_id }}{{ period.name }}" class="cell-actions pull-right">
+<div style="display: none;" id="edit-{{ student.registration_id }}{{ period.name }}" class="cell-actions float-end">
     {% if period_score.edited or not period_score|is_edited %}
         {% if period_score %}
         <button onclick="editScore(this)"
@@ -34,15 +34,15 @@
                 {% endif %}
                 data-student="{{ student.registration_id }}" data-period="{{ period.name }}"
                 class="btn btn-xs btn-warning">
-            <i class="fas fa-pencil-alt"></i>
+            <i class="fas fa-pencil-alt text-white"></i>
         </button>
         {% elif not cohort.is_parent %}
             {% include 'fragment/btn_empty_score.html' %}
         {% endif %}
     {% endif %}
     {% if period_score|is_edited %}
-        <button data-toggle="modal"
-                data-target="#delete_score"
+        <button type="button" data-bs-toggle="modal"
+                data-bs-target="#delete_score"
                 data-student="{{ student.registration_id }}"
                 data-period="{{ period.name }}"
                 data-computed="{{ period_score.computed }}"

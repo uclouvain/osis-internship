@@ -25,6 +25,7 @@
 ##############################################################################
 
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from internship.models.enums.civility import Civility
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
@@ -45,11 +46,15 @@ class InternshipCertifierAdmin(SerializableModelAdmin):
 
 
 class InternshipCertifier(SerializableModel):
-    person = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.CASCADE)
-    civility = models.CharField(max_length=50, blank=True, null=True, choices=Civility.choices())
-    role = models.CharField(max_length=100, blank=True, null=True)
+    person = models.ForeignKey(
+        'base.Person', blank=True, null=True, on_delete=models.CASCADE, verbose_name=_('Person')
+    )
+    civility = models.CharField(
+        max_length=50, blank=True, null=True, choices=Civility.choices(), verbose_name=_('Civility')
+    )
+    role = models.CharField(max_length=100, blank=True, null=True, verbose_name=_('Role'))
 
-    signature_b64 = models.TextField(blank=True, null=True)
+    signature_b64 = models.TextField(blank=True, null=True, verbose_name=_('Signature'))
 
     def civility_acronym(self):
         if self.civility:

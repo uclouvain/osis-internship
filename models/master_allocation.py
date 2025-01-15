@@ -30,6 +30,7 @@ from django.contrib import admin
 from django.db import models
 from django.db.models import Q
 from django.utils.datetime_safe import datetime
+from django.utils.translation import gettext_lazy as _
 
 from internship.models.cohort import get_current_and_future_cohorts
 from internship.models.enums.role import Role
@@ -47,22 +48,27 @@ class MasterAllocationAdmin(admin.ModelAdmin):
 class MasterAllocation(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
 
-    master = models.ForeignKey('internship.InternshipMaster', on_delete=models.CASCADE)
+    master = models.ForeignKey(
+        'internship.InternshipMaster', on_delete=models.CASCADE, verbose_name=_('Master')
+    )
     organization = models.ForeignKey(
         'internship.Organization',
         blank=True, null=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name=_('Organization'),
     )
     specialty = models.ForeignKey(
         'internship.InternshipSpeciality',
         blank=True, null=True,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        verbose_name=_('Specialty'),
     )
 
     role = models.CharField(
         max_length=50,
         choices=Role.choices(),
         default=Role.MASTER.name,
+        verbose_name=_('Role'),
     )
 
     def cohort(self):
