@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,12 +27,12 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
-    <li><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
-    <li class="active">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=current_cohort.id %}">{{ current_cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_masters' cohort_id=current_cohort.id %}">{% trans 'Internships masters' %}</a></li>
+    <li class="breadcrumb-item active">{{ allocated_master.person.last_name | upper }}, {{ allocated_master.person.first_name }}</li>
 {% endblock %}
 
 {% block content %}
@@ -45,8 +45,8 @@
         </h2>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-3">
                     <div class="form-group">
@@ -141,8 +141,8 @@
                 </div>
             </div>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">{% trans 'Allocation' %}</div>
+            <div class="card card-default">
+                <div class="card-heading">{% trans 'Allocation' %}</div>
                 <table class="table">
                     <thead>
                         <tr>
@@ -174,16 +174,16 @@
                 </table>
             </div>
         </div>
-        <div class="panel-footer">
+        <div class="card-footer">
             <a href="{% url 'master_edit' cohort_id=current_cohort.id master_id=allocated_master.id %}" class="btn btn-default">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                <span class="fa fa-edit" aria-hidden="true"></span>
                 {% trans "Edit" %}
             </a>
-            <a class="btn btn-danger pull-right master_btn_delete"
+            <a class="btn btn-danger float-end master_btn_delete"
             data-href="{% url 'master_delete' cohort_id=current_cohort.id master_id=allocated_master.id %}"
-            data-toggle="modal" data-target="#delete_modal"
+            data-bs-toggle="modal" data-bs-target="#delete_modal"
             data-value="{% trans 'the allocation(s) for' %} {{allocated_master.person.last_name}} {{allocated_master.person.first_name}} {% trans 'in' %} {{ current_cohort }}">
-                <span class="glyphicon glyphicon-remove aria-hidden="true"></span>
+                <span class="fa fa-remove aria-hidden="true"></span>
                 {% trans "Delete" %}
             </a>
         </div>

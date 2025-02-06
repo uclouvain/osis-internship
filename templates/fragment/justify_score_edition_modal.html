@@ -1,23 +1,23 @@
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 <div class="modal fade" id="justify_score" tabindex="-1" role="dialog" aria-labelledby="justify_score_label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{% trans "Provide a reason for editing score ?" %}</h4>
+                <h5 class="modal-title">{% trans "Provide a reason for editing score ?" %}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="panel-default">
-                    <div class="panel-heading">
+                <div class="card-default">
+                    <div class="card-heading">
                         {% trans "You may provide a reason for editing score by choosing a justification from the list below." %}
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="form-group col-md-12 required_field">
                             <label class="control-label" for="id_reason">
                                 {% trans "Predifined reason" %}
                             </label>
-                            <select name="reason" class="form-control" title="" id="id_reason">
+                            <select  name="reason"  class="form-select"  title="" id="id_reason" >
                                 {% for reason in score_edit_reasons %}
                                     <option value="{{ reason.text }}">{{ reason.text }}</option>
                                 {% endfor %}
@@ -32,8 +32,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button id="no_reason_btn" type="button" class="btn btn-default" data-dismiss="modal">{% trans "No reason" %}</button>
-                <button id="justify_score_btn" type="button" class="btn btn-primary" data-dismiss="modal">
+                <button id="no_reason_btn" type="button" class="btn btn-default" data-bs-dismiss="modal">{% trans "No reason" %}</button>
+                <button id="justify_score_btn" type="button" class="btn btn-primary" data-bs-dismiss="modal">
                     {% trans "Provide reason" %}
                 </button>
             </div>
