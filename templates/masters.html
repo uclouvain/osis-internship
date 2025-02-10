@@ -216,15 +216,15 @@
                             <td title="{{ allocation.role }}">{{ allocation.role.0 }}</td>
                             {% if allocation.master.user_account_status == account_status.ACTIVE.value %}
                                 <td class="text-center">
-                                    <span title="{% trans 'User account is active' %}" class="text-success fa fa-ok-circle"></span>
+                                    <span title="{% trans 'User account is active' %}" class="text-success fa-regular fa-circle-check"></span>
                                 </td>
                             {% elif allocation.master.user_account_status == account_status.PENDING.value %}
                                 <td class="text-center">
-                                    <span title="{% trans 'Activation pending' %}" class="text-info fa fa-time"></span>
+                                    <span title="{% trans 'Activation pending' %}" class="text-info fa-regular fa-clock"></span>
                                 </td>
                             {% else %}
                                 <td class="text-center">
-                                    <span title="{% trans 'No user account created' %}" class="text-danger fa fa-remove-circle"></span>
+                                    <span title="{% trans 'No user account created' %}" class="text-danger fa-regular fa-circle-xmark"></span>
                                 </td>
                             {% endif %}
                             <td class="text-center">
