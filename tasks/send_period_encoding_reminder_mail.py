@@ -11,8 +11,11 @@ DAYS_BEFORE = 15
 
 @celery_app.task
 def run() -> dict:
-    active_period = Period.active.first()
-    trigger_date = active_period.date_end - timedelta(days=DAYS_BEFORE)
-    if date.today() >= trigger_date and not active_period.reminder_mail_sent:
-        send_internship_period_encoding_reminder(active_period)
+    active_periods = Period.active.all()
+
+    for period in active_periods:
+        trigger_date = period.date_end - timedelta(days=DAYS_BEFORE)
+        if date.today() >= trigger_date and not period.reminder_mail_sent:
+            send_internship_period_encoding_reminder(period)
+
     return {}
