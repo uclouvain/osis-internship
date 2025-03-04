@@ -41,10 +41,16 @@ class InternshipScoreAdmin(ModelAdmin):
     score_fields = [f'APD_{index}' for index in range(1, APD_NUMBER+1)]
     list_display = (
         'student', 'period', 'cohort',
-        *score_fields, 'score', 'excused', 'reason', 'validated',
+        *score_fields, 'score', 'behavior_score', 'competency_score', 'calculated_global_score',
+        'excused', 'reason', 'validated',
     )
     raw_id_fields = ('student_affectation', 'validated_by')
-    list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
+    list_filter = (
+        'student_affectation__period__cohort',
+        'student_affectation__period__is_preconcours',
+        'validated',
+        'student_affectation__speciality__name'
+    )
     search_fields = [
         'student_affectation__student__person__first_name',
         'student_affectation__student__person__last_name'
@@ -95,6 +101,21 @@ class InternshipScore(Model):
 
     student_presence = models.BooleanField(null=True, verbose_name=_('Student presence'))
 
+    behavior_score = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name=_('Behavior score')
+    )
+    competency_score = models.DecimalField(
+        max_digits=4,
+        decimal_places=2,
+        null=True,
+        blank=True,
+        verbose_name=_('Competency score')
+    )
+
     def __str__(self):
         return f'{self.student_affectation} - {self.get_scores()}'
 
@@ -112,3 +133,14 @@ class InternshipScore(Model):
     @property
     def cohort(self):
         return self.period.cohort if self.period else None
+
+    @property
+    def is_preconcours(self):
+        return self.period.is_preconcours if self.period else False
+
+    @property
+    def calculated_global_score(self):
+        """Calculate global score as average of behavior and competency scores for preconcours periods"""
+        if not self.is_preconcours or not all([self.behavior_score, self.competency_score]):
+            return None
+        return (self.behavior_score + self.competency_score) / 2
