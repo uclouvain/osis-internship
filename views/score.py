@@ -146,24 +146,51 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id):
     apds = range(1, APD_NUMBER + 1)
 
     if request.POST:
-        apds_data = {'APD_{}'.format(apd): request.POST.get('apd-{}'.format(apd)) for apd in apds}
-        reason = request.POST.get('reason') if request.POST.get('reason') else None
-        if _validate_score(request, apds_data):
-            update = InternshipScore.objects.filter(pk=score.pk).update(
-                **apds_data,
-                reason=reason,
-                validated=True,
-                validated_by=request.user.person
-            )
-            if update:
-                messages.add_message(request, messages.SUCCESS, _('Score updated successfully for {}'.format(
-                    score.student_affectation
-                )))
-                return redirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort_id}))
-            else:
-                messages.add_message(request, messages.ERROR, UPDATE_SCORE_ERROR_MSG)
+        if student_affectation.period.is_preconcours:
+            behavior_score = request.POST.get('behavior_score')
+            competency_score = request.POST.get('competency_score')
+            scores_data = {
+                'behavior_score': behavior_score,
+                'competency_score': competency_score
+            }
+            if _validate_preconcours_score(request, scores_data):
+                update = InternshipScore.objects.filter(pk=score.pk).update(
+                    behavior_score=behavior_score,
+                    competency_score=competency_score,
+                    reason=request.POST.get('reason'),
+                    validated=True,
+                    validated_by=request.user.person
+                )
+                if update:
+                    messages.add_message(
+                        request, 
+                        messages.SUCCESS, 
+                        _('Score updated successfully for {}'.format(score.student_affectation))
+                    )
+                    return redirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort_id}))
+                else:
+                    messages.add_message(request, messages.ERROR, UPDATE_SCORE_ERROR_MSG)
         else:
-            _cache_apd_form_values(apds_data, score)
+            apds_data = {'APD_{}'.format(apd): request.POST.get('apd-{}'.format(apd)) for apd in apds}
+            reason = request.POST.get('reason') if request.POST.get('reason') else None
+            if _validate_score(request, apds_data):
+                update = InternshipScore.objects.filter(pk=score.pk).update(
+                    **apds_data,
+                    reason=reason,
+                    validated=True,
+                    validated_by=request.user.person
+                )
+                if update:
+                    messages.add_message(
+                        request, 
+                        messages.SUCCESS, 
+                        _('Score updated successfully for {}'.format(score.student_affectation))
+                    )
+                    return redirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort_id}))
+                else:
+                    messages.add_message(request, messages.ERROR, UPDATE_SCORE_ERROR_MSG)
+            else:
+                _cache_apd_form_values(apds_data, score)
 
     context = {
         'cohort': cohort,
@@ -705,8 +732,16 @@ def _get_mapping_score(period, apd):
 
 def _append_period_scores_and_comments_to_student(period, student, student_scores):
     if student_scores:
-        scores = student_scores[0].get_scores()
-        comments = student_scores[0].comments
+        score_obj = student_scores[0]
+        if period.is_preconcours:
+            scores = {
+                'behavior': score_obj.behavior_score,
+                'competency': score_obj.competency_score,
+                'calculated_global_score': score_obj.calculated_global_score
+            }
+        else:
+            scores = score_obj.get_scores()
+        comments = score_obj.comments
         student.scores += (period.name, scores),
         student.comments.update({period.name: replace_comments_keys_with_translations(comments)})
         _retrieve_scores_entered_manually(period, student, student_scores)
@@ -1111,3 +1146,27 @@ def replace_comments_keys_with_translations(comments):
         'intermediary_evaluation': _('Intermediary evaluation')
     }
     return {comments_keys_mapping[k]: v for k, v in comments.items()}
+
+
+def _validate_preconcours_score(request, scores_data):
+    """Validate preconcours scores before saving."""
+    try:
+        behavior_score = int(scores_data['behavior_score'])
+        competency_score = int(scores_data['competency_score'])
+    except (ValueError, TypeError):
+        messages.add_message(
+            request, 
+            messages.ERROR, 
+            _('Les scores doivent être des nombres entiers.')
+        )
+        return False
+
+    if behavior_score < 0 or behavior_score > 20 or competency_score < 0 or competency_score > 20:
+        messages.add_message(
+            request, 
+            messages.ERROR, 
+            _('Les scores doivent être compris entre 0 et 20.')
+        )
+        return False
+
+    return True

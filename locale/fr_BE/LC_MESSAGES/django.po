@@ -230,7 +230,7 @@ msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
 msgstr "Une évaluation doit inclure au minimum {} et au maximum {} APD évalués"
 
 msgid "Appreciate medical emergency"
-msgstr "Reconnaitre l’urgence médicale"
+msgstr "Reconnaitre l'urgence médicale"
 
 msgid "Aptitudes conditions fulfilled"
 msgstr "Conditions d'aptitudes remplies"
@@ -350,7 +350,7 @@ msgid "Compulsory"
 msgstr "Obligatoire"
 
 msgid "Conduct clinical examination"
-msgstr "Réaliser l’examen clinique"
+msgstr "Réaliser l'examen clinique"
 
 msgid "Configuration"
 msgstr "Configuration"
@@ -1582,3 +1582,6 @@ msgstr "réalise parfaitement"
 
 msgid "{} day(s)"
 msgstr "{} jour(s)"
+
+msgid "Pré-concours"
+msgstr "Pré-concours"

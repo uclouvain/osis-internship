@@ -1510,3 +1510,6 @@ msgstr ""
 
 msgid "{} day(s)"
 msgstr ""
+
+msgid "Pré-concours"
+msgstr "Pre-competition"

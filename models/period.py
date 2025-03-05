@@ -71,7 +71,7 @@ class Period(SerializableModel):
     remedial = models.BooleanField(default=False, verbose_name=_('Remedial'))
     place_evaluation_active = models.BooleanField(default=False)
     exclude_from_assignment = models.BooleanField(default=False, verbose_name=_('Exclude from assignment'))
-    is_preconcours = models.BooleanField(default=False, verbose_name=_('Preconcours'))
+    is_preconcours = models.BooleanField(default=False, verbose_name=_('Pré-concours'))
 
     objects = models.Manager()
     active = ActivePeriod()

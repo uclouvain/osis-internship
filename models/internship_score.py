@@ -26,6 +26,7 @@
 import uuid as uuid
 
 from django.contrib.admin import ModelAdmin
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Model, JSONField
 from django.utils.translation import gettext_lazy as _
@@ -101,19 +102,23 @@ class InternshipScore(Model):
 
     student_presence = models.BooleanField(null=True, verbose_name=_('Student presence'))
 
-    behavior_score = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        null=True,
+    behavior_score = models.IntegerField(
+        null=True, 
         blank=True,
-        verbose_name=_('Behavior score')
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(20)
+        ],
+        verbose_name=_("Behavior score")
     )
-    competency_score = models.DecimalField(
-        max_digits=4,
-        decimal_places=2,
-        null=True,
+    competency_score = models.IntegerField(
+        null=True, 
         blank=True,
-        verbose_name=_('Competency score')
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(20)
+        ],
+        verbose_name=_("Skill score")
     )
 
     def __str__(self):

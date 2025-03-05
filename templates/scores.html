@@ -273,9 +273,12 @@
                             </td>
                             <td>
                                 {{ period }}
-                            {% if period.is_active %}
-                                  <icon style="font-size: 11px; color: #333;" class="fa fa-time" title="{% trans 'Current period' %}"></icon>
-                            {% endif %}
+                                {% if period.is_preconcours %}
+                                    <span class="badge bg-light text-dark" title="{% trans 'Pré-concours' %}" data-bs-toggle="tooltip">P</span>
+                                {% endif %}
+                                {% if period.is_active %}
+                                    <icon style="font-size: 11px; color: #333;" class="fa fa-time" title="{% trans 'Current period' %}"></icon>
+                                {% endif %}
                             </td>
                             {% with student.specialties|get_item:period.name as specialty %}
                                 <td title="{{ specialty.name  | default_if_none:_('No specialty') }}">
@@ -304,24 +307,54 @@
 
                             </td>
                             {% if not student.scores|has_substr:period %}
-                                {% for i in i|rjust:15 %}
-                                    <td class="hidden-sm hidden-xs text-center">-</td>
-                                {% endfor %}
+                                {% if period.is_preconcours %}
+                                    <td class="hidden-sm hidden-xs text-center" colspan="8">
+                                        <strong>{% trans "Score comportemental" %} : </strong>
+                                        {% for period_name, period_scores in student.scores %}
+                                            {% if period_name == period.name %}
+                                                {{ period_scores.behavior|default:"-" }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="hidden-sm hidden-xs text-center" colspan="7">
+                                        <strong>{% trans "Score de compétence" %} : </strong>
+                                        {% for period_name, period_scores in student.scores %}
+                                            {% if period_name == period.name %}
+                                                {{ period_scores.competency|default:"-" }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                {% else %}
+                                    {% for i in i|rjust:15 %}
+                                        <td class="hidden-sm hidden-xs text-center">-</td>
+                                    {% endfor %}
+                                {% endif %}
                             {% endif %}
                             {% for key, scores in student.scores %}
                                 {% if key|slugify == period|slugify %}
-                                    {% for score in scores %}
-                                        {% if score != None %}
-                                            <td class="hidden-sm hidden-xs text-center
-                                            {% if not score|is_valid:forloop.counter0 %}
-                                             text-bold text-danger
-                                            {% endif %}">
-                                                {{ score }}
-                                            </td>
-                                        {% else %}
-                                            <td class="hidden-sm hidden-xs text-center">-</td>
-                                        {% endif %}
-                                    {% endfor %}
+                                    {% if period.is_preconcours %}
+                                        <td class="hidden-sm hidden-xs text-center" colspan="8">
+                                            <strong>{% trans "Score comportemental" %} : </strong>
+                                            {{ scores.behavior|default:"-" }}
+                                        </td>
+                                        <td class="hidden-sm hidden-xs text-center" colspan="7">
+                                            <strong>{% trans "Score de compétence" %} : </strong>
+                                            {{ scores.competency|default:"-" }}
+                                        </td>
+                                    {% else %}
+                                        {% for score in scores %}
+                                            {% if score != None %}
+                                                <td class="hidden-sm hidden-xs text-center
+                                                {% if not score|is_valid:forloop.counter0 %}
+                                                 text-bold text-danger
+                                                {% endif %}">
+                                                    {{ score }}
+                                                </td>
+                                            {% else %}
+                                                <td class="hidden-sm hidden-xs text-center">-</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                             <td>
@@ -334,11 +367,23 @@
                             {% endwith %}
                             </td>
                             {% with student.periods_scores|get_item:period.name as period_score%}
-                                  {% if period_score %}
+                                  {% if period_score is not null %}
                                     <td style="vertical-align: middle; width: 140px;"
                                         onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                         onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
-                                        {% include 'fragment/score_cell.html' %}
+                                        {% if period.is_preconcours %}
+                                            {% for period_name, period_scores in student.scores %}
+                                                {% if period_name == period.name %}
+                                                    {% if period_scores.behavior and period_scores.competency %}
+                                                        {{ period_scores.calculated_global_score|floatformat:1 }}
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {% include 'fragment/score_cell.html' %}
+                                        {% endif %}
                                     </td>
                                 {% else %}
                                       {% if period in completed_periods %}
@@ -346,7 +391,19 @@
                                           onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                           onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')"
                                           >
-                                            0
+                                            {% if period.is_preconcours %}
+                                                {% for period_name, period_scores in student.scores %}
+                                                    {% if period_name == period.name %}
+                                                        {% if period_scores.behavior and period_scores.competency %}
+                                                            {{ period_scores.calculated_global_score|floatformat:1 }}
+                                                        {% else %}
+                                                            0
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                0
+                                            {% endif %}
                                             {% include 'fragment/btn_empty_score.html' %}
                                           </td>
                                       {% else %}
