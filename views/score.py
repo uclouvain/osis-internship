@@ -60,7 +60,7 @@ from internship.models.period import get_effective_periods, get_assignable_perio
 from internship.templatetags.dictionary import is_edited, is_excused
 from internship.templatetags.student import has_remedial
 from internship.utils.exporting import score_encoding_xls, score_summary_pdf
-from internship.utils.importing import import_scores, import_eval
+from internship.utils.importing import import_scores, import_eval, import_preconcours_scores
 from internship.utils.mails import mails_management
 from internship.views.common import get_object_list, round_half_up
 from osis_common.decorators.download import set_download_cookie
@@ -934,7 +934,11 @@ def _upload_scores_file(request, cohort):
         if file_name and ".xlsx" not in str(file_name):
             messages.add_message(request, messages.ERROR, _('File extension must be .xlsx'))
         else:
-            import_errors = import_scores.import_xlsx(cohort, file_name, period)
+            period = cohort.period_set.get(name=period)
+            if period.is_preconcours:
+                import_errors = import_preconcours_scores.import_xlsx(cohort, file_name, period)
+            else:
+                import_errors = import_scores.import_xlsx(cohort, file_name, period)
             _process_errors(request, import_errors, period)
 
 

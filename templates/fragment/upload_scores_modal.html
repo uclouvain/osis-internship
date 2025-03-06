@@ -12,7 +12,7 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="period-select">{% trans 'Period' %}</label>
-                        <select  name="period"  class="form-select"  id="period-select" >
+                        <select name="period" class="form-select" id="period-select">
                             {% for period in all_periods %}
                                 <option value="{{ period }}" data-is-preconcours="{{ period.is_preconcours|yesno:'true,false' }}">{{ period }}</option>
                             {% endfor %}
