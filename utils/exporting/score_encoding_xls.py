@@ -76,13 +76,18 @@ def _add_sheet_content(internship, periods, students, worksheet):
 
 def _complete_student_row_by_internship(columns, internship, periods, student):
     for period in periods:
-        if period.name in student.specialties.keys() and student.specialties[period.name]['acronym'] == internship:
-            _append_row_data(columns, period, student)
+        if period.name in student.specialties.keys():
+            if student.specialties[period.name][0]['acronym'] == internship:
+                _append_row_data(columns, period, student)
 
 
 def _append_row_data(columns, period, student):
     if period.name in student.organizations.keys():
-        columns.append(student.organizations[period.name]['reference'])
+        if len(student.specialties[period.name]) > 1:
+            multiple_specialties = '/'.join([sp['reference'] for sp in student.organizations[period.name]])
+            columns.append(multiple_specialties)
+        else:
+            columns.append(student.organizations[period.name][0]['reference'])
     else:
         columns.append('')
     if period.name in student.periods_scores.keys():
@@ -97,10 +102,14 @@ def _append_row_data(columns, period, student):
 
 
 def _retrieve_score(period_score):
+    if len(period_score) > 1:
+        return sum(period_score) / len(period_score)
+    else:
+        period_score = period_score[0]
     if _is_dict_with_key(period_score, 'edited'):
-        if _is_dict_with_key(period_score['edited'], 'excused'):
-            return period_score['edited']['excused'] or ''
-        return period_score['edited']['score'] or ''
+        if _is_dict_with_key(period_score['edited'][0], 'excused'):
+            return period_score['edited'][0]['excused'] or ''
+        return period_score['edited'][0]['score'] or ''
     else:
         return period_score
 
@@ -135,7 +144,11 @@ def _append_evolution_score(columns, score):
 def _complete_student_row_for_all_internships(columns, periods, student):
     for period in periods:
         if period.name in student.specialties.keys():
-            columns.append(student.specialties[period.name]['acronym'])
+            if len(student.specialties[period.name]) > 1:
+                multiple_specialties = '/'.join([sp['acronym'] for sp in student.specialties[period.name]])
+                columns.append(multiple_specialties)
+            else:
+                columns.append(student.specialties[period.name][0]['acronym'])
         else:
             columns.append('')
             

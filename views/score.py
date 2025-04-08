@@ -644,7 +644,6 @@ def _compute_evolution_score(students, periods):
 def _get_scores_mean(scores, n_periods):
     evolution_score = 0
     effective_n_periods = n_periods - _count_emptied_scores(scores)
-    print(scores.keys())
     for key in scores.keys():
         period_score = _get_period_score(scores[key])
         evolution_score += period_score / effective_n_periods \
@@ -793,7 +792,6 @@ def _append_comments(comments, period, student):
 def _retrieve_scores_entered_manually(period, student, student_scores):
     student_score = student_scores[0]
     score = student_score.score
-    print(student, period, student_score.excused)
     if score or student_score.excused:
         if not period.name in student.numeric_scores.keys():
             student.numeric_scores.update(
