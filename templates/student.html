@@ -170,21 +170,17 @@
                           href="{% url 'internship_student_affectation_modification' cohort_id=cohort.id student_id=student.id %}">
                             <span class="fa fa-pencil" aria-hidden="true"></span> {% trans 'Edit' %}</a>
                     </div>
-                    {% for period in periods %}
-                        <label>{{ period.name }}</label>
-                        ({{ period.date_start }} - {{ period.date_end }})<br/>
-                        {% for affectation in affectations %}
-                            {% if affectation.period == period %}
-                                <p>{{ affectation.speciality.name }}{{ affectation.internship.choice }} |
-                                    {{ affectation.organization.reference }} {{ affectation.organization.name }} ({{ affectation.speciality.name }}) - {{ affectation.period.cohort }}<br/>
-                                    {% trans 'Address' %} :
-                                    {{ affectation.organization.location }} {{ affectation.organization.postal_code }}
-                                    {{ affectation.organization.city }}<br/>
-                                    {% trans 'Master' %} :
-                                    {{ affectation.master }}
-                                </p><br>
-                            {% endif %}
-                        {% endfor %}
+                    {% for affectation in affectations %}
+                        <label>{{ affectation.period.name }}</label>
+                        ({{ affectation.period.date_start }} - {{ affectation.period.date_end }})<br/>
+                        <p>{{ affectation.speciality.name }}{{ affectation.internship.choice }} |
+                            {{ affectation.organization.reference }} {{ affectation.organization.name }} ({{ affectation.speciality.name }}) - {{ affectation.period.cohort }}<br/>
+                            {% trans 'Address' %} :
+                            {{ affectation.organization.location }} {{ affectation.organization.postal_code }}
+                            {{ affectation.organization.city }}<br/>
+                            {% trans 'Master' %} :
+                            {{ affectation.master }}
+                        </p><br>
                     {% endfor %}
                 </div>
             </div>

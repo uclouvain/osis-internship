@@ -152,6 +152,7 @@ urlpatterns = [
                 path('statistics/', affectation.view_statistics, name='internship_affectation_statistics'),
                 path('errors/', affectation.view_errors, name='internship_affectation_errors'),
                 path('generate/', affectation.run_affectation, name='internship_affectation_generate'),
+                path('import/', affectation.import_affectations, name='internship_affectation_import'),
                 path('sumup/', affectation.internship_affectation_sumup, name='internship_affectation_sumup'),
             ])),
 

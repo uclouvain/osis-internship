@@ -138,7 +138,25 @@ def _complete_student_row_for_all_internships(columns, periods, student):
             columns.append(student.specialties[period.name]['acronym'])
         else:
             columns.append('')
-        _append_row_data(columns, period, student)
+            
+        if period.is_preconcours:
+            _append_preconcours_data(columns, period, student)
+        else:
+            _append_row_data(columns, period, student)
+
+
+def _append_preconcours_data(columns, period, student):
+    if period.name in student.scores_by_period:
+        period_scores = student.scores_by_period[period.name]
+        score = period_scores.get('score_object')
+        if score:
+            columns.append(score.behavior_score if score.behavior_score is not None else '')
+            columns.append(score.competency_score if score.competency_score is not None else '')
+            columns.append(period_scores.get('calculated_global_score', ''))
+        else:
+            columns.extend(['', '', ''])
+    else:
+        columns.extend(['', '', ''])
 
 
 def _add_sheet_header(worksheet):
@@ -154,9 +172,17 @@ def _add_header(cohort, periods, worksheet):
     column_titles = [_("Name"), _("First name"), _("NOMA")]
     all_periods_count = get_effective_periods(periods.first().cohort.pk).count()
     for period in periods:
-        column_titles.append(period.name)
-        column_titles.append("{}+".format(period.name))
-        column_titles.append("{}-Score".format(period.name))
+        if period.is_preconcours:
+            column_titles.extend([
+                period.name,
+                f"{period.name} - {_('Behavior')}",
+                f"{period.name} - {_('Competency')}",
+                f"{period.name} - {_('Global')}"
+            ])
+        else:
+            column_titles.append(period.name)
+            column_titles.append("{}+".format(period.name))
+            column_titles.append("{}-Score".format(period.name))
     if periods.count() == all_periods_count:
         column_titles.append(_("Evolution"))
         column_titles.append(_("Evolution computed"))

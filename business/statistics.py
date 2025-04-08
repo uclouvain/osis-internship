@@ -27,7 +27,6 @@ import re
 from collections import OrderedDict
 from collections import defaultdict
 from operator import itemgetter
-from statistics import mean, stdev
 
 from base.models.student import Student
 from internship import models
@@ -38,6 +37,7 @@ from internship.models.internship import Internship
 from internship.models.internship_choice import InternshipChoice
 from internship.models.internship_speciality import InternshipSpeciality
 from internship.models.period import get_assignable_periods, get_subcohorts_periods
+from statistics import mean, stdev
 
 HOSPITAL_ERROR = 999  # Reference of the hospital "erreur"
 
@@ -151,7 +151,7 @@ def compute_stats(cohort, sol):
                         student
                     )
                 # Hostpital error
-                if int(affectation.organization.reference) == HOSPITAL_ERROR:
+                if str(HOSPITAL_ERROR) in affectation.organization.reference:
                     hospital_error_count += 1
                 consecutive_month += affectation.consecutive_month
     # Total number of students
@@ -321,8 +321,15 @@ def load_solution_sol(cohort, student_affectations):
             sol[item.student] = OrderedDict(sorted(sol[item.student].items(), key=_human_sort_key))
             sol[item.student]['score'] = 0
             item.student.priority = item.student in students
-        # Put the internship in the solution
-        sol[item.student][item.period.name] = item
+        # Put the internship in the solution and update info if already exists
+        if sol[item.student][item.period.name]:
+            existing = sol[item.student][item.period.name]
+            existing.speciality.name = f"{existing.speciality.name} / {item.speciality.name}"
+            existing.speciality.acronym = f"{existing.speciality.acronym}/{item.speciality.acronym}"
+            existing.organization.name = f"{existing.organization.name} / {item.organization.name}"
+            existing.organization.reference = f"{existing.organization.reference}/{item.organization.reference}"
+        else:
+            sol[item.student][item.period.name] = item
         # store the cost of each student
         sol[item.student]['score'] += item.cost
 
