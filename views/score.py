@@ -35,7 +35,8 @@ from dateutil.utils import today
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.db import transaction
-from django.db.models import OuterRef, Subquery, F
+from django.db.models import OuterRef, Subquery, F, Window
+from django.db.models.functions import RowNumber
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -548,7 +549,7 @@ def empty_score(request, cohort_id):
     )
     score, created = InternshipScore.objects.update_or_create(
         student_affectation=affectation,
-        defaults={'excused': True}
+        defaults={'excused': True, 'validated': True}
     )
     if score:
         return render(request, "fragment/score_cell.html", context={
@@ -570,7 +571,7 @@ def _prepare_score_table(cohorts, periods, students):
         'student__person', 'student__registration_id', 'period__name', 'organization__reference', 'organization__name',
         'speciality__acronym', 'speciality__sequence', 'speciality__name', 'internship__speciality_id',
         'internship__name', 'internship__length_in_periods', 'internship_evaluated'
-    ).order_by('period__date_start')
+     ).order_by('period__date_start')
 
     scores = _group_by_students_and_periods(scores)
 
@@ -593,7 +594,17 @@ def _get_persons_scores(students):
         student_affectation__student__person_id__in=persons, validated=True,
     ).select_related(
         'student_affectation__student__person', 'student_affectation__period__cohort'
-    ).order_by('student_affectation__student__person')
+    ).annotate(
+        period_aff_index=Window(
+            expression=RowNumber(),
+            partition_by=[F('student_affectation__student'), F('student_affectation__period')],
+            order_by=F('student_affectation__id').asc(),
+        )
+    ).order_by(
+        'student_affectation__student__person__last_name',
+        'student_affectation__period__date_start',
+        'period_aff_index'
+    )
     return persons, scores
 
 
@@ -633,6 +644,7 @@ def _compute_evolution_score(students, periods):
 def _get_scores_mean(scores, n_periods):
     evolution_score = 0
     effective_n_periods = n_periods - _count_emptied_scores(scores)
+    print(scores.keys())
     for key in scores.keys():
         period_score = _get_period_score(scores[key])
         evolution_score += period_score / effective_n_periods \
@@ -641,13 +653,20 @@ def _get_scores_mean(scores, n_periods):
 
 
 def _get_period_score(score):
-    if is_edited(score):
-        if not is_excused(score['edited']):
-            return score['edited']['score']
+    if score:
+        if isinstance(score, list) and len(score) > 1:
+            return sum(score) / len(score)
+        elif isinstance(score, int):
+            return score
         else:
-            return None
-    else:
-        return score
+            if is_edited(score[0]):
+                if not is_excused(score[0]['edited']) and 'score' in score[0]['edited'][0].keys():
+                    return score[0]['edited'][0]['score']
+                else:
+                    return None
+            else:
+                return score[0]
+    return None
 
 
 def _count_emptied_scores(scores):
@@ -679,19 +698,33 @@ def _map_numeric_score(mapping, students):
 
 def _map_student_score(mapping, periods_scores, student):
     for item in student.scores:
-        period, scores = item
+        period, scores, period_aff_index = item
         period_score = _process_evaluation_grades(mapping, period, scores)
-        if period in student.numeric_scores.keys():
-            periods_scores.update(
-                {
-                    period: {
-                        'computed': period_score,
-                        'edited': student.numeric_scores[period],
+        if not period in periods_scores.keys():
+            if period in student.numeric_scores.keys():
+                periods_scores.update(
+                    {
+                        period: [{
+                            'computed': period_score,
+                            'edited': student.numeric_scores[period],
+                        }]
                     }
-                }
-            )
+                )
+            else:
+                periods_scores.update({period: [period_score]})
         else:
-            periods_scores.update({period: period_score})
+            if period in student.numeric_scores.keys():
+                periods_scores.update(
+                    {
+                        period: [*periods_scores[period], {
+                            'computed': period_score,
+                            'edited': student.numeric_scores[period],
+                        }]
+                    }
+                )
+            else:
+                periods_scores.update({period: [*periods_scores[period], period_score]})
+
 
 
 def _process_evaluation_grades(mapping, period, scores):
@@ -718,7 +751,8 @@ def _match_scores_with_students(periods, scores, students):
         for period in periods:
             if student.person.pk in scores.keys() and period.pk in scores[student.person.pk].keys():
                 student_scores = scores[student.person.pk][period.pk]
-                _append_period_scores_and_comments_to_student(period, student, list(student_scores))
+                for student_score in student_scores:
+                    _append_period_scores_and_comments_to_student(period, student, [student_score])
 
 
 def _set_condition_fulfilled_status(students):
@@ -742,20 +776,44 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
         else:
             scores = score_obj.get_scores()
         comments = score_obj.comments
-        student.scores += (period.name, scores),
-        student.comments.update({period.name: replace_comments_keys_with_translations(comments)})
+        student.scores += (period.name, scores, score_obj.period_aff_index),
+        _append_comments(comments, period, student)
         _retrieve_scores_entered_manually(period, student, student_scores)
+
+
+def _append_comments(comments, period, student):
+    if not period.name in student.comments.keys():
+        student.comments.update({period.name: [replace_comments_keys_with_translations(comments)]})
+    else:
+        student.comments.update(
+            {period.name: [*student.comments[period.name], replace_comments_keys_with_translations(comments)]}
+        )
 
 
 def _retrieve_scores_entered_manually(period, student, student_scores):
     student_score = student_scores[0]
     score = student_score.score
+    print(student, period, student_score.excused)
     if score or student_score.excused:
-        student.numeric_scores.update(
-            {
-                period.name: {'excused': score, 'reason': student_score.reason}
-                if student_score.excused else {'score': score, 'reason': student_score.reason}}
-        )
+        if not period.name in student.numeric_scores.keys():
+            student.numeric_scores.update(
+                {
+                    period.name: [
+                        {'excused': score, 'reason': student_score.reason}
+                        if student_score.excused else {'score': score, 'reason': student_score.reason}
+                    ]
+                },
+            )
+        else:
+            student.numeric_scores.update(
+                {
+                    period.name: [
+                        *period.numeric_scores[period.name],
+                        {'excused': score, 'reason': student_score.reason}
+                        if student_score.excused else {'score': score, 'reason': student_score.reason}
+                    ]
+                },
+            )
 
 
 def _link_periods_to_specialties(students, students_affectations):
@@ -769,12 +827,22 @@ def _update_student_specialties(student, students_affectations):
             _annotate_non_mandatory_internship(affectation)
             acronym = _get_acronym_with_sequence(affectation)
             specialty_name = affectation['speciality__name']
-            student.specialties.update({
-                affectation['period__name']: {
-                    'acronym': acronym,
-                    'name': specialty_name
-                }
-            })
+            if not affectation['period__name'] in student.specialties.keys():
+                student.specialties.update({
+                    affectation['period__name']: [{
+                        'acronym': acronym,
+                        'name': specialty_name
+                    }]
+                })
+            else:
+                # case for multiple specialties for one period
+                student.specialties.update({
+                    affectation['period__name'] : [
+                        *student.specialties.get(affectation['period__name']),
+                        {'acronym': acronym, 'name': specialty_name}
+                    ]
+                })
+
 
 
 def _get_acronym_with_sequence(affectation):
@@ -795,18 +863,30 @@ def _link_periods_to_organizations(students, students_affectations):
 def update_student_organizations(student, students_affectations):
     for affectation in students_affectations:
         if affectation['student__person'] == student.person.pk:
-            student.organizations.update(
-                {
-                    affectation['period__name']: {
+            if not affectation['period__name'] in student.organizations.keys():
+                student.organizations.update({
+                    affectation['period__name']: [{
                         "reference": "{}{}".format(
                             affectation['speciality__acronym'],
                             affectation['organization__reference']
                         ),
                         "name": affectation['organization__name']
-                    }
-                }
-            )
-
+                    }]
+                })
+            else:
+                # case for multiple organizations for one period
+                student.organizations.update({
+                    affectation['period__name']: [
+                        *student.organizations.get(affectation['period__name']),
+                        {
+                            "reference": "{}{}".format(
+                                affectation['speciality__acronym'],
+                                affectation['organization__reference']
+                            ),
+                            "name": affectation['organization__name']
+                        }
+                    ]
+                })
 
 def _annotate_non_mandatory_internship(affectation):
     if affectation['internship__speciality_id'] is None and affectation['internship__name']:

@@ -23,36 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import json
-
 from django.template.defaulttags import register
 
-
-@register.filter
-def get_item(dictionary, key):
-    val = dictionary.get(key, "")
-    return val
-
-@register.filter
-def get_period_scores_item(dictionary, key):
-    val = dictionary.get(key, [None])
-    return val
-
-@register.filter
-def has_substr(dictionary, key):
-    return "'{}'".format(key) in str(dictionary)
+from internship.models.period import Period
 
 
 @register.filter
-def is_edited(val):
-    return type(val) is dict and 'edited' in val.keys()
-
-
-@register.filter
-def is_excused(val):
-    return type(val) is dict and 'excused' in val.keys()
-
-
-@register.filter
-def to_json(dict):
-    return json.dumps(dict)
+def get_period(pk):
+    return Period.objects.get(pk=pk)
