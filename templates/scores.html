@@ -324,7 +324,7 @@
                                 {% if period.is_preconcours %}
                                     <td class="hidden-sm hidden-xs text-center" colspan="8">
                                         <strong>{% trans "Score comportemental" %} : </strong>
-                                        {% for period_name, period_scores in student.scores %}
+                                        {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
                                                 {{ period_scores.behavior|default:"-" }}
                                             {% endif %}
@@ -332,7 +332,7 @@
                                     </td>
                                     <td class="hidden-sm hidden-xs text-center" colspan="7">
                                         <strong>{% trans "Score de compétence" %} : </strong>
-                                        {% for period_name, period_scores in student.scores %}
+                                        {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
                                                 {{ period_scores.competency|default:"-" }}
                                             {% endif %}
@@ -392,8 +392,8 @@
                                         onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                         onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
                                         {% if period.is_preconcours %}
-                                            {% for period_name, period_scores in student.scores %}
-                                                {% if period_name == period.name %}
+                                            {% for period_name, period_scores, period_aff_index in student.scores %}
+                                                {% if period_name == period.name and forloop.parentloop.counter == period_aff_index %}
                                                     {% if period_scores.behavior and period_scores.competency %}
                                                         {{ period_scores.calculated_global_score|floatformat:1 }}
                                                     {% else %}
@@ -412,7 +412,7 @@
                                           onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')"
                                           >
                                             {% if period.is_preconcours %}
-                                                {% for period_name, period_scores in student.scores %}
+                                                {% for period_name, period_scores, period_aff_index in student.scores %}
                                                     {% if period_name == period.name %}
                                                         {% if period_scores.behavior and period_scores.competency %}
                                                             {{ period_scores.calculated_global_score|floatformat:1 }}
