@@ -1522,6 +1522,9 @@ components:
         competency_score:
           type: integer
           nullable: true
+        preconcours_evaluation_detail:
+          type: object
+          description: Preconcours evaluation detail
     ScoreListGet:
       type: object
       nullable: true

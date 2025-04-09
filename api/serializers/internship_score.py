@@ -43,6 +43,7 @@ class InternshipScoreListSerializer(serializers.ModelSerializer):
             'comments',
             'behavior_score',
             'competency_score',
+            'preconcours_evaluation_detail',
             *_apd_fields()
         )
 
@@ -62,6 +63,7 @@ class InternshipScoreDetailSerializer(serializers.ModelSerializer):
             'student_presence',
             'behavior_score',
             'competency_score',
+            'preconcours_evaluation_detail',
             *_apd_fields()
         )
 
@@ -79,5 +81,6 @@ class InternshipScorePutSerializer(serializers.HyperlinkedModelSerializer):
             'student_presence',
             'behavior_score',
             'competency_score',
+            'preconcours_evaluation_detail',
             *_apd_fields()
         )

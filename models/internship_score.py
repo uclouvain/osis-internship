@@ -94,6 +94,7 @@ class InternshipScore(Model):
 
     comments = JSONField(default=dict, blank=True, verbose_name=_('Comments'))
     objectives = JSONField(default=dict, blank=True, verbose_name=_('Objectives'))
+    preconcours_evaluation_detail = JSONField(default=dict, blank=True, verbose_name=_('Preconcours Evaluation Detail'))
 
     validated = models.BooleanField(default=False, verbose_name=_('Validated'))
     validated_by = models.ForeignKey(
