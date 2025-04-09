@@ -923,6 +923,12 @@ def _filter_students_with_all_grades_submitted(students, periods, filter):
             student_affectation__student__in=students_with_affectations,
             student_affectation__period__pk__in=completed_periods,
             validated=True,
+        ).annotate(
+            period_aff_index=Window(
+                expression=RowNumber(),
+                partition_by=[F('student_affectation__student'), F('student_affectation__period')],
+                order_by=F('student_affectation__id').asc(),
+            )
         ).select_related(
             'student_affectation__student', 'student_affectation__period'
         ).values_list(
@@ -972,6 +978,12 @@ def _filter_students_with_all_apds_validated(cohort, students, periods, filter):
             student_affectation__period__in=periods,
             student_affectation__student__person_id__in=list(persons)).select_related(
             'student_affectation__student__person', 'student_affectation__period__cohort'
+        ).annotate(
+            period_aff_index=Window(
+                expression=RowNumber(),
+                partition_by=[F('student_affectation__student'), F('student_affectation__period')],
+                order_by=F('student_affectation__id').asc(),
+            )
         ).order_by('student_affectation__student__person')
         scores = _group_by_students_and_periods(scores)
         _prepare_students_extra_data(students)
