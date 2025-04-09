@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.16"
+  version: "1.1.17"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -1420,6 +1420,8 @@ components:
           $ref: '#/components/schemas/CohortGet'
         place_evaluation_active:
           type: boolean
+        is_preconcours:
+          type: boolean
     StudentAffectationGet:
       type: object
       properties:
@@ -1514,6 +1516,12 @@ components:
         student_presence:
           type: boolean
           nullable: true
+        behavior_score:
+          type: integer
+          nullable: true
+        competency_score:
+          type: integer
+          nullable: true
     ScoreListGet:
       type: object
       nullable: true
@@ -1572,6 +1580,12 @@ components:
           nullable: true
         comments:
           type: object
+          nullable: true
+        behavior_score:
+          type: integer
+          nullable: true
+        competency_score:
+          type: integer
           nullable: true
     Uuid:
       type: string

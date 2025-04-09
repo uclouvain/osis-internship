@@ -41,6 +41,8 @@ class InternshipScoreListSerializer(serializers.ModelSerializer):
             'validated',
             'student_presence',
             'comments',
+            'behavior_score',
+            'competency_score',
             *_apd_fields()
         )
 
@@ -58,6 +60,8 @@ class InternshipScoreDetailSerializer(serializers.ModelSerializer):
             'objectives',
             'validated',
             'student_presence',
+            'behavior_score',
+            'competency_score',
             *_apd_fields()
         )
 
@@ -73,5 +77,7 @@ class InternshipScorePutSerializer(serializers.HyperlinkedModelSerializer):
             'objectives',
             'validated',
             'student_presence',
+            'behavior_score',
+            'competency_score',
             *_apd_fields()
         )
