@@ -31,6 +31,7 @@ from openpyxl.utils import get_column_letter
 from internship import models
 from internship.models.period import get_effective_periods
 from internship.templatetags.dictionary import is_edited
+from internship.templatetags.list import get_period_score_tuple
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 from osis_common.document.xls_build import save_virtual_workbook
 
@@ -159,15 +160,18 @@ def _complete_student_row_for_all_internships(columns, periods, student):
 
 
 def _append_preconcours_data(columns, period, student):
-    if period.name in student.scores_by_period:
-        period_scores = student.scores_by_period[period.name]
-        score = period_scores.get('score_object')
-        if score:
-            columns.append(score.behavior_score if score.behavior_score is not None else '')
-            columns.append(score.competency_score if score.competency_score is not None else '')
-            columns.append(period_scores.get('calculated_global_score', ''))
-        else:
-            columns.extend(['', '', ''])
+    period_scores = get_period_score_tuple(student.scores, period.name)
+    if period_scores:
+        if isinstance(period_scores, dict):
+            period_scores = [period_scores]
+        behavior = 0
+        competency = 0
+        calculated_global_score = 0
+        for period_score in period_scores:
+            behavior += float(period_score.get('behavior', '')) / len(period_scores)
+            competency += float(period_score.get('competency', '')) / len(period_scores)
+            calculated_global_score += float(period_score.get('calculated_global_score', '')) / len(period_scores)
+        columns.extend([behavior, competency, calculated_global_score])
     else:
         columns.extend(['', '', ''])
 

@@ -376,7 +376,7 @@
                                 {% if comments %}
                                 {% for comment in comments %}
                                 {% if forloop.counter == forloop.parentloop.counter %}
-                                <a data-bs-toggle="modal" data-bs-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comment|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-index="{{ forloop.counter0 }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
+                                <a data-bs-toggle="modal" data-bs-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-preconcours="{{ period.is_preconcours }}" data-score="{{ student.scores|get_period_score_tuple:period.name|to_json }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comment|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-index="{{ forloop.counter0 }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
                                     <icon class="far fa-comment"></icon>
                                 </a>
                                 {% endif %}
@@ -664,19 +664,58 @@
         const organization = $(e.relatedTarget).data('organization');
         const index = $(e.relatedTarget).data('index');
 
-        $(e.currentTarget).find('#modal-student-period').text(`${student} - ${period}`);
+        const preconcours = $(e.relatedTarget).data('preconcours');
+        const score = $(e.relatedTarget).data('score');
 
+        $(e.currentTarget).find('#modal-student-period').text(`${student} - ${period}`);
         $(e.currentTarget).find('#modal-internship').text(`${specialty[index].name} - ${organization[index].name}`);
 
         let commentsModalBody = $(e.currentTarget).find('#modal-comments');
         let commentsModalBodyContent = $('<span/>');
 
-        for (const [key, comment] of Object.entries(comments)) {
-          commentsModalBodyContent.append("" +
-              "<div class='card card-default'>" +
-              `<div class='card-heading'>${key}</div>` +
-              `<div class='card-body'>${comment}</div>`
-          );
+        if (preconcours === 'True'){
+            const behaviorScore = score['behavior']
+            const competencyScore = score['competency']
+            for (const [key, value] of Object.entries(comments)) {
+                if(!isNaN(value)){
+                  commentsModalBodyContent.append("" +
+                  `<div class='card card-default py-1 px-2 d-flex flex-row justify-content-between'>
+                    <div>${key}</div>
+                    <div>${value} / 20</div>
+                   </div>`
+                  )
+                  if(key === 'ENGAGEMENT PERSONNEL DANS LE SERVICE') {
+                    commentsModalBodyContent.append("" +
+                      `<div class='card card-default border border-dark bg-light py-2 px-2 d-flex flex-row justify-content-between fw-bold'>
+                        <div>Cote de comportement</div>
+                        <div>${behaviorScore} / 20</div>
+                       </div>`
+                      )
+                  }
+                  if(key === 'HABILETE TECHNIQUE CLINIQUE') {
+                    commentsModalBodyContent.append("" +
+                      `<div class='card card-default border border-dark bg-light py-2 px-2 d-flex flex-row justify-content-between fw-bold'>
+                        <div>Cote de compétence</div>
+                        <div>${competencyScore} / 20</div>
+                       </div>`
+                      )
+                  }
+                } else {
+                  commentsModalBodyContent.append("" +
+                      "<div class='card card-default'>" +
+                      `<div class='card-heading'>${key}</div>` +
+                      `<div class='card-body'>${value}</div>`
+                  );
+              }
+            }
+        } else {
+            for (const [key, comment] of Object.entries(comments)) {
+              commentsModalBodyContent.append("" +
+                  "<div class='card card-default'>" +
+                  `<div class='card-heading'>${key}</div>` +
+                  `<div class='card-body'>${comment}</div>`
+              );
+            }
         }
         commentsModalBody.html(commentsModalBodyContent);
     });

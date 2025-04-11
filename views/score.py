@@ -627,6 +627,7 @@ def _prepare_students_extra_data(students):
         student.evaluations = {}
         student.comments = {}
         student.remedial_periods_count = 0
+        student.preconcours_score = {}
 
 
 def _compute_evolution_score(students, periods):
@@ -774,7 +775,7 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
             }
         else:
             scores = score_obj.get_scores()
-        comments = score_obj.comments
+        comments = score_obj.preconcours_evaluation_detail if period.is_preconcours else score_obj.comments
         student.scores += (period.name, scores, score_obj.period_aff_index),
         _append_comments(comments, period, student)
         _retrieve_scores_entered_manually(period, student, student_scores)
@@ -1237,7 +1238,16 @@ def replace_comments_keys_with_translations(comments):
         'impr_areas': _('Improvement areas'),
         'suggestions': _('Suggestions'),
         'good_perf_ex': _('Good performance example'),
-        'intermediary_evaluation': _('Intermediary evaluation')
+        'intermediary_evaluation': _('Intermediary evaluation'),
+        'behavior_1': _('RELATIONS AVEC LES PATIENTS'),
+        'behavior_2': _('RELATIONS AVEC LES MEDECINS, LE PERSONNEL'),
+        'behavior_3': _('CONSCIENCE PROFESSIONNELLE'),
+        'behavior_4': _('ENGAGEMENT PERSONNEL DANS LE SERVICE'),
+        'competence_1': _('CAPACITE DE RECUEIL DES DONNEES DE BASE'),
+        'competence_2': _('CONNAISSANCES MEDICALES'),
+        'competence_3': _('JUGEMENT CLINIQUE'),
+        'competence_4': _('HABILETE TECHNIQUE CLINIQUE'),
+        'preconcours_comments': _('Preconcours comments'),
     }
     return {comments_keys_mapping[k]: v for k, v in comments.items()}
 

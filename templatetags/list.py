@@ -44,3 +44,14 @@ def count_multiple_score_for_period(score_periods):
     counts = Counter([el[0] for el in score_periods])
     total = sum(count>1 for count in counts.values())
     return total
+
+@register.filter
+@register.filter
+def get_period_score_tuple(tuples, period):
+    matches = [t[1] for t in tuples if t[0] == period]
+    if not matches:
+        return None
+    elif len(matches) == 1:
+        return matches[0]
+    else:
+        return matches
