@@ -39,7 +39,7 @@ class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
                                     'consecutive_month', 'type', 'internship_evaluated', 'uuid')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
-    list_filter = ('period__cohort', 'choice')
+    list_filter = ('period__cohort', 'choice', 'period__name')
 
 
 class InternshipStudentAffectationStat(SerializableModel):
