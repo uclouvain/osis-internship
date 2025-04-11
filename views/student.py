@@ -506,8 +506,8 @@ def _get_students_with_status(request, cohort, filters):
         'person__first_name'
     ).annotate(
         current_internship=Concat(
-            Subquery(current_internship_subquery.values('speciality__acronym')),
-            Subquery(current_internship_subquery.values('organization__reference'))
+            Subquery(current_internship_subquery.values('speciality__acronym')[:1]),
+            Subquery(current_internship_subquery.values('organization__reference')[:1])
         ),
         already_done_internships_in_parent_cohort_count=Subquery(
             already_done_internships_in_parent_cohort_count, output_field=models.IntegerField()

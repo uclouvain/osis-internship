@@ -1,7 +1,8 @@
-const anchor = location.hash;
+const anchor = `#${document.querySelector('#tabs .nav-link.active').id}`;
 const grades = ['A', 'B', 'C', 'D'];
 
-$(`#tabs a[href="${anchor}"]`).tab('show');
+const activeTab = document.querySelector(`#tabs a[href="${anchor}"]`);
+new bootstrap.Tab(activeTab).show();
 
 if(anchor.indexOf("mapping")!==-1){
     $('#tabs a[href="#mapping"]').tab('show');

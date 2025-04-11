@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 {% load grades %}
@@ -28,12 +28,12 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internship_scores_encoding' cohort_id=cohort.id %}">{% trans 'Scores encoding' context "internship" %}</a></li>
-    <li class="active">
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship_scores_encoding' cohort_id=cohort.id %}">{% trans 'Scores encoding' context "internship" %}</a></li>
+    <li class="breadcrumb-item active">
         {{ score.student_affectation.student.person.last_name }}, {{ score.student_affectation.student.person.first_name }} - {{ score.student_affectation.period.name }} </li>
 {% endblock %}
 
@@ -44,36 +44,91 @@
         <h3>{{ score.student_affectation.period.name }} - {{ score.student_affectation.speciality }} - {{ score.student_affectation.organization }}</h3>
     </div>
 
-    <div class="panel panel-default">
-      <div class="panel-heading">
+    <div class="card card-default">
+      <div class="card-heading">
           {% trans 'Internship grades' %}
-          <span class="pull-right">
+          <span class="float-end">
               <strong>{% trans 'Internship master' %} </strong>: {{ master | default_if_none:'-' }}
               <strong>|</strong>
               <strong>{% trans 'Validated by' %} </strong>: {{ score.validated_by | default_if_none:'-' }}
           </span>
       </div>
-        <div class="panel-body">
+        <div class="card-body">
             <form method="post" action="">
                 {% csrf_token %}
-                <div class="row">
-                    {% for apd in apds %}
-                    <div class="col-md-4 form-group" style="margin-top: 20px; margin-bottom: 20px;">
-                        <label data-toggle="tooltip" for="{{ apd }}" class="col-md-4 text-center" style="line-height:2.5;">
-                            APD {{ apd }}</label>
-                        <div class="col-md-8">
-                        <select style="width: 100%;" class="form-control" name="apd-{{ apd }}" id="input-apd-{{ apd }}">
-                            <option value="">-</option>
-                            {% for grade in available_grades %}
-                                <option value="{{ grade }}"
-                                {% if score and score|get_apd_value:apd == grade %} selected {% endif %}>
-                                    {{ grade }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                <div class="row flex-column gap-3" style="height: 450px;">
+                    {% if score.student_affectation.period.is_preconcours %}
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="form-label col-md-4" style="line-height:2.5;">
+                                    {% trans "Score comportemental" %}
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="number" 
+                                           class="form-control" 
+                                           name="behavior_score" 
+                                           id="input-behavior-score"
+                                           min="0"
+                                           max="20"
+                                           step="1"
+                                           value="{{ score.behavior_score|default:'' }}"
+                                           placeholder="0-20"
+                                           required>
+                                    <small class="form-text text-muted">{% trans "Entrez une note entre 0 et 20" %}</small>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="form-label col-md-4" style="line-height:2.5;">
+                                    {% trans "Score de compétence" %}
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="number" 
+                                           class="form-control" 
+                                           name="competency_score" 
+                                           id="input-competency-score"
+                                           min="0"
+                                           max="20"
+                                           step="1"
+                                           value="{{ score.competency_score|default:'' }}"
+                                           placeholder="0-20"
+                                           required>
+                                    <small class="form-text text-muted">{% trans "Entrez une note entre 0 et 20" %}</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <div class="alert alert-info">
+                                {% trans "La note globale sera calculée comme la moyenne des deux scores" %}
+                                {% if score.calculated_global_score %}
+                                    <br>
+                                    <strong>{% trans "Note globale actuelle" %} : {{ score.calculated_global_score }}</strong>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% for apd in apds %}
+                        <div class="col-md-6">
+                            <div class="row">
+                            <label data-bs-toggle="tooltip" for="{{ apd }}" class="form-label col-md-2 text-center" style="line-height:2.5;">
+                                APD {{ apd }}
+                            </label>
+                            <div class="col-md-6">
+                            <select class="form-select" name="apd-{{ apd }}" id="input-apd-{{ apd }}" >
+                                <option value="">-</option>
+                                {% for grade in available_grades %}
+                                    <option value="{{ grade }}"
+                                    {% if score and score|get_apd_value:apd == grade %} selected {% endif %}>
+                                        {{ grade }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group" style="margin-top: 20px; margin-bottom: 20px;">
@@ -84,14 +139,13 @@
                     </div>
                 </div>
             <br/>
-            <div class="pull-right">
+            <div class="float-end">
                 <a class="btn btn-default" id="lnk_organization_cancel" href="{% url 'internship_scores_encoding' cohort_id=cohort.pk %}">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel'%}</a>
+                    <span class="fa fa-remove" aria-hidden="true"></span> {% trans 'Cancel'%}</a>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_organization_save">
-                    <span class="glyphicon glyphicon-floppy-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
+                    <span class="fa fa-floppy-save" aria-hidden="true"></span> {% trans 'Save'%}</button>
             </div>
             </form>
         </div>
     </div>
 {% endblock %}
-

@@ -1,4 +1,4 @@
-{% load i18n bootstrap3 %}
+{% load i18n django_bootstrap5 %}
 
 <form id="extend_user_account_validity_form" method="post" action="{% url 'extend_validity' cohort_id %}">
 
@@ -8,15 +8,15 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">{% trans "Extend user account validity" %} ?</h4>
+                <h5 class="modal-title">{% trans "Extend user account validity" %} ?</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
                 <p>{% trans "This action will extend all selected master's user account validity by 1 year." %}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "Cancel" %}</button>
-                <button id="extend_validity_btn" type="button" class="btn btn-primary" data-dismiss="modal" onclick="extendUserAccountValidity()">
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal">{% trans "Cancel" %}</button>
+                <button id="extend_validity_btn" type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="extendUserAccountValidity()">
                     {% trans "Extend" %}
                 </button>
             </div>

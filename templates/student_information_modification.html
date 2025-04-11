@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 {% comment "License" %}
     * OSIS stands for Open Student Information System. It's an application
@@ -28,19 +28,19 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_student_resume' cohort_id=cohort.id  %}">{% trans 'Students' %}</a></li>
-    <li class="active">{{ student.person.last_name }} {{ student.person.first_name }}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_student_resume' cohort_id=cohort.id  %}">{% trans 'Students' %}</a></li>
+    <li class="breadcrumb-item active">{{ student.person.last_name }} {{ student.person.first_name }}</li>
 {% endblock %}
 {% block content %}
     <div class="page-header">
         <h2>{{ student.person.last_name }} {{ student.person.first_name }} ({{ information.contest }})</h2>
     </div>
-    <div class="panel panel-default">
-        <div class="panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <br>
             <div class="row">
                 <div class="col-md-3">
@@ -72,21 +72,21 @@
                         <label>{% trans 'Birth date' %}</label><br>
                         {{ student.person.birth_date | default_if_none:'-' }}
                     </div>
-                    {% bootstrap_field form.email form_group_class="form-group col-md-6" label=_("Email") %}
-                    {% bootstrap_field form.phone_mobile form_group_class="form-group col-md-3" label=_("Phone Number / Mobile Number") %}
+                    {% bootstrap_field form.email wrapper_class="form-group col-md-6"  %}
+                    {% bootstrap_field form.phone_mobile wrapper_class="form-group col-md-3"  %}
                 </div>
                 <div class="row">
-                    {% bootstrap_field form.location form_group_class="form-group col-md-3" label=_("Address") %}
-                    {% bootstrap_field form.postal_code form_group_class="form-group col-md-3" label=_("Postal code") %}
-                    {% bootstrap_field form.city form_group_class="form-group col-md-3" label=_("Locality") %}
-                    {% bootstrap_field form.country form_group_class="form-group col-md-3" label=_("Country") %}
+                    {% bootstrap_field form.location wrapper_class="form-group col-md-3"  %}
+                    {% bootstrap_field form.postal_code wrapper_class="form-group col-md-3"  %}
+                    {% bootstrap_field form.city wrapper_class="form-group col-md-3"  %}
+                    {% bootstrap_field form.country wrapper_class="form-group col-md-3"  %}
                 </div>
                 <br>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+                    <span class="fa fa-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
                 <a href="{% url 'internships_student_read' cohort_id=cohort.id student_id=student.id %}" class="btn btn-default" title="{% trans 'Cancel'%}">
-                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel'%}
+                    <span class="fa fa-remove" aria-hidden="true"></span> {% trans 'Cancel'%}
                 </a>
             </form>
         </div>

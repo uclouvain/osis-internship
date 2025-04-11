@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,15 +27,15 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans "Affectation's result" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans "Affectation's result" %}</li>
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" href="{% static 'css/dataTables.bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap5/dataTables.bootstrap5.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/internship.css' %}">
 {% endblock %}
 
@@ -58,7 +58,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h4 class="modal-title">
-                    <span class="glyphicon glyphicon-time">
+                    <span class="fa fa-time">
                     </span> {% trans 'Please wait' %}
                     </h4>
                 </div>
@@ -80,29 +80,29 @@
             <form  method="post" action="{% url 'internship_affectation_generate' cohort_id=cohort.id %}" id="generate_solution">
               {% csrf_token %}
             </form>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             <h4 class="modal-title">{% trans 'Generate solution' %}</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-default" data-dismiss="modal">{% trans 'Cancel' %}</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal">{% trans 'Cancel' %}</button>
             <button type="button" class="btn btn-primary" onclick="$('#generate').modal('hide');$('#PleaseWaitModal').modal('show');$('#generate_solution').submit()">{% trans 'Generate solution' %}</button>
           </div>
         </div>
+        </div>
       </div>
-    </div>
 
-    <div class="panel panel-default panel-affectation">
+    <div class="card card-default panel-affectation">
      {% include "fragment/affectation_panel_heading.html" %}
 
-        <div class="panel-body">
+        <div class="card-body">
             <ul class="nav nav-tabs">
-                <li class="active"><a data-toggle="tab" href="#tab_hospitals">{% trans 'Hospitals' %}</a></li>
-                <li><a href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
-                <li><a href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'Statistics' %}</a></li>
-                <li><a href="{% url 'internship_affectation_errors' cohort_id=cohort.id %}">{% trans 'Errors' %}</a></li>
+                <li class="nav-item"><a class="nav-link active" data-bs-toggle="tab" href="#tab_hospitals">{% trans 'Hospitals' %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'internship_affectation_students' cohort_id=cohort.id %}">{% trans 'Students' %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'internship_affectation_statistics' cohort_id=cohort.id %}">{% trans 'Statistics' %}</a></li>
+                <li class="nav-item"><a class="nav-link" href="{% url 'internship_affectation_errors' cohort_id=cohort.id %}">{% trans 'Errors' %}</a></li>
             </ul>
             <div class="tab-content">
-                <div id="tab_hospitals" class="tab-pane fade in active">
+                <div id="tab_hospitals" class="tab-pane fade show active">
                     <br>
                     <table class="table" id="organizations">
                         <thead class="table-stats-sticky-header">
@@ -155,7 +155,7 @@
 
 {% block script %}
     <script type="text/javascript" src="{% static 'js/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/dataTables.bootstrap.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/bootstrap5/dataTables.bootstrap5.js' %}"></script>
     <script>
         $(document).ready(function() {
             $('#students').DataTable({

@@ -37,18 +37,27 @@ YES_NO_CHOICES = (
 
 
 class OrganizationForm(forms.ModelForm):
-    country = forms.ModelChoiceField(queryset=Country.objects.order_by('name'), required=False)
-    cohort = forms.ModelChoiceField(queryset=Cohort.objects.all(), required=False, disabled=True)
+    country = forms.ModelChoiceField(
+        queryset=Country.objects.order_by('name'), required=False, label=_('Country')
+    )
+    cohort = forms.ModelChoiceField(
+        queryset=Cohort.objects.all(), required=False, disabled=True, label=_('Cohort')
+    )
     fake = forms.TypedChoiceField(
         coerce=lambda x: x == 'True',
         required=False,
         choices=YES_NO_CHOICES,
-        widget=forms.Select(attrs={"class": "form-control"})
+        widget=forms.Select(attrs={"class": "form-select"}),
+        label=_('Fake')
     )
+
+    def __init__(self, *args, **kwargs):
+        super(OrganizationForm, self).__init__(*args, **kwargs)
+        self.fields['location'].label = _('Street and number')
 
     class Meta:
         model = Organization
         fields = ['name', 'website', 'reference', 'location', 'postal_code', 'city', 'country', 'report_period',
-                  'report_start_date', 'report_end_date', 'report_last_name', 'report_first_name', 'report_gender',
+                  'report_start_date', 'report_end_date', 'report_last_name', 'report_first_name',
                   'report_specialty', 'report_birthdate', 'report_email', 'report_noma', 'report_phone',
                   'report_address', 'report_postal_code', 'report_city', 'cohort', 'fake']

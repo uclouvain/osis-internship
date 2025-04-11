@@ -1,7 +1,7 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
-{% load bootstrap3 %}
+{% load django_bootstrap5 %}
 
 
 {% comment "License" %}
@@ -29,12 +29,12 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li><a href="{% url 'internships_periods' cohort_id=cohort.id %}">{% trans 'Periods' %}</a></li>
-    <li class="active">{% trans 'Add period' %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_periods' cohort_id=cohort.id %}">{% trans 'Periods' %}</a></li>
+    <li class="breadcrumb-item active">{% trans 'Add period' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -43,23 +43,24 @@
     <h2>{% trans 'Create a period' %}</h2>
 </div>
 
-<div class="panel panel-default">
-    <div class="panel-body">
+<div class="card card-default">
+    <div class="card-body">
         <form action="{{ url_form }}" method="post">
             {% csrf_token %}
             <div class="row">
-                    {% bootstrap_field form.name form_group_class="form-group col-md-4" label=_("Name") %}
-                    {% bootstrap_field form.date_start form_group_class="form-group col-md-4" label=_("Start date") %}
-                    {% bootstrap_field form.date_end form_group_class="form-group col-md-4" label=_("End date") %}
-                    {% bootstrap_field form.remedial form_group_class="form-group col-md-4" label=_("Remedial") %}
-                    {% bootstrap_field form.exclude_from_assignment form_group_class="form-group col-md-4" label=_("Exclude from assignment") %}
+                    {% bootstrap_field form.name wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.date_start wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.date_end wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.remedial wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.exclude_from_assignment wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.is_preconcours wrapper_class="form-group col-md-4" %}
             </div>
 
             <a href="{% url 'internships_periods' cohort_id=cohort.id %}" class="btn btn-default">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> {% trans 'Cancel' %}
+                <span class="fa fa-remove" aria-hidden="true"></span> {% trans 'Cancel' %}
             </a>
                 <button type="submit" class="btn btn-primary" title="{% trans 'Save'%}" id="bt_interships_new">
-                    <span class="glyphicon glyphicon-save" aria-hidden="true"></span> {% trans 'Save'%}
+                    <span class="fa fa-save" aria-hidden="true"></span> {% trans 'Save'%}
                 </button>
         </form>
     </div>

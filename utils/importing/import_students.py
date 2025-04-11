@@ -74,11 +74,15 @@ def _update_information(information, cohort, row):
 
 def _get_data_differences(old, new):
     old.cohort = new.cohort
-    new_set = set(new.__dict__.items()) - set(old.__dict__.items())
+    new_dict = new.__dict__.copy()
+    old_dict = old.__dict__.copy()
+    new_dict.pop('_state')
+    old_dict.pop('_state')
+    new_set = set(new_dict.items()) - set(old_dict.items())
     data_diff = {
         "data": new,
         "diff_set": new_set,
-        "original_data": old.__dict__,
+        "original_data": old_dict,
         "new_record": False
     } if new_set else None
     return data_diff

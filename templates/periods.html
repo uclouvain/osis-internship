@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,11 +27,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans 'Periods' %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans 'Periods' %}</li>
 {% endblock %}
 
 {% block content %}
@@ -40,13 +40,13 @@
         <h2>{% trans 'Periods' %}</h2>
     </div>
 
-    <div class="panel panel-default">
-        <div class="panel panel-body">
+    <div class="card card-default">
+        <div class="card-body">
             <div class="row">
                 <div class="col-md-12">
                     <a href="{% url 'periods_create' cohort_id=cohort.id %}" id="lnk_internship_create"
                        class="btn btn-default" role="button" title="Create an internship">
-                        <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>
+                        <span class="fa fa-plus" aria-hidden="true"></span>
                         {% trans 'Add period' %}
                     </a>
                 </div>
@@ -57,6 +57,7 @@
                 <thead>
                     <tr>
                         <th>{% trans 'Name' %}</th>
+                        <th>{% trans 'Type' %}</th>
                         <th>{% trans 'Start date' %}</th>
                         <th>{% trans 'End date' %}</th>
                         <th> </th>
@@ -66,18 +67,23 @@
                     {%for period in periods%}
                         <tr>
                             <td>{{period.name}}</td>
+                            <td>
+                                {% if period.is_preconcours %}
+                                    <span class="badge bg-info">{% trans 'Pré-concours' %}</span>
+                                {% endif %}
+                            </td>
                             <td>{{period.date_start}}</td>
                             <td>{{period.date_end}}</td>
                             <td>
                                 <a class="btn btn-warning" id="lnk_speciality_{{speciality.id}}"
                                    href="{% url 'period_get' cohort_id=cohort.id period_id=period.id %}">
-                                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>
+                                    <span class="fa fa-pencil text-white" aria-hidden="true"></span>
                                 </a>
                                 <a class="btn btn-danger" id="lnk_speciality_{{speciality.id}}"
                                    data-href="{% url 'period_delete' cohort_id=cohort.id period_id=period.id %}"
-                                   data-toggle="modal" data-target="#delete_modal"
+                                   data-bs-toggle="modal" data-bs-target="#delete_modal"
                                    data-value="{{period.name}}">
-                                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>
+                                    <span class="fa fa-trash text-white" aria-hidden="true"></span>
                                 </a>
                             </td>
                         </tr>

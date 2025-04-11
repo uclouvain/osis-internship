@@ -33,6 +33,10 @@ def get_item(dictionary, key):
     val = dictionary.get(key, "")
     return val
 
+@register.filter
+def get_period_scores_item(dictionary, key):
+    val = dictionary.get(key, [None])
+    return val
 
 @register.filter
 def has_substr(dictionary, key):

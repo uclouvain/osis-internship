@@ -31,6 +31,7 @@ from openpyxl.utils import get_column_letter
 from internship import models
 from internship.models.period import get_effective_periods
 from internship.templatetags.dictionary import is_edited
+from internship.templatetags.list import get_period_score_tuple
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
 from osis_common.document.xls_build import save_virtual_workbook
 
@@ -76,13 +77,18 @@ def _add_sheet_content(internship, periods, students, worksheet):
 
 def _complete_student_row_by_internship(columns, internship, periods, student):
     for period in periods:
-        if period.name in student.specialties.keys() and student.specialties[period.name]['acronym'] == internship:
-            _append_row_data(columns, period, student)
+        if period.name in student.specialties.keys():
+            if student.specialties[period.name][0]['acronym'] == internship:
+                _append_row_data(columns, period, student)
 
 
 def _append_row_data(columns, period, student):
     if period.name in student.organizations.keys():
-        columns.append(student.organizations[period.name]['reference'])
+        if len(student.specialties[period.name]) > 1:
+            multiple_specialties = '/'.join([sp['reference'] for sp in student.organizations[period.name]])
+            columns.append(multiple_specialties)
+        else:
+            columns.append(student.organizations[period.name][0]['reference'])
     else:
         columns.append('')
     if period.name in student.periods_scores.keys():
@@ -97,10 +103,14 @@ def _append_row_data(columns, period, student):
 
 
 def _retrieve_score(period_score):
+    if len(period_score) > 1:
+        return sum(period_score) / len(period_score)
+    else:
+        period_score = period_score[0]
     if _is_dict_with_key(period_score, 'edited'):
-        if _is_dict_with_key(period_score['edited'], 'excused'):
-            return period_score['edited']['excused'] or ''
-        return period_score['edited']['score'] or ''
+        if _is_dict_with_key(period_score['edited'][0], 'excused'):
+            return period_score['edited'][0]['excused'] or ''
+        return period_score['edited'][0]['score'] or ''
     else:
         return period_score
 
@@ -135,10 +145,35 @@ def _append_evolution_score(columns, score):
 def _complete_student_row_for_all_internships(columns, periods, student):
     for period in periods:
         if period.name in student.specialties.keys():
-            columns.append(student.specialties[period.name]['acronym'])
+            if len(student.specialties[period.name]) > 1:
+                multiple_specialties = '/'.join([sp['acronym'] for sp in student.specialties[period.name]])
+                columns.append(multiple_specialties)
+            else:
+                columns.append(student.specialties[period.name][0]['acronym'])
         else:
             columns.append('')
-        _append_row_data(columns, period, student)
+            
+        if period.is_preconcours:
+            _append_preconcours_data(columns, period, student)
+        else:
+            _append_row_data(columns, period, student)
+
+
+def _append_preconcours_data(columns, period, student):
+    period_scores = get_period_score_tuple(student.scores, period.name)
+    if period_scores:
+        if isinstance(period_scores, dict):
+            period_scores = [period_scores]
+        behavior = 0
+        competency = 0
+        calculated_global_score = 0
+        for period_score in period_scores:
+            behavior += float(period_score.get('behavior', '')) / len(period_scores)
+            competency += float(period_score.get('competency', '')) / len(period_scores)
+            calculated_global_score += float(period_score.get('calculated_global_score', '')) / len(period_scores)
+        columns.extend([behavior, competency, calculated_global_score])
+    else:
+        columns.extend(['', '', ''])
 
 
 def _add_sheet_header(worksheet):
@@ -154,9 +189,17 @@ def _add_header(cohort, periods, worksheet):
     column_titles = [_("Name"), _("First name"), _("NOMA")]
     all_periods_count = get_effective_periods(periods.first().cohort.pk).count()
     for period in periods:
-        column_titles.append(period.name)
-        column_titles.append("{}+".format(period.name))
-        column_titles.append("{}-Score".format(period.name))
+        if period.is_preconcours:
+            column_titles.extend([
+                period.name,
+                f"{period.name} - {_('Behavior')}",
+                f"{period.name} - {_('Competency')}",
+                f"{period.name} - {_('Global')}"
+            ])
+        else:
+            column_titles.append(period.name)
+            column_titles.append("{}+".format(period.name))
+            column_titles.append("{}-Score".format(period.name))
     if periods.count() == all_periods_count:
         column_titles.append(_("Evolution"))
         column_titles.append(_("Evolution computed"))

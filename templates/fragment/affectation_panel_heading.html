@@ -24,19 +24,22 @@
 * see http://www.gnu.org/licenses/.
 {% endcomment %}
 
-<div class="panel-heading">
+<div class="card-heading">
     {% if not cohort.is_parent %}
     <div class="row">
         <div class="col-md-3">
             {% if not cohort.is_published  %}
-                <button type="submit" class="btn btn-primary" title="{% trans 'Send'%}" id="bt_interships_save" onclick="$('#generate').modal('show');">
-                    <span class="glyphicon glyphicon-random" aria-hidden="true"></span> {% trans 'Generate solution' %}
+                <button type="submit" class="btn btn-primary" title="{% trans 'Import affectations' %}" id="bt_import_affectations" data-bs-toggle="modal" data-bs-target="#import_affectations_modal">
+                    <span class="fa fa-upload" aria-hidden="true"></span> {% trans 'Import affectations' %}
+                </button>
+                <button type="submit" class="btn btn-primary" title="{% trans 'Generate solution'%}" id="bt_generate_solution" onclick="$('#generate').modal('show');">
+                    <span class="fa fa-random" aria-hidden="true"></span> {% trans 'Generate solution' %}
                 </button>
             {% endif %}
         </div>
         <div class="col-md-5">
             <span style="display: inline-block; padding: 6px 0px;">{% trans 'Latest generation start' %} :
-                <span class="badge badge-info">
+                <span class="badge bg-info">
                     {{ latest_generation.start_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }}
                     {{ latest_generation.start_date_time| default_if_none:''|time:"TIME_FORMAT" }}
                 </span>
@@ -44,12 +47,48 @@
         </div>
         <div class="col-md-4">
                         <span style="display: inline-block; padding: 6px 0px;">{% trans 'Latest generation end' %} :
-                <span class="badge badge-info">
+                <span class="badge bg-info">
                     {{ latest_generation.end_date_time| default_if_none:''|date:"SHORT_DATE_FORMAT" }}
                     {{ latest_generation.end_date_time| default_if_none:''|time:"TIME_FORMAT" }}
                 </span>
             </span>
         </div>
+    </div>
+
+     <div class="modal fade" tabindex="-1" role="dialog" id="import_affectations_modal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title">{% trans 'Import affectations' %}</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form  method="post" action="{% url 'internship_affectation_import' cohort_id=cohort.id %}" enctype="multipart/form-data" id="import_affectations_form">
+              {% csrf_token %}
+              <div class="mb-3">
+                <label for="affectation_file" class="form-label">{% trans 'Affectations File' %}</label>
+                <input class="form-control" type="file" id="affectation_file" name="affectation_file">
+              </div>
+              <div class="mb-3">
+                <label for="pre_concours_period" class="form-label">{% trans 'Pre-concours Period' %}</label>
+                <select class="form-select" id="pre_concours_period" name="pre_concours_period" required>
+                  {% for period in periods %}
+                    {% if period.is_preconcours %}
+                    <option value="{{ period.id }}">{{ period.name }}</option>
+                    {% endif %}
+                  {% endfor %}
+                </select>
+              </div>
+              <div id="import_errors" class="text-danger">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans 'Close' %}</button>
+            <button type="button" class="btn btn-primary" onclick="$('#import_affectations_form').submit();">{% trans 'Import' %}</button>
+          </div>
+        </div>
+      </div>
     </div>
     {% endif %}
 </div>

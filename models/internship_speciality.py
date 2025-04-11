@@ -26,6 +26,7 @@
 from django.contrib import admin
 from django.core.exceptions import ObjectDoesNotExist
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 from osis_common.models.serializable_model import SerializableModel, SerializableModelAdmin
 
@@ -37,14 +38,16 @@ class InternshipSpecialityAdmin(SerializableModelAdmin):
 
 
 class InternshipSpeciality(SerializableModel):
-    name = models.CharField(max_length=125)
-    acronym = models.CharField(max_length=125, null=True, blank=True)
-    mandatory = models.BooleanField(default=False)
-    sequence = models.IntegerField(blank=True, null=True)
-    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE)
-    selectable = models.BooleanField(default=True)
+    name = models.CharField(max_length=125, verbose_name=_('Name'))
+    acronym = models.CharField(max_length=125, null=True, blank=True, verbose_name=_('Acronym'))
+    mandatory = models.BooleanField(default=False, verbose_name=_('Mandatory'))
+    sequence = models.IntegerField(blank=True, null=True, verbose_name=_('Sequence'))
+    cohort = models.ForeignKey('internship.Cohort', on_delete=models.CASCADE, verbose_name=_('Cohort'))
+    selectable = models.BooleanField(default=True, verbose_name=_('Selectable'))
 
-    parent = models.ForeignKey("InternshipSpeciality", on_delete=models.CASCADE, null=True, blank=True)
+    parent = models.ForeignKey(
+        "InternshipSpeciality", on_delete=models.CASCADE, null=True, blank=True, verbose_name=_('Parent'),
+    )
 
     def acronym_with_sequence(self):
         if self.sequence:

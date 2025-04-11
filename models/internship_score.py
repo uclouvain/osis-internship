@@ -26,8 +26,10 @@
 import uuid as uuid
 
 from django.contrib.admin import ModelAdmin
+from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import Model, JSONField
+from django.utils.translation import gettext_lazy as _
 
 APD_NUMBER = 15
 MIN_APDS = 5
@@ -40,10 +42,16 @@ class InternshipScoreAdmin(ModelAdmin):
     score_fields = [f'APD_{index}' for index in range(1, APD_NUMBER+1)]
     list_display = (
         'student', 'period', 'cohort',
-        *score_fields, 'score', 'excused', 'reason', 'validated',
+        *score_fields, 'score', 'behavior_score', 'competency_score', 'calculated_global_score',
+        'excused', 'reason', 'validated',
     )
     raw_id_fields = ('student_affectation', 'validated_by')
-    list_filter = ('student_affectation__period__cohort', 'validated', 'student_affectation__speciality__name')
+    list_filter = (
+        'student_affectation__period__cohort',
+        'student_affectation__period__is_preconcours',
+        'validated',
+        'student_affectation__speciality__name'
+    )
     search_fields = [
         'student_affectation__student__person__first_name',
         'student_affectation__student__person__last_name'
@@ -69,7 +77,8 @@ class InternshipScore(Model):
         'internship.InternshipStudentAffectationStat',
         on_delete=models.CASCADE,
         related_name='score',
-        null=True
+        null=True,
+        verbose_name=_('Student Affectation'),
     )
 
     for index in range(1, APD_NUMBER+1):
@@ -79,17 +88,39 @@ class InternshipScore(Model):
             null=True,
             blank=True,
         )
-    score = models.IntegerField(null=True, blank=True)
-    excused = models.BooleanField(default=False)
-    reason = models.CharField(max_length=255, null=True, blank=True)
+    score = models.IntegerField(null=True, blank=True, verbose_name=_('Score'))
+    excused = models.BooleanField(default=False, verbose_name=_('Excused'))
+    reason = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Reason'))
 
-    comments = JSONField(default=dict, blank=True)
-    objectives = JSONField(default=dict, blank=True)
+    comments = JSONField(default=dict, blank=True, verbose_name=_('Comments'))
+    objectives = JSONField(default=dict, blank=True, verbose_name=_('Objectives'))
+    preconcours_evaluation_detail = JSONField(default=dict, blank=True, verbose_name=_('Preconcours Evaluation Detail'))
 
-    validated = models.BooleanField(default=False)
-    validated_by = models.ForeignKey('base.Person', blank=True, null=True, on_delete=models.CASCADE)
+    validated = models.BooleanField(default=False, verbose_name=_('Validated'))
+    validated_by = models.ForeignKey(
+        'base.Person', blank=True, null=True, on_delete=models.CASCADE, verbose_name=_('Validated by')
+    )
 
-    student_presence = models.BooleanField(null=True)
+    student_presence = models.BooleanField(null=True, verbose_name=_('Student presence'))
+
+    behavior_score = models.IntegerField(
+        null=True, 
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(20)
+        ],
+        verbose_name=_("Behavior score")
+    )
+    competency_score = models.IntegerField(
+        null=True, 
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(20)
+        ],
+        verbose_name=_("Skill score")
+    )
 
     def __str__(self):
         return f'{self.student_affectation} - {self.get_scores()}'
@@ -108,3 +139,14 @@ class InternshipScore(Model):
     @property
     def cohort(self):
         return self.period.cohort if self.period else None
+
+    @property
+    def is_preconcours(self):
+        return self.period.is_preconcours if self.period else False
+
+    @property
+    def calculated_global_score(self):
+        """Calculate global score as average of behavior and competency scores for preconcours periods"""
+        if not self.is_preconcours or not all([self.behavior_score, self.competency_score]):
+            return None
+        return (self.behavior_score + self.competency_score) / 2

@@ -1,4 +1,4 @@
-{% extends "layout.html" %}
+{% extends "bootstrap5/layout.html" %}
 {% load static %}
 {% load i18n %}
 
@@ -27,11 +27,11 @@
 {% endcomment %}
 
 {% block breadcrumb %}
-    <li><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
-    <li id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
-    <li><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
-    <li><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
-    <li class="active">{% trans "All internships" %}</li>
+    <li class="breadcrumb-item"><a href="{% url 'studies' %}">{% trans 'Student path' %}</a></li>
+    <li class="breadcrumb-item" id="lnk_cohorts_management"><a href="{% url 'cohorts_management' %}">{% trans "Cohorts management" %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internship' %}">{% trans 'Internships management' %}</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'internships_home' cohort_id=cohort.id %}">{{ cohort.name }}</a></li>
+    <li class="breadcrumb-item active">{% trans "All internships" %}</li>
 {% endblock %}
 {% block content %}
     <div class="page-header">
@@ -43,7 +43,7 @@
             <div class="col-md-6">
                 <div class="form-group">
                     <label for="organization_sort">{% trans 'Hospital' %}</label>
-                    <select name="organization_sort" id="organization_sort" onChange="javascript: this.form.submit();" class="form-control">
+                    <select  name="organization_sort" id="organization_sort" onChange="javascript: this.form.submit();"  class="form-select"  >
                         <option value="0">{% trans 'Choose a hospital' %}</option>
                         {% for organization in organizations %}
                             <option value="{{ organization.name }}"
@@ -56,104 +56,97 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <button type="button" class="btn btn-default pull-right" data-toggle="modal" data-target="#pnl_upload_internship"
+                <button type="button" class="btn btn-default float-end" data-bs-toggle="modal" data-bs-target="#pnl_upload_internship"
                         id="bt_upload_score_modal" style="margin-top: 26px;">
-                    <span class="glyphicon glyphicon-import" aria-hidden="true"></span>
+                    <span class="fa fa-file-import" aria-hidden="true"></span>
                     {% trans "Import" %}
                 </button>
             </div>
         </div>
     </form>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <ul class="nav nav-tabs">
-                {% for luy in all_speciality %}
-                    <li
+    <div class="card card-default">
+        <div class="card-body">
+            <nav>
+                <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                    {% for luy in all_speciality %}
+                        <a class="nav-link
                             {% if not speciality_sort_value %}
                                 {% if active_tab|add:"0" == luy.id %}
-                                    class="active"
+                                    active
                                 {% endif %}
-                            {%endif%}
-                    >
-                        <a href="{% url 'internships' cohort_id=cohort.id specialty_id=luy.id %}">
+                            {%endif%}"
+                            href="{% url 'internships' cohort_id=cohort.id specialty_id=luy.id %}">
                             {{luy.name}}
                         </a>
-                    </li>
-                {% endfor %}
-                <li
-                        {%if speciality_sort_value%}
-                            class="active"
-                        {%endif%}
-                ><a data-toggle="tab" href="#tab_choice">{% trans 'Internship choice' %}</a></li>
-            </ul>
+                    {% endfor %}
+                    <a class="nav-link {% if speciality_sort_value %} active {% endif %}"
+                       href="{% url 'internships' cohort_id=cohort.id %}?speciality_sort=1">
+                        {% trans 'Internship choice' %}
+                    </a>
+                </div>
+            </nav>
             {% csrf_token %}
-            <div class="tab-content">
+            <div class="tab-content" id="nav-tabContent">
                 {% for luy in all_speciality %}
-                    <div id="tab_{{luy.tab}}" class="tab-pane fade
+                    <div id="tab_{{luy.tab}}" role="tabpanel" class="tab-pane fade
                                               {% if not speciality_sort_value %}
                                                 {% if active_tab|add:"0" == luy.id %}
-                                                  in active
+                                                  show active
                                                 {% endif %}
                                               {%endif%}">
                         <h3>{{luy.name}}</h3>
-                        <div class="panel panel-default">
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane fade in active" id="profile">
-                                    <table class="table table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th align="center">{% trans 'Hospital' %}</th>
-                                            <th align="center">{% trans 'Maximum number of students' %}</th>
-                                            <th align="center">{% trans 'Number of first choices' %}</th>
-                                            <th align="center">{% trans 'Number of other choices' %}</th>
-                                            <th align="center">{% trans 'Details' %}</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for internship in all_internships %}
-                                            {% if internship.speciality == luy %}
-                                                <tr>
-                                                    <td>
-                                                        {{ internship.organization.reference }} - {{ internship.organization }}
-                                                    </td>
-                                                    <td align="center">
-                                                        {{ internship.maximum_enrollments }}
-                                                    </td>
-                                                    <td align="center">
-                                                        {{ internship.number_first_choice }}
-                                                    </td>
-                                                    <td align="center">
-                                                        {{ internship.number_other_choice }}
-                                                    </td>
-                                                    <td align="center">
-                                                        <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
-                                                           href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">
-                                                          <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
-                                                        </a>
-                                                    </td>
-                                                </tr>
-                                            {% endif %}
-                                        {% endfor %}
-                                        </tbody>
-                                    </table>
-                                </div>
+                        <div class="card card-default">
+                                <table class="table table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th align="center">{% trans 'Hospital' %}</th>
+                                        <th align="center">{% trans 'Maximum number of students' %}</th>
+                                        <th align="center">{% trans 'Number of first choices' %}</th>
+                                        <th align="center">{% trans 'Number of other choices' %}</th>
+                                        <th align="center">{% trans 'Details' %}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for internship in all_internships %}
+                                        {% if internship.speciality == luy %}
+                                            <tr>
+                                                <td>
+                                                    {{ internship.organization.reference }} - {{ internship.organization }}
+                                                </td>
+                                                <td align="center">
+                                                    {{ internship.maximum_enrollments }}
+                                                </td>
+                                                <td align="center">
+                                                    {{ internship.number_first_choice }}
+                                                </td>
+                                                <td align="center">
+                                                    {{ internship.number_other_choice }}
+                                                </td>
+                                                <td align="center">
+                                                    <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
+                                                       href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">
+                                                      <span class="fa fa-search text-white" aria-hidden="true"></span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
                             </div>
-                        </div>
                     </div>
                 {%endfor%}
-                <div id="tab_choice" class="tab-pane fade
-            {% if speciality_sort_value %}
-              in active
-            {%endif%}">
-                    <div class="panel panel-default">
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane fade in active" id="profile">
+                    <div id="tab_choice" role="tabpanel" class="tab-pane fade
+                    {% if speciality_sort_value %}
+                      show active
+                    {%endif%}">
+                    <div class="card card-default">
                                 <table class="table table-hover">
                                     <form action="{% url 'internships' cohort_id=cohort.id %}" method="get" class="form-horizontal">
-                                                <div class="input-group" style="padding: 15px;">
-                                                    <label class="control-label" for="speciality_sort">{% trans 'Internship' %}</label>
-                                                    <select name="speciality_sort" onChange="javascript: this.form.submit();" class="form-control">
+                                                <div class="input-group p-3 d-flex justify-content-between align-items-center gap-3">
+                                                    <label class="control-label m-0" for="speciality_sort">{% trans 'Internship' %}</label>
+                                                    <select  name="speciality_sort" onChange="javascript: this.form.submit();"  class="form-select"  >
                                                         <option value="0">--</option>
                                                         <option value="all" {% if speciality_sort_value == "all" %}selected{% endif %}>{% trans 'All internships' %}</option>
                                                         {% for spec in non_mandatory_speciality %}
@@ -199,7 +192,7 @@
                                             <td align="center">
                                                 <a class="btn btn-info" target="_blank" id="lnk_students_choice{{internship.id}}"
                                                    href="{% url 'internship_detail_student_choice' cohort_id=cohort.id offer_id=internship.id %}">
-                                <span class="glyphicon glyphicon-search" aria-hidden="true">
+                                <span class="fa fa-search text-white" aria-hidden="true">
                                 </span>
                                                 </a>
                                             </td>
@@ -208,8 +201,6 @@
                                     {% endfor %}
                                     </tbody>
                                 </table>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -221,8 +212,8 @@
                     <form method="post" enctype="multipart/form-data" action="{% url 'upload_offers' cohort_id=cohort.id %}">
                         {% csrf_token %}
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title" id="uploadScroresLabel">{% trans 'Internships injection' %}</h4>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" id="bt_close_upload_score_modal"></button>
                         </div>
                         <div class="modal-body">
                             <div class="form-group">
@@ -232,7 +223,7 @@
                             <p class="help-block">{% trans "Select a xlsx file for the internships' injection" %}</p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal" id="bt_cancel_upload_score_modal">{% trans 'Cancel' %}</button>
+                            <button type="button" class="btn btn-default" data-bs-dismiss="modal" id="bt_cancel_upload_score_modal">{% trans 'Cancel' %}</button>
                             <input type="submit" class="btn btn-primary" value="{% trans 'Inject'%}" onclick="document.getElementById('files').style.visibility='visible'" id="bt_submit_upload_score_modal"/>
                         </div>
                     </form>
