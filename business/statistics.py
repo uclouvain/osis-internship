@@ -277,22 +277,23 @@ def load_solution_table(data, periods):
         temp_internship_table[organization_ref][acronym][period_name]['after'] += pid.number_places
 
     for item in data:
-        # Update the number of available places for given organization, speciality, period
-        if item.organization.reference not in temp_internship_table or \
-                item.speciality.acronym not in temp_internship_table[item.organization.reference]:
-            continue
-        temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['after'] -= 1
-        # Update the % of takes places
-        if temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] > 0:
-            temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = \
-                temp_internship_table[
-                    item.organization.reference
-                ][item.speciality.acronym][item.period.name]['after'] / \
-                temp_internship_table[
-                    item.organization.reference
-                ][item.speciality.acronym][item.period.name]['before'] * 100
-        else:
-            temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = 0
+        if item.organization or item.speciality:
+            # Update the number of available places for given organization, speciality, period
+            if item.organization.reference not in temp_internship_table or \
+                    item.speciality.acronym not in temp_internship_table[item.organization.reference]:
+                continue
+            temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['after'] -= 1
+            # Update the % of takes places
+            if temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] > 0:
+                temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = \
+                    temp_internship_table[
+                        item.organization.reference
+                    ][item.speciality.acronym][item.period.name]['after'] / \
+                    temp_internship_table[
+                        item.organization.reference
+                    ][item.speciality.acronym][item.period.name]['before'] * 100
+            else:
+                temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = 0
     # Sort all student by the score (descending order)
     sorted_internship_table = []
     for organization_ref, specialities in temp_internship_table.items():
