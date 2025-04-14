@@ -23,6 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from django.db.models import Window, F
+from django.db.models.functions import RowNumber
 from django.template.loader import render_to_string
 from weasyprint import HTML
 
@@ -38,7 +40,13 @@ def generate_pdf(cohort, periods, student, internships, mapping, extra_data):  #
         student_affectation__period__in=periods,
     ).select_related(
         'student_affectation__student__person', 'student_affectation__period__cohort'
-    ).order_by('student_affectation__period')
+    ).annotate(
+        period_aff_index=Window(
+            expression=RowNumber(),
+            partition_by=[F('student_affectation__student'), F('student_affectation__period')],
+            order_by=F('student_affectation__id').asc(),
+        )
+    ).order_by('student_affectation__period', 'period_aff_index')
 
     students_affectations = InternshipStudentAffectationStat.objects.filter(
         student__person=student.person,
