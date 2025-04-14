@@ -313,7 +313,7 @@
             }).then(response => response.json()).then(data => {
                 if(!data['err'] && data['source'] !== 'INTERNSHIP'){
                     personData = data;
-                    $('#fillPersonDataModal').modal();
+                    new bootstrap.Modal('#fillPersonDataModal').show()
                 }
             });
         }
