@@ -665,7 +665,11 @@
         const index = $(e.relatedTarget).data('index');
 
         const preconcours = $(e.relatedTarget).data('preconcours');
-        const score = $(e.relatedTarget).data('score');
+
+        let score = $(e.relatedTarget).data('score');
+        if(Array.isArray(score)){
+            score = score[index]
+        }
 
         $(e.currentTarget).find('#modal-student-period').text(`${student} - ${period}`);
         $(e.currentTarget).find('#modal-internship').text(`${specialty[index].name} - ${organization[index].name}`);

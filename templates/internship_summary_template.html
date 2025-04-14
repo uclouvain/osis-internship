@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load list %}
 {% load dictionary %}
 {% load master %}
 {% load mapping %}
@@ -31,6 +32,11 @@
 
 <link rel="stylesheet" href="{% static 'fontawesome-pro-6.5.1-web/css/all.min.css' %}"/>
 <link rel="stylesheet" href="{% static 'css/bootstrap5/bootstrap-osis.min.css' %}"/>
+
+<!-- FOR DEBUG PURPOSE ONLY -->
+<!-- <link rel="stylesheet" href="http://127.0.0.1:8000/static/css/bootstrap5/bootstrap-osis.min.css">
+<link rel="stylesheet" href="http://127.0.0.1:8000/static/exports/common.css">
+<link rel="stylesheet" href="http://127.0.0.1:8000/static/fontawesome-pro-6.5.1-web/css/all.min.css"> -->
 
 <style>
     @page {
@@ -283,10 +289,13 @@
 
               {% for score in internships_scores %}
 
-                {% with student.specialties|get_item:score.period.name as specialty %}
-                {% with student.organizations|get_item:score.period.name as organization %}
+                {% iter_score_periods periods student.scores score.period.name as iter_score_periods %}
 
-                {% if organization %}
+                {% for iter in iter_score_periods %}
+                {% with student.specialties|get_item:score.period.name|get_item_at_index:forloop.counter0 as specialty %}
+                {% with student.organizations|get_item:score.period.name|get_item_at_index:forloop.counter0 as organization %}
+
+                {% if organization and forloop.counter == score.period_aff_index %}
                 <tr>
                     <td style="text-align: center;">{{ score.period.name }}</td>
                     <td>{{ specialty.name }}</td>
@@ -299,20 +308,39 @@
                                 <td class="hidden-sm hidden-xs text-center">-</td>
                             {% endfor %}
                         {% endif %}
-                        {% for key, scores in student.scores %}
-                            {% if key|slugify == score.period|slugify %}
-                                {% for score in scores %}
-                                    {% if score %}
-                                        <td class="apd text-center
-                                            {% if not score|is_valid:forloop.counter0 %}
-                                             text-bold text-danger
-                                            {% endif %}">
-                                            {{ score }}
-                                        </td>
-                                    {% else %}
-                                        <td class="text-center">-</td>
-                                    {% endif %}
-                                {% endfor %}
+                        {% for key, scores, period_aff_index in student.scores %}
+                            {% if key|slugify == score.period|slugify and forloop.parentloop.counter == period_aff_index %}
+                                {% if score.period.is_preconcours %}
+                                    <td class="hidden-sm hidden-xs text-center" colspan="8">
+                                        <strong>{% trans "Score comportemental" %} : </strong>
+                                        {% for period_name, period_scores, period_aff_index in student.scores %}
+                                            {% if period_name == score.period.name and forloop.parentloop.parentloop.counter == period_aff_index%}
+                                                {{ period_scores.behavior|default:"-" }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="hidden-sm hidden-xs text-center" colspan="7">
+                                        <strong>{% trans "Score de compétence" %} : </strong>
+                                        {% for period_name, period_scores, period_aff_index in student.scores %}
+                                            {% if period_name == score.period.name and forloop.parentloop.parentloop.counter == period_aff_index%}
+                                                {{ period_scores.competency|default:"-" }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                {% else %}
+                                    {% for score in scores %}
+                                        {% if score %}
+                                            <td class="apd text-center
+                                                {% if not score|is_valid:forloop.counter0 %}
+                                                 text-bold text-danger
+                                                {% endif %}">
+                                                {{ score }}
+                                            </td>
+                                        {% else %}
+                                            <td class="text-center">-</td>
+                                        {% endif %}
+                                    {% endfor %}
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
 
@@ -321,10 +349,22 @@
                     <td class="text-center">
                         {% with student.periods_scores|get_item:score.period.name as computed_score %}
                             {% if extra_data.with_scores %}
-                                {% if not computed_score|is_edited %}
-                                    {{ computed_score }}
+                                {% if score.period.is_preconcours %}
+                                    {% for period_name, period_scores, period_aff_index in student.scores %}
+                                        {% if period_name == score.period.name and forloop.parentloop.counter == period_aff_index %}
+                                            {% if period_scores.behavior and period_scores.competency %}
+                                                {{ period_scores.calculated_global_score|floatformat:1 }}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endfor %}
                                 {% else %}
-                                    {{ computed_score.edited.score }}
+                                    {% if not computed_score.0|is_edited %}
+                                        {{ computed_score.0 }}
+                                    {% else %}
+                                        {{ computed_score.0.edited.0.score }}
+                                    {% endif %}
                                 {% endif %}
                             {% else %}
                                 {% trans 'Pending' %}
@@ -339,7 +379,7 @@
 
               {% endwith %}
               {% endwith %}
-
+              {% endfor %}
               {% endfor %}
             </tbody>
           </table>
@@ -364,8 +404,13 @@
 
             {% for score in internships_scores %}
 
-            {% with student.specialties|get_item:score.period.name as specialty %}
-            {% with student.organizations|get_item:score.period.name as organization %}
+                {% iter_score_periods periods student.scores score.period.name as iter_score_periods %}
+
+                {% for iter in iter_score_periods %}
+                {% with student.specialties|get_item:score.period.name|get_item_at_index:forloop.counter0 as specialty %}
+                {% with student.organizations|get_item:score.period.name|get_item_at_index:forloop.counter0 as organization %}
+
+                {% if organization and forloop.counter == score.period_aff_index %}
                 <div class="card card-default card-horizontal" style="break-inside: avoid;">
                     <div class="card-heading">
                         <div class="detail-period-line">
@@ -381,7 +426,11 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        {% with score.comments|keys_to_labels as comments %}
+                            {% if score.period.is_preconcours %}
+                                <h5>{% trans "Pre-competition internship comments" %}</h5>
+                                <p>{{ score.preconcours_evaluation_detail.preconcours_comments }}</p>
+                            {% else %}
+                            {% with score.comments|keys_to_labels as comments %}
                             {% for key, comment in comments.items %}
                                 <div class="{% if forloop.counter|divisibleby:2 %} row {% endif %}">
                                 <div class="col-xs-6">
@@ -394,14 +443,17 @@
                                     <p>{% trans "No comments provided by the internship's master" %}</p>
                                 </div>
                             {% endfor %}
-                        {% endwith %}
+                            {% endwith %}
+                            {% endif %}
                     </div>
                 </div>
+                {% endif %}
 
             {% endwith %}
             {% endwith %}
 
             {% endfor %}
+        {% endfor %}
 
     <div style="break-before: avoid;">
         {% get_certification %}
