@@ -28,10 +28,10 @@
     {% if not cohort.is_parent %}
     <div class="row">
         <div class="col-md-3">
-            {% if not cohort.is_published  %}
                 <button type="submit" class="btn btn-primary" title="{% trans 'Import affectations' %}" id="bt_import_affectations" data-bs-toggle="modal" data-bs-target="#import_affectations_modal">
                     <span class="fa fa-upload" aria-hidden="true"></span> {% trans 'Import affectations' %}
                 </button>
+            {% if not cohort.is_published  %}
                 <button type="submit" class="btn btn-primary" title="{% trans 'Generate solution'%}" id="bt_generate_solution" onclick="$('#generate').modal('show');">
                     <span class="fa fa-random" aria-hidden="true"></span> {% trans 'Generate solution' %}
                 </button>
