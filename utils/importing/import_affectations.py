@@ -40,6 +40,18 @@ def import_xlsx(cohort, xlsxfile, period_instance):
     errors = []
     row_count = 0
     organization_mg = Organization.objects.get(cohort=cohort, reference=MEDECINE_GENERALE_ORG_REF)
+
+    # Check if affectations already exist for the cohort and period
+    existing_affectations = internship_student_affectation_stat.InternshipStudentAffectationStat.objects.filter(
+        period=period_instance,
+        student__cohort=cohort
+    ).exists()
+
+    if existing_affectations:
+        errors.append("Affectations already exist for this cohort and period. Import cancelled.")
+        return errors, 0
+
+    affectations_data = []
     for index, row in enumerate(worksheet.iter_rows(min_row=2, values_only=True), start=2):  # Start from the second row, index starts at 2
         row_errors = _validate_row(cohort, row, index)
         if row_errors:
