@@ -261,17 +261,23 @@
                           {% iter_score_periods periods student.scores period.name as iter_score_periods %}
                           {% for iter in iter_score_periods %}
                           {% if not period.remedial or student|has_remedial:period %}
-                          <tr onmouseover="showEditScoreBtn({{ student.pk }}, {{ period.pk }})"
-                              onmouseout="hideEditScoreBtn({{ student.pk }}, {{ period.pk }})"
+                          <tr onmouseover="showEditScoreBtn({{ student.pk }}, {{ period.pk }}, {{ forloop.counter }})"
+                              onmouseout="hideEditScoreBtn({{ student.pk }}, {{ period.pk }}, {{ forloop.counter }})"
                               {% if period == last_complete_period and last_period is not last_completed_period %}
                                 class="last-completed-period"
                               {% endif %}>
                             <td style="text-align: center;">
                             {% if student.registration_id %}
-                              <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk%}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
-                              id="edit-btn-{{ student.pk }}-{{ period.pk }}">
-                                <icon class="far fa-edit"></icon>
-                              </a>
+                            {% with student.specialties|get_item:period.name as specialties %}
+                            {% for sp in specialties %}
+                                {% if forloop.counter == forloop.parentloop.counter %}
+                                  <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk specialty_name=sp.name %}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
+                                  id="edit-btn-{{ student.pk }}-{{ period.pk }}-{{ forloop.counter }}">
+                                    <icon class="far fa-edit"></icon>
+                                  </a>
+                                {% endif %}
+                            {% endfor %}
+                            {% endwith %}
                             {% endif %}
                             </td>
                             <td>
@@ -647,12 +653,12 @@
         });
     });
 
-    function showEditScoreBtn(studentId, periodId){
-        $(`#edit-btn-${studentId}-${periodId}`).show();
+    function showEditScoreBtn(studentId, periodId, index){
+        $(`#edit-btn-${studentId}-${periodId}-${index}`).show();
     }
 
-    function hideEditScoreBtn(studentId, periodId){
-        $(`#edit-btn-${studentId}-${periodId}`).hide();
+    function hideEditScoreBtn(studentId, periodId, index){
+        $(`#edit-btn-${studentId}-${periodId}-${index}`).hide();
     }
 
     //triggered when comments modal is about to be shown

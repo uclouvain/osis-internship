@@ -29,6 +29,7 @@ from base.models import student
 from internship.models import internship_speciality, internship_student_affectation_stat, organization
 from internship.models.enums.choice_type import ChoiceType
 from internship.models.internship import Internship
+from internship.models.internship_score import InternshipScore
 from internship.models.organization import Organization
 
 INTERNSHIP_TYPE_MANDATORY = 'Stage obligatoire'
@@ -134,7 +135,7 @@ def _create_affectation(
             internship = Internship.objects.filter(name=internship_type, cohort=cohort).first()
 
         try: # Added try-except block to handle potential IntegrityError
-            internship_student_affectation_stat.InternshipStudentAffectationStat.objects.create(
+            student_affectation = internship_student_affectation_stat.InternshipStudentAffectationStat.objects.create(
                 student=student_obj,
                 period=period_instance,
                 speciality=specialty,
@@ -142,6 +143,10 @@ def _create_affectation(
                 internship=internship,
                 cost=0,
                 choice=ChoiceType.IMPOSED.value,
+            )
+            # create empty score along with affectation
+            InternshipScore.objects.create(
+                student_affectation=student_affectation
             )
         except Exception as e: # Catching generic exception for simplicity, ideally catch IntegrityError
             print(f"Error creating affectation for student {registration_id}, row {row_index}: {e}") # Log error, do not re-raise for now
