@@ -179,6 +179,10 @@ msgstr "Résultat de l'affectation"
 msgid "Affectations File"
 msgstr "Fichier des affectations"
 
+msgid ""
+"Affectations already exist for this cohort and period. Import cancelled."
+msgstr "Des affectations de stage existent déjà pour cette période. L'importation est annulée."
+
 msgid "All EPAs validated"
 msgstr "Tous les APDs validés"
 
@@ -848,6 +852,9 @@ msgstr "Faire/recevoir le rapport de transmission"
 
 msgid "Male"
 msgstr "Masculin"
+
+msgid "Manager comment"
+msgstr "Commentaire du gestionnaire"
 
 msgid "Mandatory"
 msgstr "Obligatoire"
@@ -1635,7 +1642,9 @@ msgstr ""
 
 msgid ""
 "Your affectations are being imported. This process may take a few minutes."
-msgstr "Vos affectations sont en cours d'importation. Cela peut prendre quelques minutes."
+msgstr ""
+"Vos affectations sont en cours d'importation. Cela peut prendre quelques "
+"minutes."
 
 msgid "achieves with help"
 msgstr "réalise avec aide"

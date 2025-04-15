@@ -775,18 +775,21 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
             }
         else:
             scores = score_obj.get_scores()
+        reason = score_obj.reason
         comments = score_obj.preconcours_evaluation_detail if period.is_preconcours else score_obj.comments
         student.scores += (period.name, scores, score_obj.period_aff_index),
-        _append_comments(comments, period, student)
+        _append_comments(comments, period, student, reason)
         _retrieve_scores_entered_manually(period, student, student_scores)
 
 
-def _append_comments(comments, period, student):
+def _append_comments(comments, period, student, reason):
+    resulting_comments = replace_comments_keys_with_translations(comments)
+    resulting_comments[_('Manager comment')] = reason
     if not period.name in student.comments.keys():
-        student.comments.update({period.name: [replace_comments_keys_with_translations(comments)]})
+        student.comments.update({period.name: [resulting_comments]})
     else:
         student.comments.update(
-            {period.name: [*student.comments[period.name], replace_comments_keys_with_translations(comments)]}
+            {period.name: [*student.comments[period.name], resulting_comments]}
         )
 
 
