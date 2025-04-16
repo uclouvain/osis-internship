@@ -127,12 +127,13 @@ def scores_encoding(request, cohort_id):
 
 @login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
-def score_detail_form(request, cohort_id, student_registration_id, period_id):
+def score_detail_form(request, cohort_id, student_registration_id, period_id, specialty_name):
     cohort = Cohort.objects.get(pk=cohort_id)
     student = Student.objects.get(registration_id=student_registration_id)
     student_affectation, created = InternshipStudentAffectationStat.objects.get_or_create(
         student__registration_id=student_registration_id,
         period_id=period_id,
+        speciality__name=specialty_name,
         defaults={'cost': 0, 'student': student}
     )
     score, created = InternshipScore.objects.select_related(
@@ -591,7 +592,7 @@ def _prepare_score_table(cohorts, periods, students):
 def _get_persons_scores(students):
     persons = [student.person.pk for student in students]
     scores = InternshipScore.objects.filter(
-        student_affectation__student__person_id__in=persons, validated=True,
+        student_affectation__student__person_id__in=persons,
     ).select_related(
         'student_affectation__student__person', 'student_affectation__period__cohort'
     ).annotate(
@@ -775,18 +776,24 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
             }
         else:
             scores = score_obj.get_scores()
+        reason = score_obj.reason
         comments = score_obj.preconcours_evaluation_detail if period.is_preconcours else score_obj.comments
-        student.scores += (period.name, scores, score_obj.period_aff_index),
-        _append_comments(comments, period, student)
-        _retrieve_scores_entered_manually(period, student, student_scores)
+        if score_obj.validated:
+            student.scores += (period.name, scores, score_obj.period_aff_index),
+            _append_comments(comments, period, student, reason)
+            _retrieve_scores_entered_manually(period, student, student_scores)
+        else:
+            student.scores += (period.name, [], score_obj.period_aff_index),
 
 
-def _append_comments(comments, period, student):
+def _append_comments(comments, period, student, reason):
+    resulting_comments = replace_comments_keys_with_translations(comments)
+    resulting_comments[_('Manager comment')] = reason
     if not period.name in student.comments.keys():
-        student.comments.update({period.name: [replace_comments_keys_with_translations(comments)]})
+        student.comments.update({period.name: [resulting_comments]})
     else:
         student.comments.update(
-            {period.name: [*student.comments[period.name], replace_comments_keys_with_translations(comments)]}
+            {period.name: [*student.comments[period.name], resulting_comments]}
         )
 
 

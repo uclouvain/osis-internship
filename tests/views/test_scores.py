@@ -636,7 +636,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_acronym': self.mandatory_internship.speciality.acronym
         })
         response = self.client.get(url)
         self.assertTemplateUsed(response, "score_form.html")
@@ -646,7 +647,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_acronym': self.mandatory_internship.speciality.acronym
         })
         response = self.client.get(url)
 
@@ -667,7 +669,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_acronym': self.mandatory_internship.speciality.acronym
         })
         response = self.client.post(url, data={'apd-1': 'B'})
         messages_list = [msg for msg in response.wsgi_request._messages]
@@ -685,7 +688,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_acronym': self.mandatory_internship.speciality.acronym
         })
         response = self.client.post(url, data={
             'apd-1': 'B',

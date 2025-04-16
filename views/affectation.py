@@ -115,7 +115,7 @@ def view_students(request, cohort_id):
             "organization",
             "speciality",
             "period"
-        )
+        ).order_by("period__date_start", "id")
 
     if student_affectations.count() > 0:
         sol = statistics.load_solution_sol(cohort, student_affectations)

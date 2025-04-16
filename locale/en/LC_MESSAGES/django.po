@@ -159,6 +159,10 @@ msgstr ""
 msgid "Affectations File"
 msgstr ""
 
+msgid ""
+"Affectations already exist for this cohort and period. Import cancelled."
+msgstr ""
+
 msgid "All EPAs validated"
 msgstr ""
 
@@ -811,6 +815,9 @@ msgid "Make/receive transmission report"
 msgstr ""
 
 msgid "Male"
+msgstr ""
+
+msgid "Manager comment"
 msgstr ""
 
 msgid "Mandatory"
