@@ -63,13 +63,17 @@ def import_xlsx(cohort, xlsxfile, period_instance):
     for index, row in enumerate(worksheet.iter_rows(min_row=2, values_only=True), start=2):
         registration_id = row[2]
         affectation_str = row[7]
+        # Check if date columns exist and have values
+        date_start = row[8] if len(row) > 8 and row[8] else None
+        date_end = row[9] if len(row) > 9 and row[9] else None
         internship_type = row[10]
         if registration_id and affectation_str:
             affectation_strings = affectation_str.split('/')
             for affectation_string in affectation_strings:
                 _create_affectation(
                     cohort, period_instance, registration_id,
-                    affectation_string, internship_type, index, organization_mg
+                    affectation_string, internship_type, index, organization_mg,
+                    date_start, date_end
                 )
             row_count += 1
     return errors, row_count
@@ -79,10 +83,17 @@ def _validate_row(cohort, row, row_index):
     errors = []
     registration_id = row[2]
     affectation_str = row[7]
+    # Check if date columns exist and have values
+    date_start = row[8] if len(row) > 8 and row[8] else None
+    date_end = row[9] if len(row) > 9 and row[9] else None
     internship_type = row[10]
 
     if not registration_id or not affectation_str:
         return errors  # Skip empty rows
+
+    # Validate dates if provided
+    if date_start and date_end and date_start > date_end:
+        errors.append(f"Row {row_index}: Start date must be earlier than end date.")
 
     student_obj = student.find_by_registration_id(registration_id)
     if not student_obj:
@@ -119,7 +130,8 @@ def _validate_row(cohort, row, row_index):
 
 
 def _create_affectation(
-        cohort, period_instance, registration_id, affectation_str, internship_type, row_index, organization_mg
+        cohort, period_instance, registration_id, affectation_str, internship_type, row_index, organization_mg,
+        date_start=None, date_end=None
 ):
     student_obj = student.find_by_registration_id(registration_id)
     affectation_strings = affectation_str.split('/')  # Split here to handle multiple affectations
@@ -151,6 +163,8 @@ def _create_affectation(
                 internship=internship,
                 cost=0,
                 choice=ChoiceType.IMPOSED.value,
+                date_start=date_start,
+                date_end=date_end,
             )
             # create empty score along with affectation
             InternshipScore.objects.create(

@@ -469,6 +469,9 @@ msgstr "Validation APD"
 msgid "Edit"
 msgstr "Modifier"
 
+msgid "Effective dates"
+msgstr "Dates effectives"
+
 msgid "Edit cohort"
 msgstr "Ajouter une cohorte"
 

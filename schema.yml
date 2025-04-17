@@ -1445,6 +1445,16 @@ components:
           type: string
         score:
           $ref: '#/components/schemas/ScoreListGet'
+        date_start:
+          type: string
+          format: date
+          nullable: true
+          description: Effective start date of the internship
+        date_end:
+          type: string
+          format: date
+          nullable: true
+          description: Effective end date of the internship
     ScoreGet:
       type: object
       properties:
@@ -1866,6 +1876,16 @@ components:
           nullable: true
         internship_evaluated:
           type: boolean
+        date_start:
+          type: string
+          format: date
+          nullable: true
+          description: Effective start date of the internship
+        date_end:
+          type: string
+          format: date
+          nullable: true
+          description: Effective end date of the internship
     PlaceEvaluationItemPaging:
       properties:
         count:
