@@ -13,11 +13,15 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='internshipscore',
             name='behavior_score',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=4, null=True, verbose_name='Behavior score'),
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=4, null=True, verbose_name='Behavior score'
+            ),
         ),
         migrations.AddField(
             model_name='internshipscore',
             name='competency_score',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=4, null=True, verbose_name='Competency score'),
+            field=models.DecimalField(
+                blank=True, decimal_places=2, max_digits=4, null=True, verbose_name='Competency score'
+            ),
         ),
     ]

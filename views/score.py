@@ -1207,17 +1207,17 @@ def _validate_preconcours_score(request, scores_data):
         competency_score = int(scores_data['competency_score'])
     except (ValueError, TypeError):
         messages.add_message(
-            request, 
-            messages.ERROR, 
-            _('Les scores doivent être des nombres entiers.')
+            request,
+            messages.ERROR,
+            _('Scores must be integers')
         )
         return False
 
     if behavior_score < 0 or behavior_score > 20 or competency_score < 0 or competency_score > 20:
         messages.add_message(
-            request, 
-            messages.ERROR, 
-            _('Les scores doivent être compris entre 0 et 20.')
+            request,
+            messages.ERROR,
+            _('Scores must be between 0 and 20.')
         )
         return False
 

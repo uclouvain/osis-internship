@@ -36,6 +36,7 @@ INTERNSHIP_TYPE_MANDATORY = 'Stage obligatoire'
 MEDECINE_GENERALE_ACRONYM = 'MG'
 MEDECINE_GENERALE_ORG_REF = 600
 
+
 def import_xlsx(cohort, xlsxfile, period_instance):
     workbook = openpyxl.load_workbook(filename=xlsxfile, read_only=True)
     worksheet = workbook.active
@@ -52,7 +53,8 @@ def import_xlsx(cohort, xlsxfile, period_instance):
         errors.append(_("Affectations already exist for this cohort and period. Import cancelled."))
         return errors, 0
 
-    for index, row in enumerate(worksheet.iter_rows(min_row=2, values_only=True), start=2):  # Start from the second row, index starts at 2
+    for index, row in enumerate(worksheet.iter_rows(min_row=2, values_only=True), start=2):
+        # Start from the second row, index starts at 2
         row_errors = _validate_row(cohort, row, index)
         if row_errors:
             errors.extend(row_errors)
@@ -91,7 +93,9 @@ def _validate_row(cohort, row, row_index):
         specialty_acronym = "".join([char for char in affectation_string if char.isalpha()])
         org_reference = "".join([char for char in affectation_string if char.isdigit()])
 
-        specialty = internship_speciality.InternshipSpeciality.objects.filter(acronym=specialty_acronym, cohort=cohort).first()
+        specialty = internship_speciality.InternshipSpeciality.objects.filter(
+            acronym=specialty_acronym, cohort=cohort
+        ).first()
         if not specialty:
             errors.append(f"Row {row_index}: Specialty with acronym {specialty_acronym} not found")
 
@@ -118,12 +122,16 @@ def _create_affectation(
         cohort, period_instance, registration_id, affectation_str, internship_type, row_index, organization_mg
 ):
     student_obj = student.find_by_registration_id(registration_id)
-    affectation_strings = affectation_str.split('/') # Split here to handle multiple affectations
-    for affectation_string in affectation_strings: # Iterate over each affectation string
+    affectation_strings = affectation_str.split('/')  # Split here to handle multiple affectations
+    for affectation_string in affectation_strings:  # Iterate over each affectation string
         specialty_acronym = "".join([char for char in affectation_string if char.isalpha()])
         org_reference = "".join([char for char in affectation_string if char.isdigit()])
-        specialty = internship_speciality.InternshipSpeciality.objects.filter(acronym=specialty_acronym, cohort=cohort).first()
-        organization_obj = organization.Organization.objects.filter(reference=org_reference, cohort=cohort).first() if org_reference else None
+        specialty = internship_speciality.InternshipSpeciality.objects.filter(
+            acronym=specialty_acronym, cohort=cohort
+        ).first()
+        organization_obj = organization.Organization.objects.filter(
+            reference=org_reference, cohort=cohort
+        ).first() if org_reference else None
 
         if specialty_acronym == MEDECINE_GENERALE_ACRONYM:
             organization_obj = organization_mg
@@ -134,7 +142,7 @@ def _create_affectation(
         else:
             internship = Internship.objects.filter(name=internship_type, cohort=cohort).first()
 
-        try: # Added try-except block to handle potential IntegrityError
+        try:  # Added try-except block to handle potential IntegrityError
             student_affectation = internship_student_affectation_stat.InternshipStudentAffectationStat.objects.create(
                 student=student_obj,
                 period=period_instance,
@@ -148,5 +156,6 @@ def _create_affectation(
             InternshipScore.objects.create(
                 student_affectation=student_affectation
             )
-        except Exception as e: # Catching generic exception for simplicity, ideally catch IntegrityError
-            print(f"Error creating affectation for student {registration_id}, row {row_index}: {e}") # Log error, do not re-raise for now
+        except Exception as e:  # Catching generic exception for simplicity, ideally catch IntegrityError
+            print(f"Error creating affectation for student {registration_id}, row {row_index}: {e}")
+            # Log error, do not re-raise for now

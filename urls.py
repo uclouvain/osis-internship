@@ -158,17 +158,17 @@ urlpatterns = [
 
             path('scores_encoding/', include([
                 path('', score.scores_encoding, name='internship_scores_encoding'),
-                path(
-                    'edit/<str:student_registration_id>/<int:period_id>/<str:specialty_name>/',
+                path('edit/<str:student_registration_id>/<int:period_id>/<str:specialty_name>/',
                      score.score_detail_form,
                      name='internship_edit_score'
-                 ),
+                ),
                 path('upload_scores/', score.upload_scores, name='internship_upload_scores'),
                 path('upload_eval/', score.upload_eval, name='internship_upload_eval'),
                 path('download/', score.download_scores, name='internship_download_scores'),
-                path('download_summary/<int:student_id>', score.download_summary,
+                path(
+                    'download_summary/<int:student_id>', score.download_summary,
                      name='internship_download_summary'
-                     ),
+                ),
                 path('mapping/save', score.save_mapping, name='save_internship_score_mapping'),
                 path('ajax/save_score/', score.save_edited_score, name='save_edited_score'),
                 path('ajax/delete_score/', score.delete_edited_score, name='delete_edited_score'),

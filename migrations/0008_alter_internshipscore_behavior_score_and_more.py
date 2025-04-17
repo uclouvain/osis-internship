@@ -14,12 +14,20 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='internshipscore',
             name='behavior_score',
-            field=models.IntegerField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(20)], verbose_name='Behavior score'),
+            field=models.IntegerField(
+                blank=True, null=True,
+                validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(20)],
+                verbose_name='Behavior score'
+            ),
         ),
         migrations.AlterField(
             model_name='internshipscore',
             name='competency_score',
-            field=models.IntegerField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(20)], verbose_name='Skill score'),
+            field=models.IntegerField(
+                blank=True, null=True,
+                validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(20)],
+                verbose_name='Skill score'
+            ),
         ),
         migrations.AlterField(
             model_name='period',

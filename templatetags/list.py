@@ -32,6 +32,7 @@ from django.template.defaulttags import register
 def get_item_at_index(list, index):
     return list[index]
 
+
 @register.simple_tag
 def iter_score_periods(periods, score_periods, key):
     if key not in [p.name for p in periods]:
@@ -39,11 +40,13 @@ def iter_score_periods(periods, score_periods, key):
     matching = [sp[0] for sp in score_periods if sp[0] == key]
     return matching if matching else [key]
 
+
 @register.simple_tag
 def count_multiple_score_for_period(score_periods):
     counts = Counter([el[0] for el in score_periods])
     total = sum(count>1 for count in counts.values())
     return total
+
 
 @register.filter
 def get_period_score_tuple(tuples, period):

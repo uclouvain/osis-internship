@@ -152,7 +152,6 @@ def _complete_student_row_for_all_internships(columns, periods, student):
                 columns.append(student.specialties[period.name][0]['acronym'])
         else:
             columns.append('')
-            
         if period.is_preconcours:
             _append_preconcours_data(columns, period, student)
         else:

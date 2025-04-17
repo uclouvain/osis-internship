@@ -36,6 +36,7 @@ from osis_common.utils.models import get_object_or_none
 
 NUMBER_REGEX = r'(\d+)'
 
+
 @transaction.atomic
 def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
@@ -48,6 +49,7 @@ def import_xlsx(cohort, xlsxfile, period):
     else:
         _process_rows_import(cohort, period, worksheet)
     xlsxfile.close()
+
 
 def _process_rows_import(cohort, period, worksheet):
     for row in list(worksheet.rows)[5:worksheet.max_row]:
@@ -66,6 +68,7 @@ def _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period):
     score_completeness_errors = _analyze_score_completeness(worksheet)
     if score_completeness_errors:
         errors.update({'score_completeness_errors': score_completeness_errors})
+
 
 def _analyze_score_completeness(worksheet):
     errors = []
@@ -155,10 +158,12 @@ def _import_score(row, cohort, period):
         except (ValueError, TypeError):
             pass
 
+
 def _student_is_in_cohort(student, cohort):
     return find_by_person(student.person, cohort)
+
 
 def _periods_match(period, worksheet_period):
     period_numeric = re.findall(NUMBER_REGEX, period.name)
     worksheet_period_numeric = re.findall(NUMBER_REGEX, worksheet_period)
-    return period_numeric[0] == worksheet_period_numeric[0] if period_numeric and worksheet_period_numeric else False 
+    return period_numeric[0] == worksheet_period_numeric[0] if period_numeric and worksheet_period_numeric else False
