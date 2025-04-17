@@ -78,16 +78,27 @@ def _analyze_score_completeness(worksheet):
         competency_score = row[6].value
         global_score = row[8].value
 
-        # Check if both behavior and competency scores are missing
-        # OR if global score is missing
-        if ((behavior_score is None and competency_score is None) or
-                (global_score is None and (behavior_score is None or competency_score is None))):
-            errors.append({
-                'registration_id': registration_id,
-                'row': row
-            })
+        error = _get_score_completeness_error(
+            behavior_score,
+            competency_score,
+            errors,
+            global_score,
+            registration_id,
+            row
+        )
+        if error:
+            errors.append(error)
 
     return errors
+
+
+def _get_score_completeness_error(behavior_score, competency_score, errors, global_score, registration_id, row):
+    # Check if both behavior and competency scores are missing
+    # OR if global score is missing
+    if ((behavior_score is None and competency_score is None) or
+            (global_score is None and (behavior_score is None or competency_score is None))):
+        return {'registration_id': registration_id, 'row': row}
+
 
 def _analyze_registration_ids(cohort, worksheet):
     errors = []
@@ -96,10 +107,17 @@ def _analyze_registration_ids(cohort, worksheet):
         if registration_id is None:
             continue
         else:
-            existing_student = student.find_by_registration_id(registration_id)
-            if existing_student is None or not _student_is_in_cohort(existing_student, cohort):
-                errors.append(row)
+            error = _get_registration_id_errors(cohort, errors, registration_id, row)
+            if error:
+                errors.append(error)
     return errors
+
+
+def _get_registration_id_errors(cohort, errors, registration_id, row):
+    existing_student = student.find_by_registration_id(registration_id)
+    if existing_student is None or not _student_is_in_cohort(existing_student, cohort):
+        return row
+
 
 def _import_score(row, cohort, period):
     registration_id = row[0].value

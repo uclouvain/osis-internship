@@ -163,15 +163,6 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id, sp
                     validated=True,
                     validated_by=request.user.person
                 )
-                if update:
-                    messages.add_message(
-                        request, 
-                        messages.SUCCESS, 
-                        _('Score updated successfully for {}'.format(score.student_affectation))
-                    )
-                    return redirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort_id}))
-                else:
-                    messages.add_message(request, messages.ERROR, UPDATE_SCORE_ERROR_MSG)
         else:
             apds_data = {'APD_{}'.format(apd): request.POST.get('apd-{}'.format(apd)) for apd in apds}
             reason = request.POST.get('reason') if request.POST.get('reason') else None
@@ -182,17 +173,18 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id, sp
                     validated=True,
                     validated_by=request.user.person
                 )
-                if update:
-                    messages.add_message(
-                        request, 
-                        messages.SUCCESS, 
-                        _('Score updated successfully for {}'.format(score.student_affectation))
-                    )
-                    return redirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort_id}))
-                else:
-                    messages.add_message(request, messages.ERROR, UPDATE_SCORE_ERROR_MSG)
             else:
                 _cache_apd_form_values(apds_data, score)
+
+        if update:
+            messages.add_message(
+                request,
+                messages.SUCCESS,
+                _('Score updated successfully for {}'.format(score.student_affectation))
+            )
+            return redirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort_id}))
+        else:
+            messages.add_message(request, messages.ERROR, UPDATE_SCORE_ERROR_MSG)
 
     context = {
         'cohort': cohort,
@@ -470,7 +462,7 @@ def save_edited_score(request, cohort_id):
     period = {'name': period_name}
     period_score = {
         "computed": computed_score,
-        "edited": {'score': edited_score, 'reason': reason}
+        "edited": [{'score': edited_score, 'reason': reason}]
     }
 
     if edited_score >= MINIMUM_SCORE and edited_score <= MAXIMUM_SCORE:
@@ -654,20 +646,17 @@ def _get_scores_mean(scores, n_periods):
 
 
 def _get_period_score(score):
-    if score:
-        if isinstance(score, list) and len(score) > 1:
-            return sum(score) / len(score)
-        elif isinstance(score, int):
-            return score
-        else:
-            if is_edited(score[0]):
-                if not is_excused(score[0]['edited']) and 'score' in score[0]['edited'][0].keys():
-                    return score[0]['edited'][0]['score']
-                else:
-                    return None
-            else:
-                return score[0]
-    return None
+    if not score:
+        return
+    if isinstance(score, int):
+        return score
+    elif len(score) > 1:
+        return sum(score) / len(score)
+    elif is_edited(score[0]):
+        edited_score = score[0]['edited']
+        return None if is_excused(edited_score) else edited_score[0].get('score')
+    else:
+        return score[0]
 
 
 def _count_emptied_scores(scores):
@@ -701,30 +690,16 @@ def _map_student_score(mapping, periods_scores, student):
     for item in student.scores:
         period, scores, period_aff_index = item
         period_score = _process_evaluation_grades(mapping, period, scores)
-        if not period in periods_scores.keys():
-            if period in student.numeric_scores.keys():
-                periods_scores.update(
-                    {
-                        period: [{
-                            'computed': period_score,
-                            'edited': student.numeric_scores[period],
-                        }]
-                    }
-                )
-            else:
-                periods_scores.update({period: [period_score]})
+        existing_period_score = periods_scores.get(period, [])
+        if period in student.numeric_scores.keys():
+            new_score = {
+                'computed': period_score,
+                'edited': student.numeric_scores[period],
+            }
+            to_update = {period: [*existing_period_score, new_score]}
         else:
-            if period in student.numeric_scores.keys():
-                periods_scores.update(
-                    {
-                        period: [*periods_scores[period], {
-                            'computed': period_score,
-                            'edited': student.numeric_scores[period],
-                        }]
-                    }
-                )
-            else:
-                periods_scores.update({period: [*periods_scores[period], period_score]})
+            to_update = {period: [*existing_period_score, period_score]}
+        periods_scores.update(to_update)
 
 
 
@@ -789,37 +764,22 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
 def _append_comments(comments, period, student, reason):
     resulting_comments = replace_comments_keys_with_translations(comments)
     resulting_comments[_('Manager comment')] = reason
-    if not period.name in student.comments.keys():
-        student.comments.update({period.name: [resulting_comments]})
-    else:
-        student.comments.update(
-            {period.name: [*student.comments[period.name], resulting_comments]}
-        )
+    existing_comments = student.comments.get(period.name, [])
+    student.comments.update({period.name: [*existing_comments, resulting_comments]})
 
 
 def _retrieve_scores_entered_manually(period, student, student_scores):
     student_score = student_scores[0]
     score = student_score.score
     if score or student_score.excused:
-        if not period.name in student.numeric_scores.keys():
-            student.numeric_scores.update(
-                {
-                    period.name: [
-                        {'excused': score, 'reason': student_score.reason}
-                        if student_score.excused else {'score': score, 'reason': student_score.reason}
-                    ]
-                },
-            )
-        else:
-            student.numeric_scores.update(
-                {
-                    period.name: [
-                        *period.numeric_scores[period.name],
-                        {'excused': score, 'reason': student_score.reason}
-                        if student_score.excused else {'score': score, 'reason': student_score.reason}
-                    ]
-                },
-            )
+        existing_numeric_scores = student.numeric_scores.get(period.name, [])
+        student.numeric_scores.update({
+            period.name: [
+                *existing_numeric_scores,
+                {'excused': score, 'reason': student_score.reason} if student_score.excused
+                else {'score': score, 'reason': student_score.reason}
+            ]
+        })
 
 
 def _link_periods_to_specialties(students, students_affectations):
@@ -833,21 +793,13 @@ def _update_student_specialties(student, students_affectations):
             _annotate_non_mandatory_internship(affectation)
             acronym = _get_acronym_with_sequence(affectation)
             specialty_name = affectation['speciality__name']
-            if not affectation['period__name'] in student.specialties.keys():
-                student.specialties.update({
-                    affectation['period__name']: [{
-                        'acronym': acronym,
-                        'name': specialty_name
-                    }]
-                })
-            else:
-                # case for multiple specialties for one period
-                student.specialties.update({
-                    affectation['period__name'] : [
-                        *student.specialties.get(affectation['period__name']),
-                        {'acronym': acronym, 'name': specialty_name}
-                    ]
-                })
+            existing_specialties = student.specialties.get(affectation['period__name'], [])
+            student.specialties.update({
+                affectation['period__name']: [
+                    *existing_specialties,
+                    {'acronym': acronym, 'name': specialty_name}
+                ]
+            })
 
 
 
@@ -869,30 +821,19 @@ def _link_periods_to_organizations(students, students_affectations):
 def update_student_organizations(student, students_affectations):
     for affectation in students_affectations:
         if affectation['student__person'] == student.person.pk:
-            if not affectation['period__name'] in student.organizations.keys():
-                student.organizations.update({
-                    affectation['period__name']: [{
+            existing_organizations = student.organizations.get(affectation['period__name'], [])
+            student.organizations.update({
+                affectation['period__name']: [
+                    *existing_organizations,
+                    {
                         "reference": "{}{}".format(
                             affectation['speciality__acronym'],
                             affectation['organization__reference']
                         ),
                         "name": affectation['organization__name']
-                    }]
-                })
-            else:
-                # case for multiple organizations for one period
-                student.organizations.update({
-                    affectation['period__name']: [
-                        *student.organizations.get(affectation['period__name']),
-                        {
-                            "reference": "{}{}".format(
-                                affectation['speciality__acronym'],
-                                affectation['organization__reference']
-                            ),
-                            "name": affectation['organization__name']
-                        }
-                    ]
-                })
+                    }
+                ]
+            })
 
 def _annotate_non_mandatory_internship(affectation):
     if affectation['internship__speciality_id'] is None and affectation['internship__name']:

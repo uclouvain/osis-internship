@@ -46,7 +46,6 @@ def count_multiple_score_for_period(score_periods):
     return total
 
 @register.filter
-@register.filter
 def get_period_score_tuple(tuples, period):
     matches = [t[1] for t in tuples if t[0] == period]
     if not matches:
