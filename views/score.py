@@ -147,6 +147,8 @@ def score_detail_form(request, cohort_id, student_registration_id, period_id, sp
     master = get_main_internship_master(score)
     apds = range(1, APD_NUMBER + 1)
 
+    update = None
+
     if request.POST:
         if student_affectation.period.is_preconcours:
             behavior_score = request.POST.get('behavior_score')
