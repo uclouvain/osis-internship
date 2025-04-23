@@ -284,7 +284,9 @@ def load_solution_table(data, periods):
                 continue
             temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['after'] -= 1
             # Update the % of takes places
-            if temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['before'] > 0:
+            if temp_internship_table[
+                item.organization.reference
+            ][item.speciality.acronym][item.period.name]['before'] > 0:
                 temp_internship_table[item.organization.reference][item.speciality.acronym][item.period.name]['pc'] = \
                     temp_internship_table[
                         item.organization.reference

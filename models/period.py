@@ -39,10 +39,15 @@ class PeriodAdmin(SerializableModelAdmin):
         'reminder_mail_sent', 'remedial', 'place_evaluation_active', 'is_preconcours'
     )
     fieldsets = (
-        (None, {'fields':
-                    ('name', 'date_start', 'date_end', 'cohort',
-                     'remedial', 'exclude_from_assignment', 'is_preconcours')
-                }),
+        (
+            None, {
+            'fields':
+                    (
+                        'name', 'date_start', 'date_end', 'cohort',
+                        'remedial', 'exclude_from_assignment', 'is_preconcours'
+                    )
+            }
+         ),
     )
     list_filter = ('cohort', 'reminder_mail_sent', 'remedial', 'place_evaluation_active', 'is_preconcours')
 

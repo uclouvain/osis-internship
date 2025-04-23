@@ -71,8 +71,10 @@ def import_xlsx(cohort, xlsxfile, period_instance):
             affectation_strings = affectation_str.split('/')
 
             # Split dates if they contain '/' to match with multiple affectations
-            date_starts = date_start_str.split('/') if date_start_str and '/' in date_start_str else [date_start_str] * len(affectation_strings)
-            date_ends = date_end_str.split('/') if date_end_str and '/' in date_end_str else [date_end_str] * len(affectation_strings)
+            date_starts = date_start_str.split('/') \
+                if date_start_str and '/' in date_start_str else [date_start_str] * len(affectation_strings)
+            date_ends = date_end_str.split('/') \
+                if date_end_str and '/' in date_end_str else [date_end_str] * len(affectation_strings)
 
             # Ensure we have the same number of dates as affectations
             if len(date_starts) != len(affectation_strings):
@@ -90,7 +92,8 @@ def import_xlsx(cohort, xlsxfile, period_instance):
                 except Exception as e:
                     # Check if the exception value is already a list (our custom format)
                     if isinstance(e.args[0], list):
-                        error_msg = f"Error creating affectation for student {registration_id}, row {index}: {e.args[0]}"
+                        error_msg = (f"Error creating affectation for student {registration_id}, "
+                                     f"row {index}: {e.args[0]}")
                     else:
                         error_msg = f"Error creating affectation for student {registration_id}, row {index}: {e}"
                     errors.append(error_msg)
