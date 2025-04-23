@@ -27,17 +27,19 @@ import json
 from collections import OrderedDict
 from operator import itemgetter
 
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from internship import models
 from internship.business import assignment, statistics
 from internship.models import internship_student_affectation_stat
-from internship.models.period import get_assignable_periods, get_effective_periods, get_subcohorts_periods
+from internship.models.period import get_assignable_periods, get_subcohorts_periods
 
 
 @login_required
@@ -113,7 +115,7 @@ def view_students(request, cohort_id):
             "organization",
             "speciality",
             "period"
-        )
+        ).order_by("period__date_start", "id")
 
     if student_affectations.count() > 0:
         sol = statistics.load_solution_sol(cohort, student_affectations)
@@ -242,5 +244,27 @@ def internship_affectation_sumup(request, cohort_id):
                'hospitals': organizations, 'hospital_specialties': hospital_specialties,
                'specialties': all_speciality, 'affectations': affectations,
                'periods': periods, 'informations': informations,}
-    
     return render(request, "internship_affectation_sumup.html", context)
+
+
+@login_required
+@permission_required('internship.is_internship_manager', raise_exception=True)
+def import_affectations(request, cohort_id):
+    cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
+    if request.method == 'POST':
+        pre_concours_period_id = request.POST.get('pre_concours_period')
+        pre_concours_period = get_object_or_404(models.period.Period, pk=pre_concours_period_id)
+        affectation_file = request.FILES.get('affectation_file')
+        if affectation_file:
+            from internship.utils.importing import import_affectations
+            errors, row_count = import_affectations.import_xlsx(cohort, affectation_file, pre_concours_period)
+            if errors:
+                for error in errors:
+                    messages.error(request, error)
+            else:
+                messages.success(
+                    request, _("Succesfully imported {} affectations for {}").format(
+                        row_count, pre_concours_period.name
+                    )
+                )
+    return redirect(request.META.get('HTTP_REFERER'))

@@ -53,6 +53,7 @@
                     {% bootstrap_field form.date_end wrapper_class="form-group col-md-4" %}
                     {% bootstrap_field form.remedial wrapper_class="form-group col-md-4" %}
                     {% bootstrap_field form.exclude_from_assignment wrapper_class="form-group col-md-4" %}
+                    {% bootstrap_field form.is_preconcours wrapper_class="form-group col-md-4" %}
             </div>
 
             <a href="{% url 'internships_periods' cohort_id=cohort.id %}" class="btn btn-default">

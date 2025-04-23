@@ -156,6 +156,13 @@ msgstr ""
 msgid "Affectation's result"
 msgstr ""
 
+msgid "Affectations File"
+msgstr ""
+
+msgid ""
+"Affectations already exist for this cohort and period. Import cancelled."
+msgstr ""
+
 msgid "All EPAs validated"
 msgstr ""
 
@@ -223,10 +230,22 @@ msgstr ""
 msgid "Autonomy Level (%% according to periods)"
 msgstr ""
 
+msgid "Behavior score"
+msgstr ""
+
 msgid "Birth Date"
 msgstr ""
 
 msgid "Birth date"
+msgstr ""
+
+msgid "CAPACITE DE RECUEIL DES DONNEES DE BASE"
+msgstr ""
+
+msgid "CONNAISSANCES MEDICALES"
+msgstr ""
+
+msgid "CONSCIENCE PROFESSIONNELLE"
 msgstr ""
 
 msgid "Cancel"
@@ -247,6 +266,11 @@ msgid "Capacity"
 msgstr ""
 
 msgid "Certified in conformity with registered evaluations. Brussels, {}."
+msgstr ""
+
+msgid ""
+"Cette priode correspond  une priode de pr-concours et le fichier import sera "
+"ddi  cette particularit"
 msgstr ""
 
 msgctxt "internship"
@@ -406,6 +430,9 @@ msgstr ""
 msgid "Duplicated sequence in report"
 msgstr ""
 
+msgid "ENGAGEMENT PERSONNEL DANS LE SERVICE"
+msgstr ""
+
 msgid "EPA Validation"
 msgstr ""
 
@@ -440,6 +467,9 @@ msgid "Enrolment end"
 msgstr ""
 
 msgid "Enrolment start"
+msgstr ""
+
+msgid "Entrez une note entre 0 et 20"
 msgstr ""
 
 msgid "Erasmus"
@@ -603,6 +633,9 @@ msgstr ""
 msgid "Grades received"
 msgstr ""
 
+msgid "HABILETE TECHNIQUE CLINIQUE"
+msgstr ""
+
 msgid "Hospital"
 msgstr ""
 
@@ -622,10 +655,19 @@ msgstr ""
 msgid "Import aborted for period %(period)s due to error(s) on:"
 msgstr ""
 
+msgid "Import affectations"
+msgstr ""
+
+msgid "Import in progress"
+msgstr ""
+
 msgid "Import internships evaluations"
 msgstr ""
 
 msgid "Import internships ratings"
+msgstr ""
+
+msgid "Importing Affectations..."
 msgstr ""
 
 msgid "Imposed choices"
@@ -730,6 +772,12 @@ msgstr ""
 msgid "Item"
 msgstr ""
 
+msgid "JUGEMENT CLINIQUE"
+msgstr ""
+
+msgid "La note globale sera calcule comme la moyenne des deux scores"
+msgstr ""
+
 msgid "Language"
 msgstr ""
 
@@ -761,6 +809,9 @@ msgid "Make/receive transmission report"
 msgstr ""
 
 msgid "Male"
+msgstr ""
+
+msgid "Manager comment"
 msgstr ""
 
 msgid "Mandatory"
@@ -873,6 +924,9 @@ msgid "Non mandatory internships"
 msgstr ""
 
 msgid "Normal students"
+msgstr ""
+
+msgid "Note globale actuelle"
 msgstr ""
 
 msgid "Number"
@@ -1019,6 +1073,22 @@ msgstr ""
 msgid "Postpone allocations ?"
 msgstr ""
 
+msgid "Pre-competition internship comments"
+msgstr ""
+
+#, fuzzy
+#| msgid "Pré-concours"
+msgid "Pre-concours Period"
+msgstr "Pre-competition"
+
+msgid "Preconcours Evaluation Detail"
+msgstr ""
+
+#, fuzzy
+#| msgid "Pré-concours"
+msgid "Preconcours comments"
+msgstr "Pre-competition"
+
 msgid "Predifined reason"
 msgstr ""
 
@@ -1040,6 +1110,11 @@ msgstr ""
 msgid "Provide reason"
 msgstr ""
 
+#, fuzzy
+#| msgid "Pré-concours"
+msgid "Pr-concours"
+msgstr "Pre-competition"
+
 msgid "Publication date"
 msgstr ""
 
@@ -1047,6 +1122,12 @@ msgid "Publication must be done after the subscription process."
 msgstr ""
 
 msgid "Publication start date"
+msgstr ""
+
+msgid "RELATIONS AVEC LES MEDECINS, LE PERSONNEL"
+msgstr ""
+
+msgid "RELATIONS AVEC LES PATIENTS"
 msgstr ""
 
 msgid "Reason"
@@ -1127,6 +1208,12 @@ msgstr ""
 msgid "Score"
 msgstr ""
 
+msgid "Score comportemental"
+msgstr ""
+
+msgid "Score de comptence"
+msgstr ""
+
 msgid "Score edited. Computed score: "
 msgstr ""
 
@@ -1148,6 +1235,12 @@ msgid "Scores encoding"
 msgstr ""
 
 msgid "Scores equivalence according to periods"
+msgstr ""
+
+msgid "Scores must be between 0 and 20."
+msgstr ""
+
+msgid "Scores must be integers"
 msgstr ""
 
 msgid "Search"
@@ -1220,6 +1313,9 @@ msgid ""
 msgstr ""
 
 msgid "Signature"
+msgstr ""
+
+msgid "Skill score"
 msgstr ""
 
 msgid "Social students"
@@ -1319,6 +1415,9 @@ msgid "Subscription start date"
 msgstr ""
 
 msgid "Subspecialty"
+msgstr ""
+
+msgid "Succesfully imported {} affectations for {}"
 msgstr ""
 
 msgid "Successfully deleted item {}"
@@ -1471,6 +1570,10 @@ msgstr ""
 msgid ""
 "You may provide a reason for editing score by choosing a justification from "
 "the list below."
+msgstr ""
+
+msgid ""
+"Your affectations are being imported. This process may take a few minutes."
 msgstr ""
 
 msgid "achieves with help"

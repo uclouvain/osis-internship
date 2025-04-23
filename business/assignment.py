@@ -95,7 +95,7 @@ class Assignment:
         self.offers = self.cohort.internshipoffer_set.all()
         self.offer_ids = self.offers.values_list("id", flat=True)
         self.available_places = PeriodInternshipPlaces.objects.filter(internship_offer_id__in=self.offer_ids).values()
-        self.periods = get_assignable_periods(self.cohort.pk).extra(
+        self.periods = get_assignable_periods(self.cohort.pk).filter(is_preconcours=False).extra(
             select={"period_number": "CAST(substr(name, 2) AS INTEGER)"}
         ).order_by("period_number")
 
