@@ -312,7 +312,13 @@
                             {% if key|slugify == score.period|slugify and forloop.parentloop.counter == period_aff_index %}
                                 {% if score.period.is_preconcours %}
                                     <td class="hidden-sm hidden-xs text-center" colspan="8">
-                                        <strong>{% trans "Score comportemental" %} : </strong>
+                                        <strong>
+                                            {% if organization.reference == 'MG600' %}
+                                                {% trans "Score compétences socles" %}
+                                            {% else %}
+                                                {% trans "Score comportemental" %}
+                                            {% endif %} : 
+                                        </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == score.period.name and forloop.parentloop.parentloop.counter == period_aff_index%}
                                                 {{ period_scores.behavior|default:"-" }}
@@ -320,7 +326,13 @@
                                         {% endfor %}
                                     </td>
                                     <td class="hidden-sm hidden-xs text-center" colspan="7">
-                                        <strong>{% trans "Score de compétence" %} : </strong>
+                                        <strong>
+                                            {% if organization.reference == 'MG600' %}
+                                                {% trans "Score compétences cliniques" %}
+                                            {% else %}
+                                                {% trans "Score de compétence" %}
+                                            {% endif %} : 
+                                        </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == score.period.name and forloop.parentloop.parentloop.counter == period_aff_index%}
                                                 {{ period_scores.competency|default:"-" }}

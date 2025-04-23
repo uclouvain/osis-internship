@@ -81,7 +81,11 @@
                         <div class="col-md-6">
                             <div class="row">
                                 <label class="form-label col-md-4" style="line-height:2.5;">
-                                    {% trans "Score de compétence" %}
+                                    {% if score.student_affectation.organization.reference == 'MG600' %}
+                                        {% trans "Score compétences cliniques" %}
+                                    {% else %}
+                                        {% trans "Score de compétence" %}
+                                    {% endif %}
                                 </label>
                                 <div class="col-md-6">
                                     <input type="number" 

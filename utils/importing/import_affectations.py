@@ -63,18 +63,37 @@ def import_xlsx(cohort, xlsxfile, period_instance):
     for index, row in enumerate(worksheet.iter_rows(min_row=2, values_only=True), start=2):
         registration_id = row[2]
         affectation_str = row[7]
-        # Check if date columns exist and have values
-        date_start = row[8] if len(row) > 8 and row[8] else None
-        date_end = row[9] if len(row) > 9 and row[9] else None
         internship_type = row[10]
+        # Check if date columns exist and have values
+        date_start_str = row[11] if len(row) > 11 and row[11] else None
+        date_end_str = row[12] if len(row) > 12 and row[12] else None
         if registration_id and affectation_str:
             affectation_strings = affectation_str.split('/')
-            for affectation_string in affectation_strings:
-                _create_affectation(
-                    cohort, period_instance, registration_id,
-                    affectation_string, internship_type, index, organization_mg,
-                    date_start, date_end
-                )
+
+            # Split dates if they contain '/' to match with multiple affectations
+            date_starts = date_start_str.split('/') if date_start_str and '/' in date_start_str else [date_start_str] * len(affectation_strings)
+            date_ends = date_end_str.split('/') if date_end_str and '/' in date_end_str else [date_end_str] * len(affectation_strings)
+
+            # Ensure we have the same number of dates as affectations
+            if len(date_starts) != len(affectation_strings):
+                date_starts = [date_start_str] * len(affectation_strings)
+            if len(date_ends) != len(affectation_strings):
+                date_ends = [date_end_str] * len(affectation_strings)
+
+            for i, affectation_string in enumerate(affectation_strings):
+                try:
+                    _create_affectation(
+                        cohort, period_instance, registration_id,
+                        affectation_string, internship_type, index, organization_mg,
+                        date_starts[i], date_ends[i]
+                    )
+                except Exception as e:
+                    # Check if the exception value is already a list (our custom format)
+                    if isinstance(e.args[0], list):
+                        error_msg = f"Error creating affectation for student {registration_id}, row {index}: {e.args[0]}"
+                    else:
+                        error_msg = f"Error creating affectation for student {registration_id}, row {index}: {e}"
+                    errors.append(error_msg)
             row_count += 1
     return errors, row_count
 
@@ -83,17 +102,38 @@ def _validate_row(cohort, row, row_index):
     errors = []
     registration_id = row[2]
     affectation_str = row[7]
-    # Check if date columns exist and have values
-    date_start = row[8] if len(row) > 8 and row[8] else None
-    date_end = row[9] if len(row) > 9 and row[9] else None
     internship_type = row[10]
+    # Check if date columns exist and have values
+    date_start_str = row[11] if len(row) > 11 and row[11] else None
+    date_end_str = row[12] if len(row) > 12 and row[12] else None
 
     if not registration_id or not affectation_str:
         return errors  # Skip empty rows
 
+    # Get all affectations
+    affectation_strings = affectation_str.split('/')
+
+    # Get all dates
+    date_starts = date_start_str.split('/') if date_start_str and '/' in date_start_str else [date_start_str]
+    date_ends = date_end_str.split('/') if date_end_str and '/' in date_end_str else [date_end_str]
+
     # Validate dates if provided
-    if date_start and date_end and date_start > date_end:
-        errors.append(f"Row {row_index}: Start date must be earlier than end date.")
+    if len(date_starts) == len(date_ends):
+        for i, (start, end) in enumerate(zip(date_starts, date_ends)):
+            if start and end and start > end:
+                errors.append(f"Row {row_index}: Start date must be earlier than end date for affectation {i+1}.")
+    elif date_start_str and date_end_str:
+        errors.append(
+            f"Row {row_index}: Number of start dates"
+            f" ({len(date_starts)}) does not match number of end dates ({len(date_ends)})."
+        )
+
+    # If number of dates doesn't match number of affectations, validate using the original strings
+    if (
+            len(date_starts) != len(affectation_strings) or len(date_ends) != len(affectation_strings)
+    ) and date_start_str and date_end_str:
+        if date_start_str > date_end_str:
+            errors.append(f"Row {row_index}: Start date must be earlier than end date.")
 
     student_obj = student.find_by_registration_id(registration_id)
     if not student_obj:
@@ -134,42 +174,41 @@ def _create_affectation(
         date_start=None, date_end=None
 ):
     student_obj = student.find_by_registration_id(registration_id)
-    affectation_strings = affectation_str.split('/')  # Split here to handle multiple affectations
-    for affectation_string in affectation_strings:  # Iterate over each affectation string
-        specialty_acronym = "".join([char for char in affectation_string if char.isalpha()])
-        org_reference = "".join([char for char in affectation_string if char.isdigit()])
-        specialty = internship_speciality.InternshipSpeciality.objects.filter(
-            acronym=specialty_acronym, cohort=cohort
-        ).first()
-        organization_obj = organization.Organization.objects.filter(
-            reference=org_reference, cohort=cohort
-        ).first() if org_reference else None
+    # Process a single affectation string (already split in the calling function)
+    specialty_acronym = "".join([char for char in affectation_str if char.isalpha()])
+    org_reference = "".join([char for char in affectation_str if char.isdigit()])
+    specialty = internship_speciality.InternshipSpeciality.objects.filter(
+        acronym=specialty_acronym, cohort=cohort
+    ).first()
+    organization_obj = organization.Organization.objects.filter(
+        reference=org_reference, cohort=cohort
+    ).first() if org_reference else None
 
-        if specialty_acronym == MEDECINE_GENERALE_ACRONYM:
-            organization_obj = organization_mg
+    if specialty_acronym == MEDECINE_GENERALE_ACRONYM:
+        organization_obj = organization_mg
 
-        internship = None
-        if internship_type == INTERNSHIP_TYPE_MANDATORY:
-            internship = Internship.objects.filter(speciality=specialty, cohort=cohort).first()
-        else:
-            internship = Internship.objects.filter(name=internship_type, cohort=cohort).first()
+    internship = None
+    if internship_type == INTERNSHIP_TYPE_MANDATORY:
+        internship = Internship.objects.filter(speciality=specialty, cohort=cohort).first()
+    else:
+        internship = Internship.objects.filter(name=internship_type, cohort=cohort).first()
 
-        try:  # Added try-except block to handle potential IntegrityError
-            student_affectation = internship_student_affectation_stat.InternshipStudentAffectationStat.objects.create(
-                student=student_obj,
-                period=period_instance,
-                speciality=specialty,
-                organization=organization_obj,
-                internship=internship,
-                cost=0,
-                choice=ChoiceType.IMPOSED.value,
-                date_start=date_start,
-                date_end=date_end,
-            )
-            # create empty score along with affectation
-            InternshipScore.objects.create(
-                student_affectation=student_affectation
-            )
-        except Exception as e:  # Catching generic exception for simplicity, ideally catch IntegrityError
-            print(f"Error creating affectation for student {registration_id}, row {row_index}: {e}")
-            # Log error, do not re-raise for now
+    try:  # Added try-except block to handle potential IntegrityError
+        student_affectation = internship_student_affectation_stat.InternshipStudentAffectationStat.objects.create(
+            student=student_obj,
+            period=period_instance,
+            speciality=specialty,
+            organization=organization_obj,
+            internship=internship,
+            cost=0,
+            choice=ChoiceType.IMPOSED.value,
+            date_start=date_start,
+            date_end=date_end,
+        )
+        # create empty score along with affectation
+        InternshipScore.objects.create(
+            student_affectation=student_affectation
+        )
+    except Exception as e:  # Catching generic exception for simplicity, ideally catch IntegrityError
+        print(f"Error creating affectation for student {registration_id}, row {row_index}: {e}")
+        # Log error, do not re-raise for now
