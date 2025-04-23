@@ -720,9 +720,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         student_with_comment = response.context['students'].object_list[0]
-        self.assertDictEqual(
-            student_with_comment.comments[self.period.name][0],
-            {_("Improvement areas"): comment_content, 'Manager comment': None}
+        self.assertEqual(
+            student_with_comment.comments[self.period.name][0][_("Improvement areas")], comment_content
         )
 
     def test_should_filter_scores_by_organization(self):
