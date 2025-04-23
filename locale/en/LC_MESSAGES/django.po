@@ -796,12 +796,6 @@ msgstr ""
 msgid "Length in periods"
 msgstr ""
 
-msgid "Les scores doivent tre compris entre 0 et 20."
-msgstr ""
-
-msgid "Les scores doivent tre des nombres entiers."
-msgstr ""
-
 msgid "List of all hospitals"
 msgstr ""
 
@@ -1241,6 +1235,12 @@ msgid "Scores encoding"
 msgstr ""
 
 msgid "Scores equivalence according to periods"
+msgstr ""
+
+msgid "Scores must be between 0 and 20."
+msgstr ""
+
+msgid "Scores must be integers"
 msgstr ""
 
 msgid "Search"

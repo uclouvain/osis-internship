@@ -35,9 +35,15 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class PeriodAdmin(SerializableModelAdmin):
     list_display = (
-        'name', 'date_start', 'date_end', 'cohort', 'reminder_mail_sent', 'remedial', 'place_evaluation_active', 'is_preconcours'
+        'name', 'date_start', 'date_end', 'cohort',
+        'reminder_mail_sent', 'remedial', 'place_evaluation_active', 'is_preconcours'
     )
-    fieldsets = ((None, {'fields': ('name', 'date_start', 'date_end', 'cohort', 'remedial', 'exclude_from_assignment', 'is_preconcours')}),)
+    fieldsets = (
+        (None, {'fields':
+                    ('name', 'date_start', 'date_end', 'cohort',
+                     'remedial', 'exclude_from_assignment', 'is_preconcours')
+                }),
+    )
     list_filter = ('cohort', 'reminder_mail_sent', 'remedial', 'place_evaluation_active', 'is_preconcours')
 
 

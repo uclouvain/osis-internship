@@ -603,8 +603,8 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url)
         student_with_score_not_validated = response.context['students'].object_list[0]
         student_with_score_validated = response.context['students'].object_list[1]
-        self.assertTrue(student_with_score_validated.scores)
-        self.assertFalse(student_with_score_not_validated.scores)
+        self.assertTrue(student_with_score_validated.scores[0][1])
+        self.assertFalse(student_with_score_not_validated.scores[0][1])
 
     @mock.patch('internship.utils.exporting.score_encoding_xls.export_xls_with_scores')
     def test_export_only_validated_scores(self, mock_export: Mock):
@@ -624,7 +624,7 @@ class ScoresEncodingTest(TestCase):
         exported_students = args[2]
         student_with_score_not_validated = exported_students[0]
         student_with_score_validated = exported_students[1]
-        self.assertFalse(student_with_score_not_validated.scores)
+        self.assertFalse(student_with_score_not_validated.scores[0][1])
         self.assertTrue(student_with_score_validated.scores)
 
     def test_form_edit_score_consultation(self):
@@ -637,7 +637,7 @@ class ScoresEncodingTest(TestCase):
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
             'period_id': self.period.pk,
-            'specialty_acronym': self.mandatory_internship.speciality.acronym
+            'specialty_name': self.mandatory_internship.speciality.name
         })
         response = self.client.get(url)
         self.assertTemplateUsed(response, "score_form.html")
@@ -648,7 +648,7 @@ class ScoresEncodingTest(TestCase):
             'cohort_id': self.cohort.pk,
             'student_registration_id': student.registration_id,
             'period_id': self.period.pk,
-            'specialty_acronym': self.mandatory_internship.speciality.acronym
+            'specialty_name': self.mandatory_internship.speciality.acronym
         })
         response = self.client.get(url)
 
@@ -670,7 +670,7 @@ class ScoresEncodingTest(TestCase):
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
             'period_id': self.period.pk,
-            'specialty_acronym': self.mandatory_internship.speciality.acronym
+            'specialty_name': self.mandatory_internship.speciality.name
         })
         response = self.client.post(url, data={'apd-1': 'B'})
         messages_list = [msg for msg in response.wsgi_request._messages]
@@ -689,7 +689,7 @@ class ScoresEncodingTest(TestCase):
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
             'period_id': self.period.pk,
-            'specialty_acronym': self.mandatory_internship.speciality.acronym
+            'specialty_name': self.mandatory_internship.speciality.name
         })
         response = self.client.post(url, data={
             'apd-1': 'B',
@@ -720,7 +720,9 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         student_with_comment = response.context['students'].object_list[0]
-        self.assertEqual(student_with_comment.comments[self.period.name], [{_("Improvement areas"): comment_content}])
+        self.assertEqual(student_with_comment.comments[self.period.name], [
+            {_("Improvement areas"): comment_content, 'Manager comment': None}
+        ])
 
     def test_should_filter_scores_by_organization(self):
         organization = Organization.objects.first()

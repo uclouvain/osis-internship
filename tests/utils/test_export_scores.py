@@ -63,8 +63,12 @@ class XlsExportScoresTestCase(TestCase):
         }
         cls.student.periods_scores = {
             cls.past_period_no_scores_submitted.name: [NO_SUBMISSION_SCORE],
-            cls.past_period_excused.name: [{'edited': [{'score': EXCUSED_PERIOD_SCORE}], 'computed': NO_SUBMISSION_SCORE}],
-            cls.past_period_edited.name: [{'edited': [{'score': EDITED_PERIOD_SCORE}], 'computed': COMPUTED_PERIOD_SCORE}],
+            cls.past_period_excused.name: [
+                {'edited': [{'score': EXCUSED_PERIOD_SCORE}], 'computed': NO_SUBMISSION_SCORE}
+            ],
+            cls.past_period_edited.name: [
+                {'edited': [{'score': EDITED_PERIOD_SCORE}], 'computed': COMPUTED_PERIOD_SCORE}
+            ],
         }
         cls.periods = [
             cls.past_period_no_scores_submitted,

@@ -261,12 +261,10 @@ def import_affectations(request, cohort_id):
             if errors:
                 for error in errors:
                     messages.error(request, error)
-                return redirect(reverse('internship_affectation_hospitals', kwargs={'cohort_id': cohort.id}))
             else:
                 messages.success(
                     request, _("Succesfully imported {} affectations for {}").format(
                         row_count, pre_concours_period.name
                     )
                 )
-                return redirect(reverse('internship_affectation_hospitals', kwargs={'cohort_id': cohort.id}))
-    return redirect(reverse('internship_affectation_hospitals', kwargs={'cohort_id': cohort.id}))
+    return redirect(request.META.get('HTTP_REFERER'))

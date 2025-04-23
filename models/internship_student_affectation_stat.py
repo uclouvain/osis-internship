@@ -34,9 +34,9 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
-                    'consecutive_month', 'type', 'internship_evaluated')
+                    'consecutive_month', 'type', 'internship_evaluated', 'date_start', 'date_end')
     fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
-                                    'consecutive_month', 'type', 'internship_evaluated', 'uuid')}),)
+                                    'consecutive_month', 'type', 'internship_evaluated', 'date_start', 'date_end', 'uuid')}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
     list_filter = ('period__cohort', 'choice', 'period__name')
@@ -67,9 +67,15 @@ class InternshipStudentAffectationStat(SerializableModel):
         max_length=1, choices=AffectationType.choices(), default=AffectationType.NORMAL.value, verbose_name=_('Type')
     )
     internship_evaluated = models.BooleanField(default=False, verbose_name=_('Internship evaluated'))
+    date_start = models.DateField(null=True, blank=True, verbose_name=_('Effective start date'))
+    date_end = models.DateField(null=True, blank=True, verbose_name=_('Effective end date'))
 
     def __str__(self):
-        return u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)
+        base_str = u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)
+        # Add effective dates if they differ from period dates
+        if self.date_start and self.date_end and (self.date_start != self.period.date_start or self.date_end != self.period.date_end):
+            return base_str + u" [%s - %s]" % (self.date_start, self.date_end)
+        return base_str
 
 
 def search(**kwargs):
@@ -102,12 +108,16 @@ def delete_affectations(student, cohort):
     affectations.delete()
 
 
-def build(student, organization, specialty, period, internship, student_choices):
+def build(student, organization, specialty, period, internship, student_choices, date_start=None, date_end=None):
     affectation = InternshipStudentAffectationStat()
     affectation.student = student
     affectation.organization = organization
     affectation.period = period
     affectation.internship = internship
+
+    # Set effective dates (default to period dates if not specified)
+    affectation.date_start = date_start
+    affectation.date_end = date_end
 
     if internship is None or internship.speciality is None:
         affectation.speciality = specialty

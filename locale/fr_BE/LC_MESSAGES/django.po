@@ -181,7 +181,9 @@ msgstr "Fichier des affectations"
 
 msgid ""
 "Affectations already exist for this cohort and period. Import cancelled."
-msgstr "Des affectations de stage existent déjà pour cette période. L'importation est annulée."
+msgstr ""
+"Des affectations de stage existent déjà pour cette période. L'importation "
+"est annulée."
 
 msgid "All EPAs validated"
 msgstr "Tous les APDs validés"
@@ -466,6 +468,9 @@ msgstr "Validation APD"
 
 msgid "Edit"
 msgstr "Modifier"
+
+msgid "Effective dates"
+msgstr "Dates effectives"
 
 msgid "Edit cohort"
 msgstr "Ajouter une cohorte"
@@ -831,12 +836,6 @@ msgstr "Adresse légale"
 
 msgid "Length in periods"
 msgstr "Durée en périodes"
-
-msgid "Les scores doivent tre compris entre 0 et 20."
-msgstr ""
-
-msgid "Les scores doivent tre des nombres entiers."
-msgstr ""
 
 msgid "List of all hospitals"
 msgstr "Liste de tous les hôpitaux"
@@ -1278,6 +1277,12 @@ msgstr "Encodage des notes"
 
 msgid "Scores equivalence according to periods"
 msgstr "Equivalence des notes par période"
+
+msgid "Scores must be between 0 and 20."
+msgstr "Les scores doivent être compris entre 0 et 20."
+
+msgid "Scores must be integers"
+msgstr "Les scores doivent être des nombres entiers."
 
 msgid "Search"
 msgstr "Rechercher"

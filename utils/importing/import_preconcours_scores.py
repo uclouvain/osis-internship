@@ -36,6 +36,7 @@ from osis_common.utils.models import get_object_or_none
 
 NUMBER_REGEX = r'(\d+)'
 
+
 @transaction.atomic
 def import_xlsx(cohort, xlsxfile, period):
     workbook = load_workbook(filename=xlsxfile, read_only=True)
@@ -48,6 +49,7 @@ def import_xlsx(cohort, xlsxfile, period):
     else:
         _process_rows_import(cohort, period, worksheet)
     xlsxfile.close()
+
 
 def _process_rows_import(cohort, period, worksheet):
     for row in list(worksheet.rows)[5:worksheet.max_row]:
@@ -67,6 +69,7 @@ def _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period):
     if score_completeness_errors:
         errors.update({'score_completeness_errors': score_completeness_errors})
 
+
 def _analyze_score_completeness(worksheet):
     errors = []
     for row in list(worksheet.rows)[5:worksheet.max_row]:
@@ -78,16 +81,27 @@ def _analyze_score_completeness(worksheet):
         competency_score = row[6].value
         global_score = row[8].value
 
-        # Check if both behavior and competency scores are missing
-        # OR if global score is missing
-        if ((behavior_score is None and competency_score is None) or
-                (global_score is None and (behavior_score is None or competency_score is None))):
-            errors.append({
-                'registration_id': registration_id,
-                'row': row
-            })
+        error = _get_score_completeness_error(
+            behavior_score,
+            competency_score,
+            errors,
+            global_score,
+            registration_id,
+            row
+        )
+        if error:
+            errors.append(error)
 
     return errors
+
+
+def _get_score_completeness_error(behavior_score, competency_score, errors, global_score, registration_id, row):
+    # Check if both behavior and competency scores are missing
+    # OR if global score is missing
+    if ((behavior_score is None and competency_score is None) or
+            (global_score is None and (behavior_score is None or competency_score is None))):
+        return {'registration_id': registration_id, 'row': row}
+
 
 def _analyze_registration_ids(cohort, worksheet):
     errors = []
@@ -96,10 +110,17 @@ def _analyze_registration_ids(cohort, worksheet):
         if registration_id is None:
             continue
         else:
-            existing_student = student.find_by_registration_id(registration_id)
-            if existing_student is None or not _student_is_in_cohort(existing_student, cohort):
-                errors.append(row)
+            error = _get_registration_id_errors(cohort, errors, registration_id, row)
+            if error:
+                errors.append(error)
     return errors
+
+
+def _get_registration_id_errors(cohort, errors, registration_id, row):
+    existing_student = student.find_by_registration_id(registration_id)
+    if existing_student is None or not _student_is_in_cohort(existing_student, cohort):
+        return row
+
 
 def _import_score(row, cohort, period):
     registration_id = row[0].value
@@ -137,10 +158,12 @@ def _import_score(row, cohort, period):
         except (ValueError, TypeError):
             pass
 
+
 def _student_is_in_cohort(student, cohort):
     return find_by_person(student.person, cohort)
+
 
 def _periods_match(period, worksheet_period):
     period_numeric = re.findall(NUMBER_REGEX, period.name)
     worksheet_period_numeric = re.findall(NUMBER_REGEX, worksheet_period)
-    return period_numeric[0] == worksheet_period_numeric[0] if period_numeric and worksheet_period_numeric else False 
+    return period_numeric[0] == worksheet_period_numeric[0] if period_numeric and worksheet_period_numeric else False
