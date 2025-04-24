@@ -1250,7 +1250,13 @@ msgid "Score"
 msgstr "Note"
 
 msgid "Score comportemental"
-msgstr ""
+msgstr "Score comportemental"
+
+msgid "Score compétences socles"
+msgstr "Score compétences socles"
+
+msgid "Score compétences cliniques"
+msgstr "Score compétences cliniques"
 
 msgid "Score de comptence"
 msgstr "Note modifiée. Note calculée: "

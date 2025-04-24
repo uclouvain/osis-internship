@@ -44,7 +44,7 @@ def iter_score_periods(periods, score_periods, key):
 @register.simple_tag
 def count_multiple_score_for_period(score_periods):
     counts = Counter([el[0] for el in score_periods])
-    total = sum(count>1 for count in counts.values())
+    total = sum(count > 1 for count in counts.values())
     return total
 
 

@@ -35,8 +35,10 @@ from osis_common.models.serializable_model import SerializableModel, Serializabl
 class InternshipStudentAffectationStatAdmin(SerializableModelAdmin):
     list_display = ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
                     'consecutive_month', 'type', 'internship_evaluated', 'date_start', 'date_end')
-    fieldsets = ((None, {'fields': ('student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
-                                    'consecutive_month', 'type', 'internship_evaluated', 'date_start', 'date_end', 'uuid')}),)
+    fieldsets = ((None, {'fields': (
+        'student', 'organization', 'speciality', 'period', 'internship', 'choice', 'cost',
+        'consecutive_month', 'type', 'internship_evaluated', 'date_start', 'date_end', 'uuid'
+    )}),)
     raw_id_fields = ('student', 'organization', 'speciality', 'period', 'internship')
     search_fields = ['student__person__first_name', 'student__person__last_name']
     list_filter = ('period__cohort', 'choice', 'period__name')
@@ -73,7 +75,9 @@ class InternshipStudentAffectationStat(SerializableModel):
     def __str__(self):
         base_str = u"%s : %s - %s (%s)" % (self.student, self.organization, self.speciality, self.period)
         # Add effective dates if they differ from period dates
-        if self.date_start and self.date_end and (self.date_start != self.period.date_start or self.date_end != self.period.date_end):
+        if self.date_start and self.date_end and (
+                self.date_start != self.period.date_start or self.date_end != self.period.date_end
+        ):
             return base_str + u" [%s - %s]" % (self.date_start, self.date_end)
         return base_str
 

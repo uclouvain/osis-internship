@@ -158,7 +158,8 @@ urlpatterns = [
 
             path('scores_encoding/', include([
                 path('', score.scores_encoding, name='internship_scores_encoding'),
-                path('edit/<str:student_registration_id>/<int:period_id>/<str:specialty_name>/',
+                path(
+                    'edit/<str:student_registration_id>/<int:period_id>/<str:specialty_name>/',
                      score.score_detail_form,
                      name='internship_edit_score'
                 ),
