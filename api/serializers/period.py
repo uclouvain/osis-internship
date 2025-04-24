@@ -46,4 +46,5 @@ class PeriodSerializer(serializers.HyperlinkedModelSerializer):
             'date_end',
             'cohort',
             'place_evaluation_active',
+            'is_preconcours',
         )

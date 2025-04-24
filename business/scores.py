@@ -55,7 +55,7 @@ class InternshipScoreRules:
     def _filter_fulfilled_apd_indices(cls, student):
         # remove iteratively apd from list when score is valid
         apd_indices = [index for index in range(0, APD_NUMBER)]
-        for period, scores in student.scores:
+        for period, scores, period_aff_index in student.scores:
             if not apd_indices:
                 break
             for apd, score in enumerate(scores):

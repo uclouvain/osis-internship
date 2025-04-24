@@ -57,26 +57,82 @@
             <form method="post" action="">
                 {% csrf_token %}
                 <div class="row flex-column gap-3" style="height: 450px;">
-                    {% for apd in apds %}
-                    <div class="col-md-6">
-                        <div class="row">
-                        <label data-bs-toggle="tooltip" for="{{ apd }}" class="form-label col-md-2 text-center" style="line-height:2.5;">
-                            APD {{ apd }}
-                        </label>
+                    {% if score.student_affectation.period.is_preconcours %}
                         <div class="col-md-6">
-                        <select class="form-select" name="apd-{{ apd }}" id="input-apd-{{ apd }}" >
-                            <option value="">-</option>
-                            {% for grade in available_grades %}
-                                <option value="{{ grade }}"
-                                {% if score and score|get_apd_value:apd == grade %} selected {% endif %}>
-                                    {{ grade }}
-                                </option>
-                            {% endfor %}
-                        </select>
+                            <div class="row">
+                                <label class="form-label col-md-4" style="line-height:2.5;">
+                                    {% trans "Score comportemental" %}
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="number" 
+                                           class="form-control" 
+                                           name="behavior_score" 
+                                           id="input-behavior-score"
+                                           min="0"
+                                           max="20"
+                                           step="1"
+                                           value="{{ score.behavior_score|default:'' }}"
+                                           placeholder="0-20"
+                                           required>
+                                    <small class="form-text text-muted">{% trans "Entrez une note entre 0 et 20" %}</small>
+                                </div>
+                            </div>
                         </div>
+                        <div class="col-md-6">
+                            <div class="row">
+                                <label class="form-label col-md-4" style="line-height:2.5;">
+                                    {% if score.student_affectation.organization.reference == 'MG600' %}
+                                        {% trans "Score compétences cliniques" %}
+                                    {% else %}
+                                        {% trans "Score de compétence" %}
+                                    {% endif %}
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="number" 
+                                           class="form-control" 
+                                           name="competency_score" 
+                                           id="input-competency-score"
+                                           min="0"
+                                           max="20"
+                                           step="1"
+                                           value="{{ score.competency_score|default:'' }}"
+                                           placeholder="0-20"
+                                           required>
+                                    <small class="form-text text-muted">{% trans "Entrez une note entre 0 et 20" %}</small>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    {% endfor %}
+                        <div class="col-md-12 mt-3">
+                            <div class="alert alert-info">
+                                {% trans "La note globale sera calculée comme la moyenne des deux scores" %}
+                                {% if score.calculated_global_score %}
+                                    <br>
+                                    <strong>{% trans "Note globale actuelle" %} : {{ score.calculated_global_score }}</strong>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% for apd in apds %}
+                        <div class="col-md-6">
+                            <div class="row">
+                            <label data-bs-toggle="tooltip" for="{{ apd }}" class="form-label col-md-2 text-center" style="line-height:2.5;">
+                                APD {{ apd }}
+                            </label>
+                            <div class="col-md-6">
+                            <select class="form-select" name="apd-{{ apd }}" id="input-apd-{{ apd }}" >
+                                <option value="">-</option>
+                                {% for grade in available_grades %}
+                                    <option value="{{ grade }}"
+                                    {% if score and score|get_apd_value:apd == grade %} selected {% endif %}>
+                                        {{ grade }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
                 </div>
                 <div class="row">
                     <div class="col-md-12 form-group" style="margin-top: 20px; margin-bottom: 20px;">

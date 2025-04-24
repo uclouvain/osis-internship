@@ -57,6 +57,7 @@
                 <thead>
                     <tr>
                         <th>{% trans 'Name' %}</th>
+                        <th>{% trans 'Type' %}</th>
                         <th>{% trans 'Start date' %}</th>
                         <th>{% trans 'End date' %}</th>
                         <th> </th>
@@ -66,6 +67,11 @@
                     {%for period in periods%}
                         <tr>
                             <td>{{period.name}}</td>
+                            <td>
+                                {% if period.is_preconcours %}
+                                    <span class="badge bg-info">{% trans 'Pré-concours' %}</span>
+                                {% endif %}
+                            </td>
                             <td>{{period.date_start}}</td>
                             <td>{{period.date_end}}</td>
                             <td>

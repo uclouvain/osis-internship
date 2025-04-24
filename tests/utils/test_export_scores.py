@@ -33,6 +33,7 @@ from base.tests.factories.student import StudentFactory
 from internship.tests.factories.cohort import CohortFactory
 from internship.tests.factories.organization import OrganizationFactory
 from internship.tests.factories.period import PeriodFactory
+from internship.tests.factories.speciality import SpecialtyFactory
 from internship.utils.exporting.score_encoding_xls import _append_row_data, _append_evolution_score
 
 EXCUSED_PERIOD_SCORE = None
@@ -50,15 +51,24 @@ class XlsExportScoresTestCase(TestCase):
         cls.past_period_edited = PeriodFactory(cohort=cls.cohort, date_end=date.today()-timedelta(days=1))
         cls.user = PersonWithPermissionsFactory('is_internship_manager').user
         cls.student = StudentFactory()
+        cls.student.specialties = {
+            cls.past_period_no_scores_submitted.name: [{'acronym': SpecialtyFactory().acronym}],
+            cls.past_period_excused.name: [{'acronym': SpecialtyFactory().acronym}],
+            cls.past_period_edited.name: [{'acronym': SpecialtyFactory().acronym}],
+        }
         cls.student.organizations = {
-            cls.past_period_no_scores_submitted.name: {'reference': OrganizationFactory().reference},
-            cls.past_period_excused.name: {'reference': OrganizationFactory().reference},
-            cls.past_period_edited.name: {'reference': OrganizationFactory().reference},
+            cls.past_period_no_scores_submitted.name: [{'reference': OrganizationFactory().reference}],
+            cls.past_period_excused.name: [{'reference': OrganizationFactory().reference}],
+            cls.past_period_edited.name: [{'reference': OrganizationFactory().reference}],
         }
         cls.student.periods_scores = {
-            cls.past_period_no_scores_submitted.name: NO_SUBMISSION_SCORE,
-            cls.past_period_excused.name: {'edited': {'score': EXCUSED_PERIOD_SCORE}, 'computed': NO_SUBMISSION_SCORE},
-            cls.past_period_edited.name: {'edited': {'score': EDITED_PERIOD_SCORE}, 'computed': COMPUTED_PERIOD_SCORE},
+            cls.past_period_no_scores_submitted.name: [NO_SUBMISSION_SCORE],
+            cls.past_period_excused.name: [
+                {'edited': [{'score': EXCUSED_PERIOD_SCORE}], 'computed': NO_SUBMISSION_SCORE}
+            ],
+            cls.past_period_edited.name: [
+                {'edited': [{'score': EDITED_PERIOD_SCORE}], 'computed': COMPUTED_PERIOD_SCORE}
+            ],
         }
         cls.periods = [
             cls.past_period_no_scores_submitted,
