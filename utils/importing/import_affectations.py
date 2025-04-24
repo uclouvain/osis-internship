@@ -23,6 +23,8 @@
 #
 ##############################################################################
 import openpyxl
+from django.core.exceptions import ValidationError
+from django.db.transaction import TransactionManagementError
 from django.utils.translation import gettext_lazy as _
 
 from base.models import student
@@ -81,22 +83,18 @@ def import_xlsx(cohort, xlsxfile, period_instance):
                 date_starts = [date_start_str] * len(affectation_strings)
             if len(date_ends) != len(affectation_strings):
                 date_ends = [date_end_str] * len(affectation_strings)
-
-            for i, affectation_string in enumerate(affectation_strings):
-                try:
+            try:
+                for i, affectation_string in enumerate(affectation_strings):
                     _create_affectation(
                         cohort, period_instance, registration_id,
                         affectation_string, internship_type, index, organization_mg,
                         date_starts[i], date_ends[i]
                     )
-                except Exception as e:
-                    # Check if the exception value is already a list (our custom format)
-                    if isinstance(e.args[0], list):
-                        error_msg = (f"Error creating affectation for student {registration_id}, "
-                                     f"row {index}: {e.args[0]}")
-                    else:
-                        error_msg = f"Error creating affectation for student {registration_id}, row {index}: {e}"
-                    errors.append(error_msg)
+            except ValidationError as e:
+                error_msg = f"Error creating affectations: {e}"
+                errors.append(error_msg)
+            except TransactionManagementError as e:
+                pass
             row_count += 1
     return errors, row_count
 
@@ -196,22 +194,18 @@ def _create_affectation(
     else:
         internship = Internship.objects.filter(name=internship_type, cohort=cohort).first()
 
-    try:  # Added try-except block to handle potential IntegrityError
-        student_affectation = internship_student_affectation_stat.InternshipStudentAffectationStat.objects.create(
-            student=student_obj,
-            period=period_instance,
-            speciality=specialty,
-            organization=organization_obj,
-            internship=internship,
-            cost=0,
-            choice=ChoiceType.IMPOSED.value,
-            date_start=date_start,
-            date_end=date_end,
-        )
-        # create empty score along with affectation
-        InternshipScore.objects.create(
-            student_affectation=student_affectation
-        )
-    except Exception as e:  # Catching generic exception for simplicity, ideally catch IntegrityError
-        print(f"Error creating affectation for student {registration_id}, row {row_index}: {e}")
-        # Log error, do not re-raise for now
+    student_affectation = internship_student_affectation_stat.InternshipStudentAffectationStat.objects.create(
+        student=student_obj,
+        period=period_instance,
+        speciality=specialty,
+        organization=organization_obj,
+        internship=internship,
+        cost=0,
+        choice=ChoiceType.IMPOSED.value,
+        date_start=date_start,
+        date_end=date_end,
+    )
+    # create empty score along with affectation
+    InternshipScore.objects.create(
+        student_affectation=student_affectation
+    )
