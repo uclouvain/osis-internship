@@ -257,6 +257,9 @@ msgstr "Attention"
 msgid "Autonomy Level (%% according to periods)"
 msgstr "Niveau d'autonomie (%% fonction des périodes)"
 
+msgid "Base skills score"
+msgstr "Score compétences socles"
+
 msgid "Behavior score"
 msgstr "Score de comportement"
 
@@ -267,13 +270,13 @@ msgid "Birth date"
 msgstr "Date de naissance"
 
 msgid "CAPACITE DE RECUEIL DES DONNEES DE BASE"
-msgstr ""
+msgstr "CAPACITE DE RECUEIL DES DONNEES DE BASE"
 
 msgid "CONNAISSANCES MEDICALES"
-msgstr ""
+msgstr "CONNAISSANCES MEDICALES"
 
 msgid "CONSCIENCE PROFESSIONNELLE"
-msgstr ""
+msgstr "CONSCIENCE PROFESSIONNELLE"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -296,11 +299,6 @@ msgstr "Capacité maximale"
 
 msgid "Certified in conformity with registered evaluations. Brussels, {}."
 msgstr "Certifié conforme aux évaluations encodées. Bruxelles, le {}."
-
-msgid ""
-"Cette priode correspond  une priode de pr-concours et le fichier import sera "
-"ddi  cette particularit"
-msgstr ""
 
 msgctxt "internship"
 msgid "Check All"
@@ -348,6 +346,9 @@ msgstr "Effacer"
 msgid "Clear score for period ?"
 msgstr "Effacer la note pour cette période ?"
 
+msgid "Clinical skills score"
+msgstr "Score compétences cliniques"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -368,6 +369,9 @@ msgstr "Commentaires"
 
 msgid "Communicate (broad sense)"
 msgstr "Communiquer au sens large"
+
+msgid "Competency score"
+msgstr "Score de compétence"
 
 msgid "Complement patient record"
 msgstr "Compléter le dossier patient"
@@ -461,16 +465,13 @@ msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
 
 msgid "ENGAGEMENT PERSONNEL DANS LE SERVICE"
-msgstr ""
+msgstr "ENGAGEMENT PERSONNEL DANS LE SERVICE"
 
 msgid "EPA Validation"
 msgstr "Validation APD"
 
 msgid "Edit"
 msgstr "Modifier"
-
-msgid "Effective dates"
-msgstr "Dates effectives"
 
 msgid "Edit cohort"
 msgstr "Ajouter une cohorte"
@@ -483,6 +484,15 @@ msgstr "Modifier nombres de places"
 
 msgid "Editable address"
 msgstr "Adresse modifiable"
+
+msgid "Effective dates"
+msgstr "Dates effectives"
+
+msgid "Effective end date"
+msgstr "Date effective de fin"
+
+msgid "Effective start date"
+msgstr "Date effective de début"
 
 msgid "Email"
 msgstr "Courriel"
@@ -670,7 +680,7 @@ msgid "Grades received"
 msgstr "Cotes reçues"
 
 msgid "HABILETE TECHNIQUE CLINIQUE"
-msgstr ""
+msgstr "HABILETE TECHNIQUE CLINIQUE"
 
 msgid "Hospital"
 msgstr "Hôpital"
@@ -814,10 +824,7 @@ msgid "Item"
 msgstr "Question"
 
 msgid "JUGEMENT CLINIQUE"
-msgstr ""
-
-msgid "La note globale sera calcule comme la moyenne des deux scores"
-msgstr ""
+msgstr "JUGEMENT CLINIQUE"
 
 msgid "Language"
 msgstr "Langue"
@@ -972,7 +979,7 @@ msgid "Normal students"
 msgstr "Etudiants Normaux"
 
 msgid "Note globale actuelle"
-msgstr ""
+msgstr "Note globale actuelle"
 
 msgid "Number"
 msgstr "Nombre"
@@ -1121,13 +1128,14 @@ msgstr "Reporter les affectations ?"
 msgid "Pre-competition internship comments"
 msgstr "Commentaires du stage de pré-concours"
 
+msgid "Pre-concours"
+msgstr "Pré-concours"
+
 msgid "Pre-concours Period"
 msgstr "Pré-concours period"
 
-#, fuzzy
-#| msgid "Internships evaluations detail"
 msgid "Preconcours Evaluation Detail"
-msgstr "Détail des évaluations de stage"
+msgstr "Détail de l'évaluation du pré-concours"
 
 msgid "Preconcours comments"
 msgstr "Commentaires du pré-concours"
@@ -1153,9 +1161,6 @@ msgstr "Fournir un motif de modification de la note ?"
 msgid "Provide reason"
 msgstr "Fournir le motif"
 
-msgid "Pr-concours"
-msgstr "Pré-concours"
-
 msgid "Publication date"
 msgstr "Date de publication"
 
@@ -1166,10 +1171,10 @@ msgid "Publication start date"
 msgstr "Date de début de publication"
 
 msgid "RELATIONS AVEC LES MEDECINS, LE PERSONNEL"
-msgstr ""
+msgstr "RELATIONS AVEC LES MEDECINS, LE PERSONNEL"
 
 msgid "RELATIONS AVEC LES PATIENTS"
-msgstr ""
+msgstr "RELATIONS AVEC LES PATIENTS"
 
 msgid "Reason"
 msgstr "Motif"
@@ -1248,18 +1253,6 @@ msgstr "Enregistrer"
 
 msgid "Score"
 msgstr "Note"
-
-msgid "Score comportemental"
-msgstr "Score comportemental"
-
-msgid "Score compétences socles"
-msgstr "Score compétences socles"
-
-msgid "Score compétences cliniques"
-msgstr "Score compétences cliniques"
-
-msgid "Score de comptence"
-msgstr "Note modifiée. Note calculée: "
 
 msgid "Score edited. Computed score: "
 msgstr "Note modifiée. Note calculée: "
@@ -1509,6 +1502,9 @@ msgstr ""
 "Les attributions suivantes des maîtres/délégués de stage ont été transférées "
 "dans la cohorte {}:"
 
+msgid "The global score will be computed as the average of both scores"
+msgstr "La note globale sera calculée comme la moyenne des deux scores"
+
 msgid "The parent cohort must be defined as parent"
 msgstr "La cohorte parente doit être définie comme parent"
 
@@ -1562,6 +1558,13 @@ msgstr ""
 
 msgid "This may take several minutes"
 msgstr "Cela peut prendre quelques minutes"
+
+msgid ""
+"This period is specific for pre-concours and the imported file will be "
+"dedicated to this specificity"
+msgstr ""
+"Cette période correspond à une période de pré-concours et le fichier importé "
+"sera dédié à cette particularité"
 
 msgid "Title"
 msgstr "Titre"
@@ -1694,3 +1697,6 @@ msgstr "réalise parfaitement"
 
 msgid "{} day(s)"
 msgstr "{} jour(s)"
+
+#~ msgid "Score comportemental"
+#~ msgstr "Score comportemental"
