@@ -23,21 +23,11 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django import forms
+from django.template.defaulttags import register
 
 from internship.models.period import Period
 
 
-class PeriodForm(forms.ModelForm):
-
-    class Meta:
-        model = Period
-        fields = [
-            'name', 'date_start', 'date_end', 'remedial',
-            'exclude_from_assignment', 'is_preconcours'
-        ]
-        widgets = {
-            'date_start': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
-            'date_end': forms.DateInput(format="%Y-%m-%d", attrs={'type': 'date'}),
-            'is_preconcours': forms.CheckboxInput(attrs={'class': 'form-check-input'})
-        }
+@register.filter
+def get_period(pk):
+    return Period.objects.get(pk=pk)

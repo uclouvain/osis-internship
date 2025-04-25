@@ -195,7 +195,8 @@
                         {% for student in students %}
                         {% with has_remedial=student|has_remedial %}
                          <tr>
-                             {% with rowspan_no_remedial=mandatory_periods|length|add:1 %}
+                            {% count_multiple_score_for_period student.scores as count_multiples_socres  %}
+                             {% with rowspan_no_remedial=mandatory_periods|length|add:1|add:count_multiples_socres %}
                              {% with rowspan_remedial=student.remedial_periods_count %}
                               <td
                                 {% if has_remedial and periods.count < mandatory_periods.count %}
@@ -257,41 +258,63 @@
                               {% endwith %}
                         </tr>
                         {% for period in periods %}
+                          {% iter_score_periods periods student.scores period.name as iter_score_periods %}
+                          {% for iter in iter_score_periods %}
                           {% if not period.remedial or student|has_remedial:period %}
-                          <tr onmouseover="showEditScoreBtn({{ student.pk }}, {{ period.pk }})"
-                              onmouseout="hideEditScoreBtn({{ student.pk }}, {{ period.pk }})"
+                          <tr onmouseover="showEditScoreBtn({{ student.pk }}, {{ period.pk }}, {{ forloop.counter }})"
+                              onmouseout="hideEditScoreBtn({{ student.pk }}, {{ period.pk }}, {{ forloop.counter }})"
                               {% if period == last_complete_period and last_period is not last_completed_period %}
                                 class="last-completed-period"
                               {% endif %}>
                             <td style="text-align: center;">
                             {% if student.registration_id %}
-                              <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk%}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
-                              id="edit-btn-{{ student.pk }}-{{ period.pk }}">
-                                <icon class="far fa-edit"></icon>
-                              </a>
+                            {% with student.specialties|get_item:period.name as specialties %}
+                            {% for sp in specialties %}
+                                {% if forloop.counter == forloop.parentloop.counter %}
+                                  <a href="{% url 'internship_edit_score' cohort_id=cohort.pk student_registration_id=student.registration_id period_id=period.pk specialty_name=sp.name %}" type="button" class="btn btn-xs btn-default btn-edit-score" style="display: none;"
+                                  id="edit-btn-{{ student.pk }}-{{ period.pk }}-{{ forloop.counter }}">
+                                    <icon class="far fa-edit"></icon>
+                                  </a>
+                                {% endif %}
+                            {% endfor %}
+                            {% endwith %}
                             {% endif %}
                             </td>
                             <td>
                                 {{ period }}
-                            {% if period.is_active %}
-                                  <icon style="font-size: 11px; color: #333;" class="fa fa-time" title="{% trans 'Current period' %}"></icon>
-                            {% endif %}
-                            </td>
-                            {% with student.specialties|get_item:period.name as specialty %}
-                                <td title="{{ specialty.name  | default_if_none:_('No specialty') }}">
-                                    {{ specialty.acronym | default_if_none:'-' }}
-                                    </td>
-                            {% endwith %}
-                            {% with student.organizations|get_item:period.name as organization %}
-                                <td title="{{ organization.name | default_if_none:_('No organization') }}">
-                                {% if organization.name %}
-                                    <span class="{% if organization.reference|is_searched_reference:request %}badge bg-primary{% endif %}">
-                                        {{ organization.reference }}
-                                    </span>
-                                {% else %}
-                                    -
+                                {% if forloop.counter != forloop.revcounter %}
+                                    / {{ forloop.counter }}
                                 {% endif %}
-                                </td>
+                                {% if period.is_preconcours %}
+                                    <span class="badge bg-light text-dark" title="{% trans 'Pre-concours' %}" data-bs-toggle="tooltip">P</span>
+                                {% endif %}
+                                {% if period.is_active %}
+                                    <icon style="font-size: 11px; color: #333;" class="fa fa-time" title="{% trans 'Current period' %}"></icon>
+                                {% endif %}
+                            </td>
+                            {% with student.specialties|get_item:period.name as specialties %}
+                                {% for sp in specialties %}
+                                    {% if forloop.counter == forloop.parentloop.counter %}
+                                    <td title="{{ sp.name | default_if_none:_('No specialty') }}">
+                                        {{ sp.acronym | default_if_none:'-' }}
+                                    </td>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endwith %}
+                            {% with student.organizations|get_item:period.name as organizations %}
+                                {% for org in organizations %}
+                                    {% if forloop.counter == forloop.parentloop.counter %}
+                                    <td title="{{ org.name | default_if_none:_('No organization') }}">
+                                    {% if org.name %}
+                                        <span class="{% if org.reference|is_searched_reference:request %}badge bg-primary{% endif %}">
+                                            {{ org.reference }}
+                                        </span>
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                    </td>
+                                    {% endif %}
+                                {% endfor %}
                             {% endwith %}
                             <td>
                                 <label class="switch">
@@ -304,41 +327,89 @@
 
                             </td>
                             {% if not student.scores|has_substr:period %}
-                                {% for i in i|rjust:15 %}
-                                    <td class="hidden-sm hidden-xs text-center">-</td>
-                                {% endfor %}
-                            {% endif %}
-                            {% for key, scores in student.scores %}
-                                {% if key|slugify == period|slugify %}
-                                    {% for score in scores %}
-                                        {% if score != None %}
-                                            <td class="hidden-sm hidden-xs text-center
-                                            {% if not score|is_valid:forloop.counter0 %}
-                                             text-bold text-danger
-                                            {% endif %}">
-                                                {{ score }}
-                                            </td>
-                                        {% else %}
-                                            <td class="hidden-sm hidden-xs text-center">-</td>
-                                        {% endif %}
+                                {% if period.is_preconcours %}
+                                    <td class="hidden-sm hidden-xs text-center" colspan="8">
+                                        <strong>{% trans "Behavior score" %} : </strong>
+                                        {% for period_name, period_scores, period_aff_index in student.scores %}
+                                            {% if period_name == period.name %}
+                                                {{ period_scores.behavior|default:"-" }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                    <td class="hidden-sm hidden-xs text-center" colspan="7">
+                                        <strong>{% trans "Competency score" %} : </strong>
+                                        {% for period_name, period_scores, period_aff_index in student.scores %}
+                                            {% if period_name == period.name %}
+                                                {{ period_scores.competency|default:"-" }}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </td>
+                                {% else %}
+                                    {% for i in i|rjust:15 %}
+                                        <td class="hidden-sm hidden-xs text-center">-</td>
                                     {% endfor %}
+                                {% endif %}
+                            {% endif %}
+                            {% for key, scores, period_aff_index in student.scores %}
+                                {% if key|slugify == period|slugify and forloop.parentloop.counter == period_aff_index %}
+                                    {% if period.is_preconcours %}
+                                        <td class="hidden-sm hidden-xs text-center" colspan="8">
+                                            <strong>{% trans "Behavior score" %} : </strong>
+                                            {{ scores.behavior|default:"-" }}
+                                        </td>
+                                        <td class="hidden-sm hidden-xs text-center" colspan="7">
+                                            <strong>{% trans "Competency score" %} : </strong>
+                                            {{ scores.competency|default:"-" }}
+                                        </td>
+                                    {% else %}
+                                        {% for score in scores %}
+                                            {% if score != None %}
+                                                <td class="hidden-sm hidden-xs text-center
+                                                {% if not score|is_valid:forloop.counter0 %}
+                                                 text-bold text-danger
+                                                {% endif %}">
+                                                    {{ score }}
+                                                </td>
+                                            {% else %}
+                                                <td class="hidden-sm hidden-xs text-center">-</td>
+                                            {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
                                 {% endif %}
                             {% endfor %}
                             <td>
                             {% with student.comments|get_item:period.name as comments%}
                                 {% if comments %}
-                                <a data-bs-toggle="modal" data-bs-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comments|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
+                                {% for comment in comments %}
+                                {% if forloop.counter == forloop.parentloop.counter %}
+                                <a data-bs-toggle="modal" data-bs-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-preconcours="{{ period.is_preconcours }}" data-score="{{ student.scores|get_period_score_tuple:period.name|to_json }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comment|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-index="{{ forloop.counter0 }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
                                     <icon class="far fa-comment"></icon>
                                 </a>
                                 {% endif %}
+                                {% endfor %}
+                                {% endif %}
                             {% endwith %}
                             </td>
-                            {% with student.periods_scores|get_item:period.name as period_score%}
-                                  {% if period_score %}
+                            {% with student.periods_scores|get_period_scores_item:period.name as period_scores %}
+                                  {% for period_score in period_scores %}
+                                  {% if forloop.counter == forloop.parentloop.counter %}
+                                  {% if period_score is not null %}
                                     <td style="vertical-align: middle; width: 140px;"
                                         onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                         onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')">
-                                        {% include 'fragment/score_cell.html' %}
+                                        {% if period.is_preconcours %}
+                                            {% for period_name, period_scores, period_aff_index in student.scores %}
+                                                {% if period_name == period.name and forloop.parentloop.counter == period_aff_index %}
+                                                    {% if period_scores.behavior and period_scores.competency %}
+                                                        {{ period_scores.calculated_global_score|floatformat:1 }}
+                                                    {% else %}
+                                                        -
+                                                    {% endif %}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            {% include 'fragment/score_cell.html' %}
+                                        {% endif %}
                                     </td>
                                 {% else %}
                                       {% if period in completed_periods %}
@@ -346,17 +417,32 @@
                                           onmouseover="showEditButton('{{student.registration_id}}{{ period.name }}')"
                                           onmouseout="hideEditButton('{{student.registration_id}}{{ period.name }}')"
                                           >
-                                            0
+                                            {% if period.is_preconcours %}
+                                                {% for period_name, period_scores, period_aff_index in student.scores %}
+                                                    {% if period_name == period.name %}
+                                                        {% if period_scores.behavior and period_scores.competency %}
+                                                            {{ period_scores.calculated_global_score|floatformat:1 }}
+                                                        {% else %}
+                                                            0
+                                                        {% endif %}
+                                                    {% endif %}
+                                                {% endfor %}
+                                            {% else %}
+                                                0
+                                            {% endif %}
                                             {% include 'fragment/btn_empty_score.html' %}
                                           </td>
                                       {% else %}
                                           <td>-</td>
                                       {% endif %}
+                                      {% endif %}
                                 {% endif %}
+                                {% endfor %}
                             {% endwith %}
                             </tr>
 
                             {% endif %}
+                            {% endfor %}
                           {% endfor %}
 
                             {% if search_form.show_apds_validation.value %}
@@ -567,12 +653,12 @@
         });
     });
 
-    function showEditScoreBtn(studentId, periodId){
-        $(`#edit-btn-${studentId}-${periodId}`).show();
+    function showEditScoreBtn(studentId, periodId, index){
+        $(`#edit-btn-${studentId}-${periodId}-${index}`).show();
     }
 
-    function hideEditScoreBtn(studentId, periodId){
-        $(`#edit-btn-${studentId}-${periodId}`).hide();
+    function hideEditScoreBtn(studentId, periodId, index){
+        $(`#edit-btn-${studentId}-${periodId}-${index}`).hide();
     }
 
     //triggered when comments modal is about to be shown
@@ -582,20 +668,64 @@
         const comments = $(e.relatedTarget).data('comments');
         const specialty = $(e.relatedTarget).data('specialty');
         const organization = $(e.relatedTarget).data('organization');
+        const index = $(e.relatedTarget).data('index');
+
+        const preconcours = $(e.relatedTarget).data('preconcours');
+
+        let score = $(e.relatedTarget).data('score');
+        if(Array.isArray(score)){
+            score = score[index]
+        }
 
         $(e.currentTarget).find('#modal-student-period').text(`${student} - ${period}`);
-
-        $(e.currentTarget).find('#modal-internship').text(`${specialty.name} - ${organization.name}`);
+        $(e.currentTarget).find('#modal-internship').text(`${specialty[index].name} - ${organization[index].name}`);
 
         let commentsModalBody = $(e.currentTarget).find('#modal-comments');
         let commentsModalBodyContent = $('<span/>');
 
-        for (const [key, comment] of Object.entries(comments)) {
-          commentsModalBodyContent.append("" +
-              "<div class='card card-default'>" +
-              `<div class='card-heading'>${key}</div>` +
-              `<div class='card-body'>${comment}</div>`
-          );
+        if (preconcours === 'True'){
+            const behaviorScore = score['behavior']
+            const competencyScore = score['competency']
+            for (const [key, value] of Object.entries(comments)) {
+                if(!isNaN(value)){
+                  commentsModalBodyContent.append("" +
+                  `<div class='card card-default py-1 px-2 d-flex flex-row justify-content-between'>
+                    <div>${key}</div>
+                    <div>${value} / 20</div>
+                   </div>`
+                  )
+                  if(key === 'ENGAGEMENT PERSONNEL DANS LE SERVICE') {
+                    commentsModalBodyContent.append("" +
+                      `<div class='card card-default border border-dark bg-light py-2 px-2 d-flex flex-row justify-content-between fw-bold'>
+                        <div>${organization[index].reference === 'MG600' ? 'Score compétences socles' : 'Cote de comportement'}</div>
+                        <div>${behaviorScore} / 20</div>
+                       </div>`
+                      )
+                  }
+                  if(key === 'HABILETE TECHNIQUE CLINIQUE') {
+                    commentsModalBodyContent.append("" +
+                      `<div class='card card-default border border-dark bg-light py-2 px-2 d-flex flex-row justify-content-between fw-bold'>
+                        <div>${organization[index].reference === 'MG600' ? 'Score compétences cliniques' : 'Cote de compétence'}</div>
+                        <div>${competencyScore} / 20</div>
+                       </div>`
+                      )
+                  }
+                } else {
+                  commentsModalBodyContent.append("" +
+                      "<div class='card card-default'>" +
+                      `<div class='card-heading'>${key}</div>` +
+                      `<div class='card-body'>${value}</div>`
+                  );
+              }
+            }
+        } else {
+            for (const [key, comment] of Object.entries(comments)) {
+              commentsModalBodyContent.append("" +
+                  "<div class='card card-default'>" +
+                  `<div class='card-heading'>${key}</div>` +
+                  `<div class='card-body'>${comment || ''}</div>`
+              );
+            }
         }
         commentsModalBody.html(commentsModalBodyContent);
     });

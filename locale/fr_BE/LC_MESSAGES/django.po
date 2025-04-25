@@ -176,6 +176,15 @@ msgstr "Affectation"
 msgid "Affectation's result"
 msgstr "Résultat de l'affectation"
 
+msgid "Affectations File"
+msgstr "Fichier des affectations"
+
+msgid ""
+"Affectations already exist for this cohort and period. Import cancelled."
+msgstr ""
+"Des affectations de stage existent déjà pour cette période. L'importation "
+"est annulée."
+
 msgid "All EPAs validated"
 msgstr "Tous les APDs validés"
 
@@ -230,7 +239,7 @@ msgid "An evaluation should include minimum {} and maximum {} evaluated EPAs"
 msgstr "Une évaluation doit inclure au minimum {} et au maximum {} APD évalués"
 
 msgid "Appreciate medical emergency"
-msgstr "Reconnaitre l’urgence médicale"
+msgstr "Reconnaitre l'urgence médicale"
 
 msgid "Aptitudes conditions fulfilled"
 msgstr "Conditions d'aptitudes remplies"
@@ -248,11 +257,26 @@ msgstr "Attention"
 msgid "Autonomy Level (%% according to periods)"
 msgstr "Niveau d'autonomie (%% fonction des périodes)"
 
+msgid "Base skills score"
+msgstr "Score compétences socles"
+
+msgid "Behavior score"
+msgstr "Score de comportement"
+
 msgid "Birth Date"
 msgstr "Date de naissance"
 
 msgid "Birth date"
 msgstr "Date de naissance"
+
+msgid "CAPACITE DE RECUEIL DES DONNEES DE BASE"
+msgstr "CAPACITE DE RECUEIL DES DONNEES DE BASE"
+
+msgid "CONNAISSANCES MEDICALES"
+msgstr "CONNAISSANCES MEDICALES"
+
+msgid "CONSCIENCE PROFESSIONNELLE"
+msgstr "CONSCIENCE PROFESSIONNELLE"
 
 msgid "Cancel"
 msgstr "Annuler"
@@ -322,6 +346,9 @@ msgstr "Effacer"
 msgid "Clear score for period ?"
 msgstr "Effacer la note pour cette période ?"
 
+msgid "Clinical skills score"
+msgstr "Score compétences cliniques"
+
 msgid "Close"
 msgstr "Fermer"
 
@@ -343,6 +370,9 @@ msgstr "Commentaires"
 msgid "Communicate (broad sense)"
 msgstr "Communiquer au sens large"
 
+msgid "Competency score"
+msgstr "Score de compétence"
+
 msgid "Complement patient record"
 msgstr "Compléter le dossier patient"
 
@@ -350,7 +380,7 @@ msgid "Compulsory"
 msgstr "Obligatoire"
 
 msgid "Conduct clinical examination"
-msgstr "Réaliser l’examen clinique"
+msgstr "Réaliser l'examen clinique"
 
 msgid "Configuration"
 msgstr "Configuration"
@@ -434,6 +464,9 @@ msgstr ""
 msgid "Duplicated sequence in report"
 msgstr "Séquence dupliquée dans le rapport"
 
+msgid "ENGAGEMENT PERSONNEL DANS LE SERVICE"
+msgstr "ENGAGEMENT PERSONNEL DANS LE SERVICE"
+
 msgid "EPA Validation"
 msgstr "Validation APD"
 
@@ -452,6 +485,15 @@ msgstr "Modifier nombres de places"
 msgid "Editable address"
 msgstr "Adresse modifiable"
 
+msgid "Effective dates"
+msgstr "Dates effectives"
+
+msgid "Effective end date"
+msgstr "Date effective de fin"
+
+msgid "Effective start date"
+msgstr "Date effective de début"
+
 msgid "Email"
 msgstr "Courriel"
 
@@ -469,6 +511,9 @@ msgstr "Fermeture des inscriptions"
 
 msgid "Enrolment start"
 msgstr "Ouverture des inscriptions"
+
+msgid "Entrez une note entre 0 et 20"
+msgstr "Fill a score between 0 and 20"
 
 msgid "Erasmus"
 msgstr "Erasmus"
@@ -634,6 +679,9 @@ msgstr "Cotes non reçues"
 msgid "Grades received"
 msgstr "Cotes reçues"
 
+msgid "HABILETE TECHNIQUE CLINIQUE"
+msgstr "HABILETE TECHNIQUE CLINIQUE"
+
 msgid "Hospital"
 msgstr "Hôpital"
 
@@ -655,11 +703,20 @@ msgstr ""
 "Importation interrompue pour la période %(period)s suite à une ou plusieurs "
 "erreurs:"
 
+msgid "Import affectations"
+msgstr "Importer les affectations"
+
+msgid "Import in progress"
+msgstr "Import en cours"
+
 msgid "Import internships evaluations"
 msgstr "Importer évaluations de stage"
 
 msgid "Import internships ratings"
 msgstr "Importer cotes de stage"
+
+msgid "Importing Affectations..."
+msgstr "Importation des affectations..."
 
 msgid "Imposed choices"
 msgstr "Choix imposés"
@@ -766,6 +823,9 @@ msgstr "Est parente"
 msgid "Item"
 msgstr "Question"
 
+msgid "JUGEMENT CLINIQUE"
+msgstr "JUGEMENT CLINIQUE"
+
 msgid "Language"
 msgstr "Langue"
 
@@ -798,6 +858,9 @@ msgstr "Faire/recevoir le rapport de transmission"
 
 msgid "Male"
 msgstr "Masculin"
+
+msgid "Manager comment"
+msgstr "Commentaire du gestionnaire"
 
 msgid "Mandatory"
 msgstr "Obligatoire"
@@ -914,6 +977,9 @@ msgstr "Stages au choix"
 
 msgid "Normal students"
 msgstr "Etudiants Normaux"
+
+msgid "Note globale actuelle"
+msgstr "Note globale actuelle"
 
 msgid "Number"
 msgstr "Nombre"
@@ -1059,6 +1125,21 @@ msgstr "Reporter"
 msgid "Postpone allocations ?"
 msgstr "Reporter les affectations ?"
 
+msgid "Pre-competition internship comments"
+msgstr "Commentaires du stage de pré-concours"
+
+msgid "Pre-concours"
+msgstr "Pré-concours"
+
+msgid "Pre-concours Period"
+msgstr "Pré-concours period"
+
+msgid "Preconcours Evaluation Detail"
+msgstr "Détail de l'évaluation du pré-concours"
+
+msgid "Preconcours comments"
+msgstr "Commentaires du pré-concours"
+
 msgid "Predifined reason"
 msgstr "Motif prédéfini"
 
@@ -1088,6 +1169,12 @@ msgstr "La publication doit être réalisée après le processus d'inscription."
 
 msgid "Publication start date"
 msgstr "Date de début de publication"
+
+msgid "RELATIONS AVEC LES MEDECINS, LE PERSONNEL"
+msgstr "RELATIONS AVEC LES MEDECINS, LE PERSONNEL"
+
+msgid "RELATIONS AVEC LES PATIENTS"
+msgstr "RELATIONS AVEC LES PATIENTS"
 
 msgid "Reason"
 msgstr "Motif"
@@ -1190,6 +1277,12 @@ msgstr "Encodage des notes"
 msgid "Scores equivalence according to periods"
 msgstr "Equivalence des notes par période"
 
+msgid "Scores must be between 0 and 20."
+msgstr "Les scores doivent être compris entre 0 et 20."
+
+msgid "Scores must be integers"
+msgstr "Les scores doivent être des nombres entiers."
+
 msgid "Search"
 msgstr "Rechercher"
 
@@ -1271,6 +1364,9 @@ msgstr ""
 
 msgid "Signature"
 msgstr "Signature"
+
+msgid "Skill score"
+msgstr "Score de compétence"
 
 msgid "Social students"
 msgstr "Etudiants sociaux"
@@ -1371,6 +1467,9 @@ msgstr "Date de début d'inscription"
 msgid "Subspecialty"
 msgstr "Sous-spécialité"
 
+msgid "Succesfully imported {} affectations for {}"
+msgstr "{} affectations importées avec succès pour {}"
+
 msgid "Successfully deleted item {}"
 msgstr "Question {} supprimée avec succès"
 
@@ -1402,6 +1501,9 @@ msgid ""
 msgstr ""
 "Les attributions suivantes des maîtres/délégués de stage ont été transférées "
 "dans la cohorte {}:"
+
+msgid "The global score will be computed as the average of both scores"
+msgstr "La note globale sera calculée comme la moyenne des deux scores"
 
 msgid "The parent cohort must be defined as parent"
 msgstr "La cohorte parente doit être définie comme parent"
@@ -1456,6 +1558,13 @@ msgstr ""
 
 msgid "This may take several minutes"
 msgstr "Cela peut prendre quelques minutes"
+
+msgid ""
+"This period is specific for pre-concours and the imported file will be "
+"dedicated to this specificity"
+msgstr ""
+"Cette période correspond à une période de pré-concours et le fichier importé "
+"sera dédié à cette particularité"
 
 msgid "Title"
 msgstr "Titre"
@@ -1545,6 +1654,12 @@ msgstr ""
 "Vous pouvez fournir un motif de modification de la note en choisissant parmi "
 "les justifications suivantes."
 
+msgid ""
+"Your affectations are being imported. This process may take a few minutes."
+msgstr ""
+"Vos affectations sont en cours d'importation. Cela peut prendre quelques "
+"minutes."
+
 msgid "achieves with help"
 msgstr "réalise avec aide"
 
@@ -1582,3 +1697,6 @@ msgstr "réalise parfaitement"
 
 msgid "{} day(s)"
 msgstr "{} jour(s)"
+
+#~ msgid "Score comportemental"
+#~ msgstr "Score comportemental"

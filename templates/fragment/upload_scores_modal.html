@@ -12,11 +12,14 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="period-select">{% trans 'Period' %}</label>
-                        <select  name="period"  class="form-select"  id="period-select" >
+                        <select name="period" class="form-select" id="period-select">
                             {% for period in all_periods %}
-                                <option>{{ period }}</option>
+                                <option value="{{ period }}" data-is-preconcours="{{ period.is_preconcours|yesno:'true,false' }}">{{ period }}</option>
                             {% endfor %}
                         </select>
+                    </div>
+                    <div id="preconcours-warning" class="alert alert-info mt-2" style="display: none;">
+                        {% trans "This period is specific for pre-concours and the imported file will be dedicated to this specificity" %}
                     </div>
                     <div class="form-group">
                       <input type="file" id="scores_input_file" name="file_upload"/>
@@ -35,3 +38,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const periodSelect = document.getElementById('period-select');
+        const preconcourWarning = document.getElementById('preconcours-warning');
+
+        function togglePreconcourWarning() {
+            const selectedOption = periodSelect.options[periodSelect.selectedIndex];
+            const isPreconcours = selectedOption.getAttribute('data-is-preconcours') === 'true';
+            preconcourWarning.style.display = isPreconcours ? 'block' : 'none';
+        }
+
+        periodSelect.addEventListener('change', togglePreconcourWarning);
+        // Check initial state
+        togglePreconcourWarning();
+    });
+</script>

@@ -60,6 +60,8 @@ class InternshipStudentAffectationSerializer(serializers.HyperlinkedModelSeriali
             'internship_uuid',
             'internship',
             'score',
+            'date_start',
+            'date_end',
         )
 
 
@@ -86,4 +88,6 @@ class InternshipPersonAffectationSerializer(serializers.HyperlinkedModelSerializ
             'period',
             'master',
             'internship_evaluated',
+            'date_start',
+            'date_end',
         )

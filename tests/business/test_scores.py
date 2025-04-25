@@ -47,12 +47,12 @@ class InternshipScoreRulesTest(TestCase):
     def test_student_fulfill_requirements(self):
         for index in [index for index in range(0, APD_NUMBER)]:
             vars(self.internship_score)['APD_{}'.format(index+1)] = 'D'
-        self.student.scores = [(self.period, self.internship_score.get_scores())]
+        self.student.scores = [(self.period, self.internship_score.get_scores(), 1)]
         self.assertTrue(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
 
     def test_student_does_not_fulfill_requirements(self):
         self.internship_score.APD_1 = 'A'
-        self.student.scores = [(self.period, self.internship_score.get_scores())]
+        self.student.scores = [(self.period, self.internship_score.get_scores(), 1)]
         self.assertFalse(InternshipScoreRules.student_has_fulfilled_requirements(self.student))
 
     def test_student_except_apd_fulfill_requirements(self):
@@ -61,5 +61,5 @@ class InternshipScoreRulesTest(TestCase):
                 vars(self.internship_score)['APD_{}'.format(index + 1)] = 'D'
             else:
                 vars(self.internship_score)['APD_{}'.format(index + 1)] = 'B'
-        self.student.scores = [(self.period, self.internship_score.get_scores())]
+        self.student.scores = [(self.period, self.internship_score.get_scores(), 1)]
         self.assertTrue(InternshipScoreRules.student_has_fulfilled_requirements(self.student))

@@ -326,7 +326,7 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         periods_scores = response.context['students'].object_list[0].periods_scores
-        self.assertDictEqual(periods_scores, {self.period.name: 20})
+        self.assertDictEqual(periods_scores, {self.period.name: [20]})
 
     def test_export_scores(self):
         url = reverse('internship_download_scores', kwargs={'cohort_id': self.cohort.pk})
@@ -463,21 +463,21 @@ class ScoresEncodingTest(TestCase):
         self.assertEqual(evolution_score, 15)
 
     def test_round_half_up_evolution_score(self):
-        periods = {'P1': 1.5, 'P2': 1.5, 'P3': 1.5}
+        periods = {'P1': [1.5], 'P2': [1.5], 'P3': [1.5]}
         evolution_score = _get_scores_mean(periods, len(periods.keys()))
         self.assertEqual(evolution_score, 2)
 
     def test_ajax_refresh_evolution_score(self):
         url = reverse('refresh_evolution_score', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.post(url, data={
-            'scores': '{"P1": 10.0, "P2": 20.0}',
+            'scores': '{"P1": [10.0], "P2": [20.0]}',
             'period': self.period.name,
             'edited': 20
         })
         json_response = json.loads(str(response.content, 'utf-8'))
         self.assertEqual(json_response['evolution_score'], 20)
         self.assertIn("'P1': 20", json_response['updated_scores'])
-        self.assertIn("'P2': 20", json_response['updated_scores'])
+        self.assertIn("'P2': [20.0]", json_response['updated_scores'])
 
     def test_ajax_save_evolution_score(self):
         computed_score = 0
@@ -539,7 +539,7 @@ class ScoresEncodingTest(TestCase):
         filtered_object_list = [obj for obj in response.context['students'].object_list if obj == student_info]
         numeric_scores = filtered_object_list[0].numeric_scores
         evolution_score = filtered_object_list[0].evolution_score
-        self.assertEqual(numeric_scores[self.period.name], {'excused': new_score, 'reason': None})
+        self.assertEqual(numeric_scores[self.period.name], [{'excused': new_score, 'reason': None}])
         self.assertEqual(evolution_score, 0)
 
     @mock.patch('internship.utils.importing.import_eval.import_xlsx')
@@ -603,8 +603,8 @@ class ScoresEncodingTest(TestCase):
         response = self.client.get(url)
         student_with_score_not_validated = response.context['students'].object_list[0]
         student_with_score_validated = response.context['students'].object_list[1]
-        self.assertTrue(student_with_score_validated.scores)
-        self.assertFalse(student_with_score_not_validated.scores)
+        self.assertTrue(student_with_score_validated.scores[0][1])
+        self.assertFalse(student_with_score_not_validated.scores[0][1])
 
     @mock.patch('internship.utils.exporting.score_encoding_xls.export_xls_with_scores')
     def test_export_only_validated_scores(self, mock_export: Mock):
@@ -624,7 +624,7 @@ class ScoresEncodingTest(TestCase):
         exported_students = args[2]
         student_with_score_not_validated = exported_students[0]
         student_with_score_validated = exported_students[1]
-        self.assertFalse(student_with_score_not_validated.scores)
+        self.assertFalse(student_with_score_not_validated.scores[0][1])
         self.assertTrue(student_with_score_validated.scores)
 
     def test_form_edit_score_consultation(self):
@@ -636,7 +636,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_name': self.mandatory_internship.speciality.name
         })
         response = self.client.get(url)
         self.assertTemplateUsed(response, "score_form.html")
@@ -646,7 +647,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_name': self.mandatory_internship.speciality.acronym
         })
         response = self.client.get(url)
 
@@ -667,7 +669,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_name': self.mandatory_internship.speciality.name
         })
         response = self.client.post(url, data={'apd-1': 'B'})
         messages_list = [msg for msg in response.wsgi_request._messages]
@@ -685,7 +688,8 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_edit_score', kwargs={
             'cohort_id': self.cohort.pk,
             'student_registration_id': score.student_affectation.student.registration_id,
-            'period_id': self.period.pk
+            'period_id': self.period.pk,
+            'specialty_name': self.mandatory_internship.speciality.name
         })
         response = self.client.post(url, data={
             'apd-1': 'B',
@@ -716,7 +720,9 @@ class ScoresEncodingTest(TestCase):
         url = reverse('internship_scores_encoding', kwargs={'cohort_id': self.cohort.pk})
         response = self.client.get(url)
         student_with_comment = response.context['students'].object_list[0]
-        self.assertEqual(student_with_comment.comments[self.period.name], {_("Improvement areas"): comment_content})
+        self.assertEqual(
+            student_with_comment.comments[self.period.name][0][_("Improvement areas")], comment_content
+        )
 
     def test_should_filter_scores_by_organization(self):
         organization = Organization.objects.first()
