@@ -160,8 +160,8 @@ urlpatterns = [
                 path('', score.scores_encoding, name='internship_scores_encoding'),
                 path(
                     'edit/<str:student_registration_id>/<int:period_id>/<str:specialty_name>/',
-                     score.score_detail_form,
-                     name='internship_edit_score'
+                    score.score_detail_form,
+                    name='internship_edit_score'
                 ),
                 path('upload_scores/', score.upload_scores, name='internship_upload_scores'),
                 path('upload_eval/', score.upload_eval, name='internship_upload_eval'),

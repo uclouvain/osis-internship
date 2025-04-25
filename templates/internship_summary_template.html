@@ -314,9 +314,9 @@
                                     <td class="hidden-sm hidden-xs text-center" colspan="8">
                                         <strong>
                                             {% if organization.reference == 'MG600' %}
-                                                {% trans "Score compétences socles" %}
+                                                {% trans "Base skills score" %}
                                             {% else %}
-                                                {% trans "Score comportemental" %}
+                                                {% trans "Behavior score" %}
                                             {% endif %} : 
                                         </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
@@ -328,9 +328,9 @@
                                     <td class="hidden-sm hidden-xs text-center" colspan="7">
                                         <strong>
                                             {% if organization.reference == 'MG600' %}
-                                                {% trans "Score compétences cliniques" %}
+                                                {% trans "Clinical skills score" %}
                                             {% else %}
-                                                {% trans "Score de compétence" %}
+                                                {% trans "Competency score" %}
                                             {% endif %} : 
                                         </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
