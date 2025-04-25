@@ -230,6 +230,9 @@ msgstr ""
 msgid "Autonomy Level (%% according to periods)"
 msgstr ""
 
+msgid "Base skills score"
+msgstr ""
+
 msgid "Behavior score"
 msgstr ""
 
@@ -266,11 +269,6 @@ msgid "Capacity"
 msgstr ""
 
 msgid "Certified in conformity with registered evaluations. Brussels, {}."
-msgstr ""
-
-msgid ""
-"Cette priode correspond  une priode de pr-concours et le fichier import sera "
-"ddi  cette particularit"
 msgstr ""
 
 msgctxt "internship"
@@ -319,6 +317,9 @@ msgstr ""
 msgid "Clear score for period ?"
 msgstr ""
 
+msgid "Clinical skills score"
+msgstr ""
+
 msgid "Close"
 msgstr ""
 
@@ -338,6 +339,9 @@ msgid "Comments"
 msgstr ""
 
 msgid "Communicate (broad sense)"
+msgstr ""
+
+msgid "Competency score"
 msgstr ""
 
 msgid "Complement patient record"
@@ -449,6 +453,15 @@ msgid "Edit places"
 msgstr ""
 
 msgid "Editable address"
+msgstr ""
+
+msgid "Effective dates"
+msgstr ""
+
+msgid "Effective end date"
+msgstr ""
+
+msgid "Effective start date"
 msgstr ""
 
 msgid "Email"
@@ -775,9 +788,6 @@ msgstr ""
 msgid "JUGEMENT CLINIQUE"
 msgstr ""
 
-msgid "La note globale sera calcule comme la moyenne des deux scores"
-msgstr ""
-
 msgid "Language"
 msgstr ""
 
@@ -1078,6 +1088,11 @@ msgstr ""
 
 #, fuzzy
 #| msgid "Pré-concours"
+msgid "Pre-concours"
+msgstr "Pre-competition"
+
+#, fuzzy
+#| msgid "Pré-concours"
 msgid "Pre-concours Period"
 msgstr "Pre-competition"
 
@@ -1109,11 +1124,6 @@ msgstr ""
 
 msgid "Provide reason"
 msgstr ""
-
-#, fuzzy
-#| msgid "Pré-concours"
-msgid "Pr-concours"
-msgstr "Pre-competition"
 
 msgid "Publication date"
 msgstr ""
@@ -1206,12 +1216,6 @@ msgid "Save"
 msgstr ""
 
 msgid "Score"
-msgstr ""
-
-msgid "Score comportemental"
-msgstr ""
-
-msgid "Score de comptence"
 msgstr ""
 
 msgid "Score edited. Computed score: "
@@ -1449,6 +1453,9 @@ msgid ""
 "{}: "
 msgstr ""
 
+msgid "The global score will be computed as the average of both scores"
+msgstr ""
+
 msgid "The parent cohort must be defined as parent"
 msgstr ""
 
@@ -1490,6 +1497,11 @@ msgid ""
 msgstr ""
 
 msgid "This may take several minutes"
+msgstr ""
+
+msgid ""
+"This period is specific for pre-concours and the imported file will be "
+"dedicated to this specificity"
 msgstr ""
 
 msgid "Title"
@@ -1613,3 +1625,8 @@ msgstr ""
 
 msgid "{} day(s)"
 msgstr ""
+
+#, fuzzy
+#~| msgid "Pré-concours"
+#~ msgid "Pr-concours"
+#~ msgstr "Pre-competition"

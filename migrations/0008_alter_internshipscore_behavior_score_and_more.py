@@ -32,6 +32,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='period',
             name='is_preconcours',
-            field=models.BooleanField(default=False, verbose_name='Pré-concours'),
+            field=models.BooleanField(default=False, verbose_name='Pre-concours'),
         ),
     ]

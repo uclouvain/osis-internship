@@ -40,14 +40,13 @@ class PeriodAdmin(SerializableModelAdmin):
     )
     fieldsets = (
         (
-            None, {
-            'fields':
-                    (
-                        'name', 'date_start', 'date_end', 'cohort',
-                        'remedial', 'exclude_from_assignment', 'is_preconcours'
-                    )
+            None,
+            {
+                'fields': (
+                    'name', 'date_start', 'date_end', 'cohort', 'remedial', 'exclude_from_assignment', 'is_preconcours'
+                )
             }
-         ),
+        ),
     )
     list_filter = ('cohort', 'reminder_mail_sent', 'remedial', 'place_evaluation_active', 'is_preconcours')
 
@@ -82,7 +81,7 @@ class Period(SerializableModel):
     remedial = models.BooleanField(default=False, verbose_name=_('Remedial'))
     place_evaluation_active = models.BooleanField(default=False)
     exclude_from_assignment = models.BooleanField(default=False, verbose_name=_('Exclude from assignment'))
-    is_preconcours = models.BooleanField(default=False, verbose_name=_('Pré-concours'))
+    is_preconcours = models.BooleanField(default=False, verbose_name=_('Pre-concours'))
 
     objects = models.Manager()
     active = ActivePeriod()
