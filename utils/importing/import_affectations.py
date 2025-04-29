@@ -22,6 +22,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+import datetime
+
 import openpyxl
 from django.core.exceptions import ValidationError
 from django.db.transaction import TransactionManagementError
@@ -67,8 +69,8 @@ def import_xlsx(cohort, xlsxfile, period_instance):
         affectation_str = row[7]
         internship_type = row[10]
         # Check if date columns exist and have values
-        date_start_str = str(row[11]) if len(row) > 11 and row[11] else None
-        date_end_str = str(row[12]) if len(row) > 12 and row[12] else None
+        date_end_str, date_start_str = _get_dates_str(row)
+        print(date_start_str, date_end_str)
         if registration_id and affectation_str:
             affectation_strings = affectation_str.split('/')
 
@@ -97,6 +99,15 @@ def import_xlsx(cohort, xlsxfile, period_instance):
                 pass
             row_count += 1
     return errors, row_count
+
+
+def _get_dates_str(row):
+    date_start_str, date_end_str = None, None
+    if len(row) > 11 and row[11]:
+        date_start_str = str(row[11].date()) if isinstance(row[11], datetime.datetime) else row[11]
+    if len(row) > 12 and row[12]:
+        date_end_str = str(row[12].date()) if isinstance(row[12], datetime.datetime) else row[12]
+    return date_end_str, date_start_str
 
 
 def _validate_row(cohort, row, row_index):
