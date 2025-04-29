@@ -67,8 +67,8 @@ def import_xlsx(cohort, xlsxfile, period_instance):
         affectation_str = row[7]
         internship_type = row[10]
         # Check if date columns exist and have values
-        date_start_str = row[11] if len(row) > 11 and row[11] else None
-        date_end_str = row[12] if len(row) > 12 and row[12] else None
+        date_start_str = str(row[11]) if len(row) > 11 and row[11] else None
+        date_end_str = str(row[12]) if len(row) > 12 and row[12] else None
         if registration_id and affectation_str:
             affectation_strings = affectation_str.split('/')
 
