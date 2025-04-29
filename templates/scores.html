@@ -286,7 +286,7 @@
                                     / {{ forloop.counter }}
                                 {% endif %}
                                 {% if period.is_preconcours %}
-                                    <span class="badge bg-light text-dark" title="{% trans 'Pré-concours' %}" data-bs-toggle="tooltip">P</span>
+                                    <span class="badge bg-light text-dark" title="{% trans 'Pre-concours' %}" data-bs-toggle="tooltip">P</span>
                                 {% endif %}
                                 {% if period.is_active %}
                                     <icon style="font-size: 11px; color: #333;" class="fa fa-time" title="{% trans 'Current period' %}"></icon>
@@ -329,7 +329,7 @@
                             {% if not student.scores|has_substr:period %}
                                 {% if period.is_preconcours %}
                                     <td class="hidden-sm hidden-xs text-center" colspan="8">
-                                        <strong>{% trans "Score comportemental" %} : </strong>
+                                        <strong>{% trans "Behavior score" %} : </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
                                                 {{ period_scores.behavior|default:"-" }}
@@ -337,7 +337,7 @@
                                         {% endfor %}
                                     </td>
                                     <td class="hidden-sm hidden-xs text-center" colspan="7">
-                                        <strong>{% trans "Score de compétence" %} : </strong>
+                                        <strong>{% trans "Competency score" %} : </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
                                                 {{ period_scores.competency|default:"-" }}
@@ -354,11 +354,11 @@
                                 {% if key|slugify == period|slugify and forloop.parentloop.counter == period_aff_index %}
                                     {% if period.is_preconcours %}
                                         <td class="hidden-sm hidden-xs text-center" colspan="8">
-                                            <strong>{% trans "Score comportemental" %} : </strong>
+                                            <strong>{% trans "Behavior score" %} : </strong>
                                             {{ scores.behavior|default:"-" }}
                                         </td>
                                         <td class="hidden-sm hidden-xs text-center" colspan="7">
-                                            <strong>{% trans "Score de compétence" %} : </strong>
+                                            <strong>{% trans "Competency score" %} : </strong>
                                             {{ scores.competency|default:"-" }}
                                         </td>
                                     {% else %}
