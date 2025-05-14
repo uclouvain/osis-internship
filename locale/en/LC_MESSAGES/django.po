@@ -1603,6 +1603,10 @@ msgstr ""
 msgid "items per page"
 msgstr ""
 
+#, python-format
+msgid "missing score for student with registration id '%(reg_id)s'"
+msgstr ""
+
 msgid "not achieving"
 msgstr ""
 

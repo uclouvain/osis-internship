@@ -23,7 +23,6 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-import re
 
 from django.db import transaction
 from openpyxl import load_workbook
@@ -52,14 +51,14 @@ def import_xlsx(cohort, xlsxfile, period):
 
 
 def _process_rows_import(cohort, period, worksheet):
-    for row in list(worksheet.rows)[5:worksheet.max_row]:
+    for row in list(worksheet.rows)[1:worksheet.max_row]:
+        if not any(cell.value for cell in row):
+            continue
         _import_score(row, cohort, period)
 
 
 def _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period):
     errors = {}
-    if not _periods_match(period, worksheet_period):
-        errors.update({'period_error': worksheet_period})
 
     registration_error = _analyze_registration_ids(cohort, worksheet)
     if registration_error:
@@ -69,23 +68,23 @@ def _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period):
     if score_completeness_errors:
         errors.update({'score_completeness_errors': score_completeness_errors})
 
+    return errors
+
 
 def _analyze_score_completeness(worksheet):
     errors = []
-    for row in list(worksheet.rows)[5:worksheet.max_row]:
+    for row in list(worksheet.rows)[1:worksheet.max_row]:
         registration_id = row[0].value
         if registration_id is None:
             continue
 
-        behavior_score = row[4].value
-        competency_score = row[6].value
-        global_score = row[8].value
+        behavior_score = row[6].value
+        competency_score = row[7].value
 
         error = _get_score_completeness_error(
             behavior_score,
             competency_score,
             errors,
-            global_score,
             registration_id,
             row
         )
@@ -95,17 +94,15 @@ def _analyze_score_completeness(worksheet):
     return errors
 
 
-def _get_score_completeness_error(behavior_score, competency_score, errors, global_score, registration_id, row):
-    # Check if both behavior and competency scores are missing
-    # OR if global score is missing
-    if ((behavior_score is None and competency_score is None) or
-            (global_score is None and (behavior_score is None or competency_score is None))):
+def _get_score_completeness_error(behavior_score, competency_score, errors, registration_id, row):
+    if behavior_score is None or competency_score is None:
         return {'registration_id': registration_id, 'row': row}
+    return None
 
 
 def _analyze_registration_ids(cohort, worksheet):
     errors = []
-    for row in list(worksheet.rows)[5:worksheet.max_row]:
+    for row in list(worksheet.rows)[1:worksheet.max_row]:
         registration_id = row[0].value
         if registration_id is None:
             continue
@@ -121,17 +118,20 @@ def _get_registration_id_errors(cohort, errors, registration_id, row):
     if existing_student is None or not _student_is_in_cohort(existing_student, cohort):
         return row
 
-
 def _import_score(row, cohort, period):
     registration_id = row[0].value
+
     if registration_id is None:
         return
+
+    speciality_acronym = row[4].value
 
     existing_student = student.find_by_registration_id(registration_id)
     student_affectation = get_object_or_none(
         InternshipStudentAffectationStat,
         student=existing_student,
-        period=period
+        period=period,
+        speciality__acronym=speciality_acronym,
     )
 
     if student_affectation:
@@ -141,17 +141,12 @@ def _import_score(row, cohort, period):
         )
 
         try:
-            behavior_score = row[4].value
-            competency_score = row[6].value
-            global_score = row[8].value
+            behavior_score = row[6].value
+            competency_score = row[7].value
 
             if all(score is not None for score in [behavior_score, competency_score]):
                 internship_score.behavior_score = behavior_score
                 internship_score.competency_score = competency_score
-                internship_score.validated = True
-                internship_score.save()
-            elif global_score is not None:
-                internship_score.score = global_score
                 internship_score.validated = True
                 internship_score.save()
 
@@ -161,9 +156,3 @@ def _import_score(row, cohort, period):
 
 def _student_is_in_cohort(student, cohort):
     return find_by_person(student.person, cohort)
-
-
-def _periods_match(period, worksheet_period):
-    period_numeric = re.findall(NUMBER_REGEX, period.name)
-    worksheet_period_numeric = re.findall(NUMBER_REGEX, worksheet_period)
-    return period_numeric[0] == worksheet_period_numeric[0] if period_numeric and worksheet_period_numeric else False

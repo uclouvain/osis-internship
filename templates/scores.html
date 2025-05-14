@@ -373,6 +373,10 @@
                                             {% else %}
                                                 <td class="hidden-sm hidden-xs text-center">-</td>
                                             {% endif %}
+                                            {% empty %}
+                                                {% for i in i|rjust:15 %}
+                                                    <td class="hidden-sm hidden-xs text-center">-</td>
+                                                {% endfor %}
                                         {% endfor %}
                                     {% endif %}
                                 {% endif %}
@@ -687,7 +691,7 @@
             const behaviorScore = score['behavior']
             const competencyScore = score['competency']
             for (const [key, value] of Object.entries(comments)) {
-                if(!isNaN(value)){
+                if(!isNaN(value) && value !== null){
                   commentsModalBodyContent.append("" +
                   `<div class='card card-default py-1 px-2 d-flex flex-row justify-content-between'>
                     <div>${key}</div>
@@ -714,7 +718,7 @@
                   commentsModalBodyContent.append("" +
                       "<div class='card card-default'>" +
                       `<div class='card-heading'>${key}</div>` +
-                      `<div class='card-body'>${value}</div>`
+                      `<div class='card-body'>${value || ''}</div>`
                   );
               }
             }
