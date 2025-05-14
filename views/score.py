@@ -1047,12 +1047,15 @@ def _show_period_error_message(request, period_error, period):
         )
     )
 
+
 def _show_score_completeness_error_message(request, errors, period):
     message_content = _('Import aborted for period %(period)s due to error(s) on:') % {'period': period}
     for row_error in errors:
         message_content += "<br/> - {} : {}".format(
             _('row %(row_id)s') % {'row_id': row_error['row'][0].row},
-            _("missing score for student with registration id '%(reg_id)s'") % {'reg_id': escape(row_error['registration_id'])}
+            _("missing score for student with registration id '%(reg_id)s'") % {
+                'reg_id': escape(row_error['registration_id'])
+            }
         )
     display_error_messages(request, message_content, extra_tags='safe')
 
