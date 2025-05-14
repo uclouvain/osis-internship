@@ -373,6 +373,10 @@
                                             {% else %}
                                                 <td class="hidden-sm hidden-xs text-center">-</td>
                                             {% endif %}
+                                            {% empty %}
+                                                {% for i in i|rjust:15 %}
+                                                    <td class="hidden-sm hidden-xs text-center">-</td>
+                                                {% endfor %}
                                         {% endfor %}
                                     {% endif %}
                                 {% endif %}
