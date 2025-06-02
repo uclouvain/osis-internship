@@ -1207,10 +1207,10 @@ def replace_comments_keys_with_translations(comments):
         'behavior_2': _('RELATIONS AVEC LES MEDECINS, LE PERSONNEL'),
         'behavior_3': _('CONSCIENCE PROFESSIONNELLE'),
         'behavior_4': _('ENGAGEMENT PERSONNEL DANS LE SERVICE'),
-        'competence_1': _('CAPACITE DE RECUEIL DES DONNEES DE BASE'),
-        'competence_2': _('CONNAISSANCES MEDICALES'),
-        'competence_3': _('JUGEMENT CLINIQUE'),
-        'competence_4': _('HABILETE TECHNIQUE CLINIQUE'),
+        'competency_1': _('CAPACITE DE RECUEIL DES DONNEES DE BASE'),
+        'competency_2': _('CONNAISSANCES MEDICALES'),
+        'competency_3': _('JUGEMENT CLINIQUE'),
+        'competency_4': _('HABILETE TECHNIQUE CLINIQUE'),
         'preconcours_comments': _('Preconcours comments'),
     }
     return {comments_keys_mapping[k]: v for k, v in comments.items()}
