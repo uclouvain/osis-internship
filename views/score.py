@@ -604,6 +604,7 @@ def _get_persons_scores(students):
 
 
 def _group_by_students_and_periods(scores):
+    scores = sorted(scores, key=lambda score: (score.student.person.pk, score.period.pk))
     return {
         person_id: {
             period_id: list(score)
