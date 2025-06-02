@@ -605,6 +605,7 @@ def _get_persons_scores(students):
 
 def _group_by_students_and_periods(scores):
     result = {}
+    scores = sorted(scores, key=lambda score: (score.student.person.pk, score.period.pk))
     for person_id, student_scores in groupby(scores, lambda score: score.student.person.pk):
         if person_id not in result:
             result[person_id] = {}
