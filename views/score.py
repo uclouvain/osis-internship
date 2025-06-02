@@ -604,13 +604,16 @@ def _get_persons_scores(students):
 
 
 def _group_by_students_and_periods(scores):
-    return {
-        person_id: {
-            period_id: list(score)
-            for period_id, score in groupby(value, lambda score: score.period.pk)
-        }
-        for person_id, value in groupby(scores, lambda score: score.student.person.pk)
-    }
+    result = {}
+    for person_id, student_scores in groupby(scores, lambda score: score.student.person.pk):
+        if person_id not in result:
+            result[person_id] = {}
+        for period_id, period_scores in groupby(student_scores, lambda score: score.period.pk):
+            if period_id in result[person_id]:
+                result[person_id][period_id].extend(list(period_scores))
+            else:
+                result[person_id][period_id] = list(period_scores)
+    return result
 
 
 def _prepare_students_extra_data(students):
