@@ -103,7 +103,7 @@ class InternshipScore(Model):
 
     student_presence = models.BooleanField(null=True, verbose_name=_('Student presence'))
 
-    behavior_score = models.IntegerField(
+    behavior_score = models.FloatField(
         null=True,
         blank=True,
         validators=[
@@ -112,7 +112,7 @@ class InternshipScore(Model):
         ],
         verbose_name=_("Behavior score")
     )
-    competency_score = models.IntegerField(
+    competency_score = models.FloatField(
         null=True,
         blank=True,
         validators=[
