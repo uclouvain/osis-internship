@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: "1.1.17"
+  version: "1.1.18"
   title: Internship API
   description: 'This API delivers data for the Internship project.'
   contact:
@@ -1527,10 +1527,10 @@ components:
           type: boolean
           nullable: true
         behavior_score:
-          type: integer
+          type: number
           nullable: true
         competency_score:
-          type: integer
+          type: number
           nullable: true
         preconcours_evaluation_detail:
           type: object
