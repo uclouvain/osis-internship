@@ -26,7 +26,6 @@
 from django.db.models import Window, F
 from django.db.models.functions import RowNumber
 from django.template.loader import render_to_string
-from weasyprint import HTML
 
 from internship.models.internship_score import InternshipScore
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
@@ -34,6 +33,8 @@ from osis_common.utils.url_fetcher import django_url_fetcher
 
 
 def generate_pdf(cohort, periods, student, internships, mapping, extra_data):  # pylint: disable=too-many-arguments
+    from weasyprint import HTML
+
     internships_scores = InternshipScore.objects.filter(
         student_affectation__student__person=student.person, validated=True
     ).filter(
