@@ -332,7 +332,7 @@
                                         <strong>{% trans "Behavior score" %} : </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
-                                                {{ period_scores.behavior|default:"-" }}
+                                                {{ period_scores.behavior|default_if_none:"-" }}
                                             {% endif %}
                                         {% endfor %}
                                     </td>
@@ -340,7 +340,7 @@
                                         <strong>{% trans "Competency score" %} : </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
-                                                {{ period_scores.competency|default:"-" }}
+                                                {{ period_scores.competency|default_if_none:"-" }}
                                             {% endif %}
                                         {% endfor %}
                                     </td>
@@ -355,11 +355,11 @@
                                     {% if period.is_preconcours %}
                                         <td class="hidden-sm hidden-xs text-center" colspan="8">
                                             <strong>{% trans "Behavior score" %} : </strong>
-                                            {{ scores.behavior|default:"-" }}
+                                            {{ scores.behavior|default_if_none:"-" }}
                                         </td>
                                         <td class="hidden-sm hidden-xs text-center" colspan="7">
                                             <strong>{% trans "Competency score" %} : </strong>
-                                            {{ scores.competency|default:"-" }}
+                                            {{ scores.competency|default_if_none:"-" }}
                                         </td>
                                     {% else %}
                                         {% for score in scores %}
@@ -404,7 +404,7 @@
                                         {% if period.is_preconcours %}
                                             {% for period_name, period_scores, period_aff_index in student.scores %}
                                                 {% if period_name == period.name and forloop.parentloop.counter == period_aff_index %}
-                                                    {% if period_scores.behavior and period_scores.competency %}
+                                                    {% if period_scores.behavior is not None and period_scores.competency is not None %}
                                                         {{ period_scores.calculated_global_score|floatformat:1 }}
                                                     {% else %}
                                                         -
@@ -424,7 +424,7 @@
                                             {% if period.is_preconcours %}
                                                 {% for period_name, period_scores, period_aff_index in student.scores %}
                                                     {% if period_name == period.name %}
-                                                        {% if period_scores.behavior and period_scores.competency %}
+                                                        {% if period_scores.behavior is not None and period_scores.competency is not None %}
                                                             {{ period_scores.calculated_global_score|floatformat:1 }}
                                                         {% else %}
                                                             0

@@ -147,6 +147,6 @@ class InternshipScore(Model):
     @property
     def calculated_global_score(self):
         """Calculate global score as average of behavior and competency scores for preconcours periods"""
-        if not self.is_preconcours or not all([self.behavior_score, self.competency_score]):
+        if not self.is_preconcours or not all([self.behavior_score is not None, self.competency_score is not None]):
             return None
         return (self.behavior_score + self.competency_score) / 2
