@@ -1036,6 +1036,8 @@ def _process_errors(request, import_errors, period):
         _show_period_error_message(request, import_errors['period_error'], period)
     elif import_errors and 'score_completeness_errors' in import_errors.keys():
         _show_score_completeness_error_message(request, import_errors['score_completeness_errors'], period)
+    elif import_errors and 'speciality_errors' in import_errors.keys():
+        _show_speciality_error_message(request, import_errors['speciality_errors'], period)
     else:
         _show_import_success_message(request, period)
 
@@ -1067,6 +1069,18 @@ def _show_import_error_message(request, errors, period):
         message_content += "<br/> - {} : {}".format(
             _('row %(row_id)s') % {'row_id': row_error[0].row},
             _("student with registration id '%(reg_id)s' not found") % {'reg_id': escape(row_error[0].value)}
+        )
+    display_error_messages(request, message_content, extra_tags='safe')
+
+
+def _show_speciality_error_message(request, errors, period):
+    message_content = _('Import aborted for period %(period)s due to error(s) on:') % {'period': period}
+    for row_error in errors:
+        message_content += "<br/> - {} : {}".format(
+            _('row %(row_id)s') % {'row_id': row_error['row'][0].row},
+            _("speciality acronym '%(speciality_acronym)s' not found in cohort") % {
+                'speciality_acronym': escape(row_error['speciality_acronym'])
+            }
         )
     display_error_messages(request, message_content, extra_tags='safe')
 
