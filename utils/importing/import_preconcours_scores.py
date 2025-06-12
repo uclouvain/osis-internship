@@ -68,6 +68,10 @@ def _search_worksheet_for_errors(cohort, period, worksheet, worksheet_period):
     if score_completeness_errors:
         errors.update({'score_completeness_errors': score_completeness_errors})
 
+    speciality_errors = _analyze_specialities(cohort, worksheet)
+    if speciality_errors:
+        errors.update({'speciality_errors': speciality_errors})
+
     return errors
 
 
@@ -117,6 +121,32 @@ def _get_registration_id_errors(cohort, errors, registration_id, row):
     existing_student = student.find_by_registration_id(registration_id)
     if existing_student is None or not _student_is_in_cohort(existing_student, cohort):
         return row
+
+
+def _analyze_specialities(cohort, worksheet):
+    errors = []
+    specialities = cohort.internshipspeciality_set.all()
+    speciality_acronyms = [s.acronym for s in specialities]
+
+    for row in list(worksheet.rows)[1:worksheet.max_row]:
+        speciality_acronym = row[4].value
+        if speciality_acronym is None:
+            continue
+
+        if speciality_acronym not in speciality_acronyms:
+            error = _get_speciality_acronym_error(row, speciality_acronym)
+            errors.append(error)
+
+    return errors
+
+
+def _get_speciality_acronym_error(row, speciality_acronym):
+    return {
+        'speciality_acronym': speciality_acronym,
+        'row': row,
+        'error': 'Speciality acronym not found in cohort'
+    }
+
 
 def _import_score(row, cohort, period):
     registration_id = row[0].value
