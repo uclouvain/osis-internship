@@ -1691,7 +1691,7 @@ msgstr "ligne %(row_id)s"
 
 #, python-format
 msgid "speciality acronym '%(speciality_acronym)s' not found in cohort"
-msgstr ""
+msgstr "Acronyme de spécialité '%(speciality_acronym)s' introuvable dans la cohorte"
 
 #, python-format
 msgid "student with registration id '%(reg_id)s' not found"
