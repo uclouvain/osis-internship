@@ -195,14 +195,14 @@
                         {% for student in students %}
                         {% with has_remedial=student|has_remedial %}
                          <tr>
-                            {% count_multiple_score_for_period student.scores as count_multiples_socres  %}
-                             {% with rowspan_no_remedial=mandatory_periods|length|add:1|add:count_multiples_socres %}
+                            {% count_multiple_score_for_period student.scores as count_multiple_scores  %}
+                             {% with rowspan_no_remedial=mandatory_periods|length|add:1|add:count_multiple_scores %}
                              {% with rowspan_remedial=student.remedial_periods_count %}
                               <td
                                 {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -216,7 +216,7 @@
                                 {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -233,7 +233,7 @@
                                 {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -243,7 +243,7 @@
                                 {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
