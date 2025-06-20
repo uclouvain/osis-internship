@@ -382,13 +382,15 @@
                                 {% endif %}
                             {% endfor %}
                             <td>
-                            {% with student.comments|get_item:period.name as comments%}
+                            {% with student.comments|get_item:period.name as comments %}
                                 {% if comments %}
                                 {% for comment in comments %}
                                 {% if forloop.counter == forloop.parentloop.counter %}
+                                {% if comment %}
                                 <a data-bs-toggle="modal" data-bs-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-preconcours="{{ period.is_preconcours }}" data-score="{{ student.scores|get_period_score_tuple:period.name|to_json }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comment|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-index="{{ forloop.counter0 }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
                                     <icon class="far fa-comment"></icon>
                                 </a>
+                                {% endif %}
                                 {% endif %}
                                 {% endfor %}
                                 {% endif %}

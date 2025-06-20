@@ -566,7 +566,7 @@ def _prepare_score_table(cohorts, periods, students):
         'student__person', 'student__registration_id', 'period__name', 'organization__reference', 'organization__name',
         'speciality__acronym', 'speciality__sequence', 'speciality__name', 'internship__speciality_id',
         'internship__name', 'internship__length_in_periods', 'internship_evaluated'
-     ).order_by('period__date_start')
+     ).order_by('period__date_start', 'date_start')
 
     scores = _group_by_students_and_periods(scores)
 
@@ -593,7 +593,7 @@ def _get_persons_scores(students):
         period_aff_index=Window(
             expression=RowNumber(),
             partition_by=[F('student_affectation__student'), F('student_affectation__period')],
-            order_by=F('student_affectation__id').asc(),
+            order_by=F('student_affectation__date_start').asc(),
         )
     ).order_by(
         'student_affectation__student__person__last_name',
@@ -762,6 +762,8 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
             _retrieve_scores_entered_manually(period, student, student_scores)
         else:
             student.scores += (period.name, [], score_obj.period_aff_index),
+            existing_comments = student.comments.get(period.name, [])
+            student.comments.update({period.name: [*existing_comments, {}]})
 
 
 def _append_comments(comments, period, student, reason):
