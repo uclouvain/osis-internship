@@ -1,6 +1,5 @@
+from datetime import date
 from datetime import timedelta
-
-from django.utils.datetime_safe import date
 
 from backoffice.celery import app as celery_app
 from internship.models.period import Period

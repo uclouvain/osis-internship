@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from datetime import datetime
 from datetime import timedelta
 
 import requests
@@ -36,7 +37,6 @@ from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.datetime_safe import datetime
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
