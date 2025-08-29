@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import date
 from datetime import timedelta
 
 from django.test import SimpleTestCase
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 
 from internship.templatetags.user_account import user_account_expiry
