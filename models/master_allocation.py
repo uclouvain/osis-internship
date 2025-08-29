@@ -24,13 +24,14 @@
 #
 ##############################################################################
 import uuid as uuid
+from datetime import datetime
 from datetime import timedelta
 
 from django.contrib import admin
 from django.db import models
-from django.db.models import Q, F, Value
+from django.db.models import F, Value
+from django.db.models import Q
 from django.db.models.functions import Concat, Upper
-from django.utils.datetime_safe import datetime
 from django.utils.translation import gettext_lazy as _
 
 from internship.models.cohort import get_current_and_future_cohorts

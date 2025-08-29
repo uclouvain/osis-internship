@@ -27,6 +27,7 @@ import datetime
 import itertools
 import json
 import re
+from datetime import date
 from itertools import groupby
 from numbers import Real
 from operator import itemgetter
@@ -40,7 +41,6 @@ from django.db.models.functions import RowNumber
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
-from django.utils.datetime_safe import date
 from django.utils.html import escape
 from django.utils.translation import gettext as _
 
