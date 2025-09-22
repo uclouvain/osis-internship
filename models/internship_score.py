@@ -103,7 +103,7 @@ class InternshipScore(Model):
 
     student_presence = models.BooleanField(null=True, verbose_name=_('Student presence'))
 
-    behavior_score = models.IntegerField(
+    behavior_score = models.FloatField(
         null=True,
         blank=True,
         validators=[
@@ -112,7 +112,7 @@ class InternshipScore(Model):
         ],
         verbose_name=_("Behavior score")
     )
-    competency_score = models.IntegerField(
+    competency_score = models.FloatField(
         null=True,
         blank=True,
         validators=[
@@ -147,6 +147,6 @@ class InternshipScore(Model):
     @property
     def calculated_global_score(self):
         """Calculate global score as average of behavior and competency scores for preconcours periods"""
-        if not self.is_preconcours or not all([self.behavior_score, self.competency_score]):
+        if not self.is_preconcours or not all([self.behavior_score is not None, self.competency_score is not None]):
             return None
         return (self.behavior_score + self.competency_score) / 2

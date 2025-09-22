@@ -566,7 +566,7 @@ def _prepare_score_table(cohorts, periods, students):
         'student__person', 'student__registration_id', 'period__name', 'organization__reference', 'organization__name',
         'speciality__acronym', 'speciality__sequence', 'speciality__name', 'internship__speciality_id',
         'internship__name', 'internship__length_in_periods', 'internship_evaluated'
-     ).order_by('period__date_start')
+     ).order_by('period__date_start', 'date_start')
 
     scores = _group_by_students_and_periods(scores)
 
@@ -593,7 +593,7 @@ def _get_persons_scores(students):
         period_aff_index=Window(
             expression=RowNumber(),
             partition_by=[F('student_affectation__student'), F('student_affectation__period')],
-            order_by=F('student_affectation__id').asc(),
+            order_by=F('student_affectation__date_start').asc(),
         )
     ).order_by(
         'student_affectation__student__person__last_name',
@@ -604,6 +604,7 @@ def _get_persons_scores(students):
 
 
 def _group_by_students_and_periods(scores):
+    scores = sorted(scores, key=lambda score: (score.student.person.pk, score.period.pk))
     return {
         person_id: {
             period_id: list(score)
@@ -761,6 +762,8 @@ def _append_period_scores_and_comments_to_student(period, student, student_score
             _retrieve_scores_entered_manually(period, student, student_scores)
         else:
             student.scores += (period.name, [], score_obj.period_aff_index),
+            existing_comments = student.comments.get(period.name, [])
+            student.comments.update({period.name: [*existing_comments, {}]})
 
 
 def _append_comments(comments, period, student, reason):
@@ -1035,6 +1038,8 @@ def _process_errors(request, import_errors, period):
         _show_period_error_message(request, import_errors['period_error'], period)
     elif import_errors and 'score_completeness_errors' in import_errors.keys():
         _show_score_completeness_error_message(request, import_errors['score_completeness_errors'], period)
+    elif import_errors and 'speciality_errors' in import_errors.keys():
+        _show_speciality_error_message(request, import_errors['speciality_errors'], period)
     else:
         _show_import_success_message(request, period)
 
@@ -1066,6 +1071,18 @@ def _show_import_error_message(request, errors, period):
         message_content += "<br/> - {} : {}".format(
             _('row %(row_id)s') % {'row_id': row_error[0].row},
             _("student with registration id '%(reg_id)s' not found") % {'reg_id': escape(row_error[0].value)}
+        )
+    display_error_messages(request, message_content, extra_tags='safe')
+
+
+def _show_speciality_error_message(request, errors, period):
+    message_content = _('Import aborted for period %(period)s due to error(s) on:') % {'period': period}
+    for row_error in errors:
+        message_content += "<br/> - {} : {}".format(
+            _('row %(row_id)s') % {'row_id': row_error['row'][0].row},
+            _("speciality acronym '%(speciality_acronym)s' not found in cohort") % {
+                'speciality_acronym': escape(row_error['speciality_acronym'])
+            }
         )
     display_error_messages(request, message_content, extra_tags='safe')
 
@@ -1207,10 +1224,10 @@ def replace_comments_keys_with_translations(comments):
         'behavior_2': _('RELATIONS AVEC LES MEDECINS, LE PERSONNEL'),
         'behavior_3': _('CONSCIENCE PROFESSIONNELLE'),
         'behavior_4': _('ENGAGEMENT PERSONNEL DANS LE SERVICE'),
-        'competence_1': _('CAPACITE DE RECUEIL DES DONNEES DE BASE'),
-        'competence_2': _('CONNAISSANCES MEDICALES'),
-        'competence_3': _('JUGEMENT CLINIQUE'),
-        'competence_4': _('HABILETE TECHNIQUE CLINIQUE'),
+        'competency_1': _('CAPACITE DE RECUEIL DES DONNEES DE BASE'),
+        'competency_2': _('CONNAISSANCES MEDICALES'),
+        'competency_3': _('JUGEMENT CLINIQUE'),
+        'competency_4': _('HABILETE TECHNIQUE CLINIQUE'),
         'preconcours_comments': _('Preconcours comments'),
     }
     return {comments_keys_mapping[k]: v for k, v in comments.items()}

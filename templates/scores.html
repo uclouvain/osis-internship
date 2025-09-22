@@ -195,14 +195,14 @@
                         {% for student in students %}
                         {% with has_remedial=student|has_remedial %}
                          <tr>
-                            {% count_multiple_score_for_period student.scores as count_multiples_socres  %}
-                             {% with rowspan_no_remedial=mandatory_periods|length|add:1|add:count_multiples_socres %}
+                            {% count_multiple_score_for_period student.scores as count_multiple_scores  %}
+                             {% with rowspan_no_remedial=mandatory_periods|length|add:1|add:count_multiple_scores %}
                              {% with rowspan_remedial=student.remedial_periods_count %}
                               <td
                                 {% if has_remedial and periods.count < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -216,7 +216,7 @@
                                 {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -233,7 +233,7 @@
                                 {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -243,7 +243,7 @@
                                 {% if has_remedial and periods|length < mandatory_periods.count %}
                                     rowspan="{{ rowspan_no_remedial|add:rowspan_remedial }}"
                                 {% elif has_remedial %}
-                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1 }}{% endif %}"
+                                    rowspan="{% if rowspan_no_remedial < periods|length %}{{ rowspan_no_remedial|add:rowspan_remedial }}{% else %}{{ periods|length|add:1|add:count_multiple_scores }}{% endif %}"
                                 {% else %}
                                     rowspan="{{ rowspan_no_remedial }}"
                                 {% endif %}>
@@ -332,7 +332,7 @@
                                         <strong>{% trans "Behavior score" %} : </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
-                                                {{ period_scores.behavior|default:"-" }}
+                                                {{ period_scores.behavior|default_if_none:"-" }}
                                             {% endif %}
                                         {% endfor %}
                                     </td>
@@ -340,7 +340,7 @@
                                         <strong>{% trans "Competency score" %} : </strong>
                                         {% for period_name, period_scores, period_aff_index in student.scores %}
                                             {% if period_name == period.name %}
-                                                {{ period_scores.competency|default:"-" }}
+                                                {{ period_scores.competency|default_if_none:"-" }}
                                             {% endif %}
                                         {% endfor %}
                                     </td>
@@ -355,11 +355,11 @@
                                     {% if period.is_preconcours %}
                                         <td class="hidden-sm hidden-xs text-center" colspan="8">
                                             <strong>{% trans "Behavior score" %} : </strong>
-                                            {{ scores.behavior|default:"-" }}
+                                            {{ scores.behavior|default_if_none:"-" }}
                                         </td>
                                         <td class="hidden-sm hidden-xs text-center" colspan="7">
                                             <strong>{% trans "Competency score" %} : </strong>
-                                            {{ scores.competency|default:"-" }}
+                                            {{ scores.competency|default_if_none:"-" }}
                                         </td>
                                     {% else %}
                                         {% for score in scores %}
@@ -382,13 +382,15 @@
                                 {% endif %}
                             {% endfor %}
                             <td>
-                            {% with student.comments|get_item:period.name as comments%}
+                            {% with student.comments|get_item:period.name as comments %}
                                 {% if comments %}
                                 {% for comment in comments %}
                                 {% if forloop.counter == forloop.parentloop.counter %}
+                                {% if comment %}
                                 <a data-bs-toggle="modal" data-bs-target="#comments-modal" type="button" class="btn btn-xs btn-default btn-edit-score" id="comment-btn-{{ student.pk }}-{{ period.pk }}" data-preconcours="{{ period.is_preconcours }}" data-score="{{ student.scores|get_period_score_tuple:period.name|to_json }}" data-student="{{ student }}" data-period="{{ period }}" data-comments="{{ comment|to_json }}" data-organization="{{ student.organizations|get_item:period.name|to_json }}" data-index="{{ forloop.counter0 }}" data-specialty="{{ student.specialties|get_item:period.name|to_json }}">
                                     <icon class="far fa-comment"></icon>
                                 </a>
+                                {% endif %}
                                 {% endif %}
                                 {% endfor %}
                                 {% endif %}
@@ -404,7 +406,7 @@
                                         {% if period.is_preconcours %}
                                             {% for period_name, period_scores, period_aff_index in student.scores %}
                                                 {% if period_name == period.name and forloop.parentloop.counter == period_aff_index %}
-                                                    {% if period_scores.behavior and period_scores.competency %}
+                                                    {% if period_scores.behavior is not None and period_scores.competency is not None %}
                                                         {{ period_scores.calculated_global_score|floatformat:1 }}
                                                     {% else %}
                                                         -
@@ -424,7 +426,7 @@
                                             {% if period.is_preconcours %}
                                                 {% for period_name, period_scores, period_aff_index in student.scores %}
                                                     {% if period_name == period.name %}
-                                                        {% if period_scores.behavior and period_scores.competency %}
+                                                        {% if period_scores.behavior is not None and period_scores.competency is not None %}
                                                             {{ period_scores.calculated_global_score|floatformat:1 }}
                                                         {% else %}
                                                             0

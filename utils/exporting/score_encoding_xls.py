@@ -167,9 +167,9 @@ def _append_preconcours_data(columns, period, student):
         competency = 0
         calculated_global_score = 0
         for period_score in period_scores:
-            behavior += float(period_score.get('behavior', '')) / len(period_scores)
-            competency += float(period_score.get('competency', '')) / len(period_scores)
-            calculated_global_score += float(period_score.get('calculated_global_score', '')) / len(period_scores)
+            behavior += float(period_score.get('behavior', 0)) / len(period_scores)
+            competency += float(period_score.get('competency', 0)) / len(period_scores)
+            calculated_global_score += float(period_score.get('calculated_global_score', 0) or 0) / len(period_scores)
         columns.extend([behavior, competency, calculated_global_score])
     else:
         columns.extend(['', '', ''])
