@@ -147,7 +147,7 @@ class Assignment:
         if self.parent_cohort:
             for cohort in [cohort for cohort in self.parent_cohort.subcohorts.all() if cohort != self.cohort]:
                 self.existing_affectations += list(
-                    InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort)
+                    InternshipStudentAffectationStat.objects.filter(internship__cohort=cohort, organization__fake=False)
                 )
 
         # keep internship availability occurences in all cohorts
