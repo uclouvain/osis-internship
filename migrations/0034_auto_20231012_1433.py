@@ -24,14 +24,14 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name='cohort',
-            constraint=models.CheckConstraint(check=models.Q(('is_parent', False), ('publication_start_date__isnull', True), _connector='OR'), name='Une cohorte parente ne peut avoir des dates de publication et inscription'),
+            constraint=models.CheckConstraint(condition=models.Q(('is_parent', False), ('publication_start_date__isnull', True), _connector='OR'), name='Une cohorte parente ne peut avoir des dates de publication et inscription'),
         ),
         migrations.AddConstraint(
             model_name='cohort',
-            constraint=models.CheckConstraint(check=models.Q(('is_parent', True), ('publication_start_date__isnull', False), _connector='OR'), name='Une sous-cohorte doit avoir des dates de publication et inscription'),
+            constraint=models.CheckConstraint(condition=models.Q(('is_parent', True), ('publication_start_date__isnull', False), _connector='OR'), name='Une sous-cohorte doit avoir des dates de publication et inscription'),
         ),
         migrations.AddConstraint(
             model_name='cohort',
-            constraint=models.CheckConstraint(check=models.Q(('is_parent', False), ('parent_cohort__isnull', True), _connector='OR'), name='Une cohorte parente ne peut avoir elle-même un parent'),
+            constraint=models.CheckConstraint(condition=models.Q(('is_parent', False), ('parent_cohort__isnull', True), _connector='OR'), name='Une cohorte parente ne peut avoir elle-même un parent'),
         ),
     ]

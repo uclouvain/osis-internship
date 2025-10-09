@@ -21,9 +21,10 @@
 #  at the root of the source code of this program.  If not,
 #  see http://www.gnu.org/licenses/.
 # ############################################################################
+from datetime import date
+
 import mock
 from django.test import TestCase
-from django.utils.datetime_safe import date
 
 from internship.tasks import send_period_encoding_reminder_mail
 from internship.tests.factories.period import PeriodFactory

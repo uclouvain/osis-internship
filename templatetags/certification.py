@@ -1,6 +1,7 @@
+from datetime import date
+
 from django.template.defaulttags import register
 from django.utils import formats
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 
 from internship.models.internship_certifier import InternshipCertifier

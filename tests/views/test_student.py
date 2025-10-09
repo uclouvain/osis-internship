@@ -23,6 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import date
 from datetime import timedelta
 from unittest import skipUnless
 
@@ -31,7 +32,6 @@ from django.contrib.messages import get_messages
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext_lazy
 from openpyxl import Workbook
 
