@@ -23,13 +23,16 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.db.models import OuterRef, Subquery
+from django.contrib.postgres.aggregates import StringAgg
+from django.db.models import OuterRef, Subquery, F, Value
+from django.db.models.functions import Concat, Upper
 from django.utils.translation import gettext_lazy as _
 from openpyxl import Workbook
 from openpyxl.styles import Font
 
 from internship import models
 from internship.models.enums import organization_report_fields
+from internship.models.enums.role import Role
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
 from internship.utils.exporting.spreadsheet import columns_resizing, add_row
@@ -69,14 +72,22 @@ def _add_students(worksheet, cohort, organization):
             cohort, organization
         ).select_related('student__person')
 
-    master_allocation_subquery = MasterAllocation.objects.filter(
+    master_names = MasterAllocation.objects.filter(
         organization_id=OuterRef('organization_id'),
-        specialty_id=OuterRef('speciality_id')
-    )
+        specialty_id=OuterRef('speciality_id'),
+        role=Role.MASTER.name,
+    ).annotate(
+        full_name=Concat(
+            Upper(F('master__person__last_name')),
+            Value(' '),
+            F('master__person__first_name')
+        )
+    ).values('organization_id').annotate(
+        all_names=StringAgg('full_name', delimiter=', ')
+    ).values('all_names')
 
     students_stat = students_stat.annotate(
-        master_last_name=Subquery(master_allocation_subquery.values('master__person__last_name')[:1]),
-        master_first_name=Subquery(master_allocation_subquery.values('master__person__first_name')[:1])
+        masters=Subquery(master_names[:1])
     )
 
     rep_seq = list(organization.report_sequence())
@@ -98,8 +109,7 @@ def _add_students(worksheet, cohort, organization):
                     organization_report_fields.LAST_NAME: student_info.person.last_name,
                     organization_report_fields.FIRST_NAME: student_info.person.first_name,
                     organization_report_fields.SPECIALTY: student_stat.speciality.name,
-                    organization_report_fields.MASTER:
-                        f"{student_stat.master_first_name[0].upper()}. {student_stat.master_last_name.upper()}",
+                    organization_report_fields.MASTER: student_stat.masters,
                     organization_report_fields.BIRTHDATE: student_info.person.birth_date.strftime("%d-%m-%Y")
                     if student_info.person.birth_date else None,
                     organization_report_fields.EMAIL: student_info.person.email,
