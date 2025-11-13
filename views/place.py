@@ -230,8 +230,7 @@ def _get_affec_by_specialties_for_cohorts(cohorts, organization_id):
             )
             _add_student_information(affectation, internship_student_info)
             if master_allocation:
-                allocation = master_allocation.first()
-                affectation.master = allocation.master
+                affectation.master = ", ".join(master_allocation.values_list('master_display_name', flat=True))
     return affec_by_specialties, organization
 
 
