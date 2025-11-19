@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.db import transaction
 from django.db.models import Prefetch
 from django.http import HttpResponse
@@ -43,7 +43,6 @@ from internship.utils.exporting import places_evaluations_xls
 from osis_common.decorators.download import set_download_cookie
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation(request, cohort_id):
     cohort = get_object_or_404(
@@ -56,7 +55,7 @@ def internship_place_evaluation(request, cohort_id):
     return render(request, "place_evaluation.html", context={'cohort': cohort})
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_config(request, cohort_id):
     cohort = get_object_or_404(
@@ -81,7 +80,7 @@ def internship_place_evaluation_config(request, cohort_id):
     })
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_results(request, cohort_id):
     cohort = Cohort.objects.get(pk=cohort_id)
@@ -153,7 +152,7 @@ def _get_specialties_available_by_hospital(affectations):
     }
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie
 def export_place_evaluation_results(request, cohort_id):
@@ -173,7 +172,7 @@ def export_place_evaluation_results(request, cohort_id):
     return response
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_new(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -194,7 +193,7 @@ def internship_place_evaluation_item_new(request, cohort_id):
     })
 
 
-@login_required
+
 @transaction.atomic
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_save(request, cohort_id, item=None):
@@ -208,7 +207,7 @@ def internship_place_evaluation_item_save(request, cohort_id, item=None):
     return form, False
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_edit(request, cohort_id, item_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -228,7 +227,7 @@ def internship_place_evaluation_item_edit(request, cohort_id, item_id):
     })
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_delete(request, cohort_id, item_id):
     item = PlaceEvaluationItem.objects.get(pk=item_id)
@@ -237,7 +236,7 @@ def internship_place_evaluation_item_delete(request, cohort_id, item_id):
     return redirect('place_evaluation', cohort_id=cohort_id)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_move_up(request, cohort_id, item_id):
     item = PlaceEvaluationItem.objects.get(pk=item_id)
@@ -245,7 +244,7 @@ def internship_place_evaluation_item_move_up(request, cohort_id, item_id):
     return redirect('place_evaluation', cohort_id=cohort_id)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_place_evaluation_item_move_down(request, cohort_id, item_id):
     item = PlaceEvaluationItem.objects.get(pk=item_id)

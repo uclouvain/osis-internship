@@ -26,7 +26,7 @@
 from collections import OrderedDict
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.contrib.postgres.aggregates import ArrayAgg
 from django.db.models import Value
 from django.forms.formsets import formset_factory
@@ -44,7 +44,6 @@ from internship.models.period import Period
 from internship.views.common import display_errors
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def modification_student(request, cohort_id, student_id, internship_id=-1, speciality_id="-1"):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -106,7 +105,7 @@ def modification_student(request, cohort_id, student_id, internship_id=-1, speci
     return render(request, "internship_modification_student.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def assign_speciality_for_internship(request, cohort_id, student_id, internship_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -120,7 +119,7 @@ def assign_speciality_for_internship(request, cohort_id, student_id, internship_
                     internship_id=internship_id, speciality_id=speciality_id)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def edit_period_places(request, cohort_id, internship_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -134,7 +133,7 @@ def edit_period_places(request, cohort_id, internship_id):
     return render(request, "period_places_edit.html", context)
 
 
-@login_required
+
 @require_POST
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_period_places(request, cohort_id, internship_id):
@@ -155,7 +154,7 @@ def save_period_places(request, cohort_id, internship_id):
     return redirect('edit_period_places', cohort_id=cohort.id, internship_id=internship_id)
 
 
-@login_required()
+()
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_list(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -172,7 +171,7 @@ def internship_list(request, cohort_id):
     return render(request, 'internship/list.html', context)
 
 
-@login_required()
+()
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_new(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -199,7 +198,7 @@ def internship_new(request, cohort_id):
     return render(request, 'internship/internship_form.html', context)
 
 
-@login_required()
+()
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_edit(request, cohort_id, internship_id):
     inter = get_object_or_404(mdl_int.internship.Internship, pk=internship_id, cohort_id=cohort_id)
@@ -224,7 +223,7 @@ def internship_edit(request, cohort_id, internship_id):
     return render(request, 'internship/internship_form.html', context)
 
 
-@login_required()
+()
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_delete(request, cohort_id, internship_id):
     inter = get_object_or_404(mdl_int.internship.Internship, pk=internship_id, cohort_id=cohort_id)

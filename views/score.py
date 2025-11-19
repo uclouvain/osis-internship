@@ -34,7 +34,7 @@ from operator import itemgetter
 
 from dateutil.utils import today
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.db import transaction
 from django.db.models import OuterRef, Subquery, F, Window
 from django.db.models.functions import RowNumber
@@ -73,7 +73,7 @@ MAXIMUM_SCORE = 20
 UPDATE_SCORE_ERROR_MSG = _("An error occured during score update")
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @cache_filter()
 def scores_encoding(request, cohort_id):
@@ -125,7 +125,7 @@ def scores_encoding(request, cohort_id):
     return render(request, "scores.html", context=context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def score_detail_form(request, cohort_id, student_registration_id, period_id, specialty_name):
     cohort = Cohort.objects.get(pk=cohort_id)
@@ -225,7 +225,7 @@ def _validate_score(request, apds_data):
     return True
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def send_recap(request, cohort_id, period_id=None):
     selected_persons = InternshipStudentInformation.objects.filter(
@@ -324,7 +324,7 @@ def _show_reminder_sent_success_message(request):
     )
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_evaluation_status(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -355,7 +355,7 @@ def _update_evaluation_status(status, evaluations, cohort):
     return True, {'periods': evaluations_by_period.keys()}
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def refresh_evolution_score(request, cohort_id):
     n_completed_periods = get_effective_periods(cohort_id).filter(date_end__lt=today()).count()
@@ -381,7 +381,7 @@ def _load_json_scores(request):
     return json.loads(re.sub(r"(?<!\w)'(?<!\w)|(?!\w)'(?!\w)", '\"', request.POST['scores']).replace('None', 'null'))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -426,7 +426,7 @@ def _update_evolution_score(cohort, edited_score, registration_id, reason):
     )
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def delete_evolution_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -451,7 +451,7 @@ def delete_evolution_score(request, cohort_id):
         return _json_response_error(_("An error occured during score deletion"))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -484,7 +484,7 @@ def save_edited_score(request, cohort_id):
         )
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def delete_edited_score(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -533,7 +533,7 @@ def _json_response_error(msg):
     return response
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def empty_score(request, cohort_id):
     cohort = get_object_or_404(Cohort.objects.prefetch_related('period_set'), pk=cohort_id)
@@ -963,7 +963,7 @@ def _filter_students_with_specialty_organization(cohort, students, search_form):
     return students
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def upload_scores(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -1093,7 +1093,7 @@ def _show_import_success_message(request, period):
     )
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie
 def download_scores(request, cohort_id):
@@ -1121,7 +1121,7 @@ def download_scores(request, cohort_id):
     return response
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie
 def download_summary(request, cohort_id, student_id):
@@ -1167,7 +1167,7 @@ def _list_internships_acronyms(internships):
     return internships_acronyms
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def upload_eval(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -1175,7 +1175,7 @@ def upload_eval(request, cohort_id):
     return HttpResponseRedirect(reverse('internship_scores_encoding', kwargs={'cohort_id': cohort.id}))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def save_mapping(request, cohort_id):
     cohort = get_object_or_404(Cohort.objects.prefetch_related('period_set'), pk=cohort_id)

@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.db.models import Case, When, F
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
@@ -35,7 +35,6 @@ from internship import models as mdl
 from internship.forms.specialty import SpecialtyForm
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def specialities(request, cohort_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
@@ -49,7 +48,7 @@ def specialities(request, cohort_id):
     return render(request, "specialities.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_create(request, cohort_id, speciality=None):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
@@ -57,7 +56,7 @@ def speciality_create(request, cohort_id, speciality=None):
     return render(request, "speciality_form.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_save(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
@@ -123,13 +122,13 @@ def speciality_save(request, cohort_id, speciality_id):
     return HttpResponseRedirect(reverse('internships_specialities', kwargs={'cohort_id': cohort.id,}))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_new(request, cohort_id):
     return speciality_save(request, cohort_id, None)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def modify(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)
@@ -139,7 +138,7 @@ def modify(request, cohort_id, speciality_id):
     return render(request, "speciality_form.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def speciality_delete(request, cohort_id, speciality_id):
     cohort = get_object_or_404(mdl.cohort.Cohort, pk=cohort_id)

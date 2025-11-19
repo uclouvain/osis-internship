@@ -23,7 +23,7 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -33,8 +33,7 @@ from internship.forms.cohort import CohortForm
 from internship.models.cohort import Cohort
 from internship.views.common import display_errors
 
-
-@login_required()
+()
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def new(request):
     form = CohortForm(request.POST or None)
@@ -55,7 +54,7 @@ def new(request):
     return render(request, 'cohort/cohort_form.html', context)
 
 
-@login_required()
+()
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def edit(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
