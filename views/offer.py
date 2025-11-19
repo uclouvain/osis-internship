@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -42,7 +42,6 @@ from internship.utils.importing import import_offers
 from internship.views.internship import get_all_specialities, set_tabs_name
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def list_internships(request, cohort_id, specialty_id=None):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -128,7 +127,7 @@ def list_internships(request, cohort_id, specialty_id=None):
     return render(request, "internships.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, cohort_id, offer_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -197,7 +196,7 @@ def _get_mandatory_internships_choices(offer):
 
 
 @require_http_methods(['POST'])
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_save(request, cohort_id):
     # Check if the internships are selectable, if yes students can save their choices
@@ -306,7 +305,7 @@ def internships_save(request, cohort_id):
     }))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_save_modification_student(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -411,7 +410,7 @@ def internship_save_modification_student(request, cohort_id):
     return HttpResponseRedirect(redirect_url)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def upload_offers(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)

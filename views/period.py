@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -37,7 +37,6 @@ from internship.models.period import Period
 from internship.views.common import display_errors
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_periods(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -46,7 +45,7 @@ def internships_periods(request, cohort_id):
     return render(request, "periods.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_create(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -57,7 +56,7 @@ def period_create(request, cohort_id):
     return render(request, "period_form.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_save(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -83,7 +82,7 @@ def period_save(request, cohort_id, period_id):
     return HttpResponseRedirect(reverse('internships_periods', kwargs=kwargs))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_new(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -110,7 +109,7 @@ def period_new(request, cohort_id):
     return HttpResponseRedirect(reverse('internships_periods', kwargs=kwargs))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_delete(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -123,7 +122,7 @@ def period_delete(request, cohort_id, period_id):
     return HttpResponseRedirect(reverse('internships_periods', kwargs=kwargs))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def period_get(request, cohort_id, period_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)

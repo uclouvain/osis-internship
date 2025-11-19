@@ -100,14 +100,14 @@ class Cohort(SerializableModel):
         ordering = ['name']
         constraints = [
             models.CheckConstraint(
-                check=Q(is_parent=False) | Q(publication_start_date__isnull=True),
+                condition=Q(is_parent=False) | Q(publication_start_date__isnull=True),
                 name=_("A parent cohort cannot have publication and subscription dates")),
             models.CheckConstraint(
-                check=Q(is_parent=True) | Q(publication_start_date__isnull=False),
+                condition=Q(is_parent=True) | Q(publication_start_date__isnull=False),
                 name=_("A subcohort must have publication and subscription dates")
             ),
             models.CheckConstraint(
-                check=Q(is_parent=False) | Q(parent_cohort__isnull=True),
+                condition=Q(is_parent=False) | Q(parent_cohort__isnull=True),
                 name=_("A parent cohort cannot have a parent itself")
             ),
         ]
