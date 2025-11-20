@@ -23,10 +23,10 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
+from datetime import date
 from datetime import timedelta
 
 from django.test import TestCase
-from django.utils.datetime_safe import date
 
 from base.tests.factories.person import PersonWithPermissionsFactory
 from base.tests.factories.student import StudentFactory

@@ -24,19 +24,19 @@
 #
 ##############################################################################
 import json
+from datetime import datetime
 from datetime import timedelta
 
 import requests
 from django import shortcuts
 from django.conf import settings
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.db.models import Q
 from django.forms import model_to_dict
 from django.http import HttpResponseRedirect, HttpResponse, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse
-from django.utils.datetime_safe import datetime
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -66,7 +66,7 @@ from osis_common.utils.logging import logger
 INTERNSHIP_MASTER_USER_ACCOUNT_EXPIRY_DAYS = 365
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def masters(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
@@ -95,7 +95,7 @@ def masters(request, cohort_id):
     return render(request, "masters.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def create_user_accounts(request, cohort_id):
     selected_masters = InternshipMaster.objects.filter(
@@ -267,7 +267,7 @@ def _send_creation_account_email(master, connected_user=None):
     )
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def extend_accounts_validity(request, cohort_id):
     selected_masters = InternshipMaster.objects.filter(
@@ -288,7 +288,7 @@ def extend_accounts_validity(request, cohort_id):
     )
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def master(request, cohort_id, master_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
@@ -298,7 +298,7 @@ def master(request, cohort_id, master_id):
     return render(request, "master.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def master_form(request, cohort_id, master_id=None, allocated_master=None):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
@@ -324,7 +324,7 @@ def master_form(request, cohort_id, master_id=None, allocated_master=None):
     return render(request, "master_form.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def person_exists(request, cohort_id):
     email = json.loads(request.body.decode("utf-8"))['email']
@@ -336,7 +336,7 @@ def person_exists(request, cohort_id):
     return JsonResponse(data if person else {'err': 'not found'})
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def master_delete(request, master_id, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
@@ -355,7 +355,7 @@ def master_delete(request, master_id, cohort_id):
     return HttpResponseRedirect(reverse('internships_masters', kwargs={'cohort_id': cohort_id}))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def master_save(request, cohort_id):
     current_cohort = shortcuts.get_object_or_404(cohort.Cohort, pk=cohort_id)
@@ -407,7 +407,7 @@ def master_save(request, cohort_id):
                                                         hospital))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 @set_download_cookie
 def export_masters(request, cohort_id):
@@ -491,7 +491,7 @@ def _validate_allocations(request):
     return (hospitals[0] != '' or specialties[0] != '') and roles[0] != ''
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def transfer_master_allocation_to_cohort(request, cohort_id):
     cohort_from = Cohort.objects.get(pk=cohort_id)

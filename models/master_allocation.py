@@ -24,12 +24,14 @@
 #
 ##############################################################################
 import uuid as uuid
+from datetime import datetime
 from datetime import timedelta
 
 from django.contrib import admin
 from django.db import models
+from django.db.models import F, Value
 from django.db.models import Q
-from django.utils.datetime_safe import datetime
+from django.db.models.functions import Concat, Upper
 from django.utils.translation import gettext_lazy as _
 
 from internship.models.cohort import get_current_and_future_cohorts
@@ -139,4 +141,6 @@ def clean_allocations(cohort, master, postpone):
 
 
 def find_by_cohort(cohort_from):
-    return MasterAllocation.objects.filter(Q(organization__cohort=cohort_from) | Q(specialty__cohort=cohort_from))
+    return MasterAllocation.objects.annotate(master_display_name=Concat(
+        Upper(F('master__person__last_name')), Value(' '), F('master__person__first_name')
+    )).filter(Q(organization__cohort=cohort_from) | Q(specialty__cohort=cohort_from))
