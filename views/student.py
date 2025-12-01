@@ -25,10 +25,11 @@
 ##############################################################################
 import itertools
 import json
+from datetime import date
 from io import BytesIO
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.core.exceptions import PermissionDenied
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
@@ -38,7 +39,6 @@ from django.forms import model_to_dict
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext_lazy as _
 from django.views.decorators.http import require_POST
 
@@ -65,7 +65,6 @@ from osis_common.utils.models import get_object_or_none
 from reference.models.country import Country
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_resume(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -87,7 +86,7 @@ def internships_student_resume(request, cohort_id):
     return render(request, "students.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_form(request, cohort_id, form=None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -97,7 +96,7 @@ def student_form(request, cohort_id, form=None):
     return render(request, 'student_form.html', locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def get_student(request):
     registration_id = request.GET.get('id', '')
@@ -132,7 +131,7 @@ def get_student(request):
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save(request, cohort_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -149,7 +148,7 @@ def student_save(request, cohort_id):
     return HttpResponseRedirect(reverse("internships_student_resume", args=[cohort_id]))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_read(request, cohort_id, student_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -195,7 +194,7 @@ def internships_student_read(request, cohort_id, student_id):
     return render(request, "student.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_information_modification(request, cohort_id, student_id, form=None):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -206,7 +205,7 @@ def internship_student_information_modification(request, cohort_id, student_id, 
     return render(request, "student_information_modification.html", locals())
 
 
-@login_required
+
 @require_POST
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_information_modification(request, cohort_id, student_id):
@@ -243,7 +242,7 @@ def student_save_information_modification(request, cohort_id, student_id):
     return HttpResponseRedirect(redirect_url)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_student_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -269,7 +268,7 @@ def _append_numbers_to_acronyms(specialties):
             specialty.acronym += str(number[0])
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_save_affectation_modification(request, cohort_id, student_id):
     cohort = get_object_or_404(mdl_int.cohort.Cohort, pk=cohort_id)
@@ -414,7 +413,7 @@ def _build_update_data(cohort, organizations, specialties, internships):
     }
 
 
-@login_required
+
 @require_POST
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def import_students(request, cohort_id):
@@ -433,7 +432,7 @@ def import_students(request, cohort_id):
     return HttpResponseRedirect(reverse('internships_student_resume', kwargs={"cohort_id": cohort_id}))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_student_import_update(request, cohort_id, differences=None):
     """Render a view to visualize and accept differences to be applied"""

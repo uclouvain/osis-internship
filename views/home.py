@@ -23,8 +23,8 @@
 #    see http://www.gnu.org/licenses/.
 #
 ##############################################################################
-from django.contrib.auth.decorators import login_required, permission_required
-from django.db.models import F, Subquery, OuterRef
+from django.contrib.auth.decorators import permission_required
+from django.db.models import Subquery, OuterRef
 from django.shortcuts import render, get_object_or_404
 from django.views.decorators import http
 
@@ -35,7 +35,6 @@ from internship.models.internship_offer import find_internships
 from internship.models.master_allocation import MasterAllocation
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def cohort_home(request, cohort_id):
     cohort = get_object_or_404(Cohort, pk=cohort_id)
@@ -45,7 +44,7 @@ def cohort_home(request, cohort_id):
 
 
 @http.require_http_methods(['GET'])
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_cohort_selection(request):
     subcohorts_query = Cohort.objects.filter(parent_cohort__pk=OuterRef('pk')).order_by('subscription_start_date')

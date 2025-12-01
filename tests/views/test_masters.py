@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from datetime import date
 from datetime import timedelta
 from types import SimpleNamespace
 from unittest import skipUnless
@@ -34,7 +35,6 @@ from django.contrib.auth.models import Permission, User
 from django.http import HttpResponse
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from django.utils.datetime_safe import date
 from mock import patch
 
 from backoffice.settings.base import INSTALLED_APPS

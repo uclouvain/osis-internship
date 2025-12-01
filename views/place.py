@@ -24,7 +24,7 @@
 #
 ##############################################################################
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
@@ -41,7 +41,6 @@ from osis_common.decorators.download import set_download_cookie
 from reference.models.country import Country
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internships_places(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -57,7 +56,7 @@ def internships_places(request, cohort_id):
     return render(request, "places.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_save(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -84,7 +83,7 @@ def place_save(request, cohort_id, organization_id):
     return render(request, "place_form.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def place_remove(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -93,13 +92,13 @@ def place_remove(request, cohort_id, organization_id):
     return internships_places(request, cohort_id)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_new(request, cohort_id):
     return place_save(request, cohort_id, None)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_edit(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -109,7 +108,7 @@ def organization_edit(request, cohort_id, organization_id):
     return render(request, "place_form.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def organization_create(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -118,7 +117,7 @@ def organization_create(request, cohort_id):
     return render(request, "place_form.html", locals())
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_choice(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -147,7 +146,7 @@ def student_choice(request, cohort_id, organization_id):
     return render(request, "place_detail.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def student_affectation(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -194,7 +193,7 @@ def student_affectation(request, cohort_id, organization_id):
     return render(request, "place_detail_affectation.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_organisation_affectation_master(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -234,7 +233,7 @@ def _get_affec_by_specialties_for_cohorts(cohorts, organization_id):
     return affec_by_specialties, organization
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def export_hospital_affectation(request, cohort_id, organization_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)

@@ -36,6 +36,7 @@ class TestInternshipForm(TestCase):
     def test_valid_form(self):
         cohort = CohortFactory()
         instance = models.internship.Internship(cohort_id=cohort.id)
+        instance.save()
         specialty = SpecialtyFactory(cohort=cohort)
         data = {
             'name': "name",

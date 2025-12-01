@@ -28,7 +28,7 @@ from collections import OrderedDict
 from operator import itemgetter
 
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import permission_required
 from django.core.serializers.json import DjangoJSONEncoder
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render, redirect
@@ -42,7 +42,6 @@ from internship.models import internship_student_affectation_stat
 from internship.models.period import get_assignable_periods, get_subcohorts_periods
 
 
-@login_required
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def run_affectation(request, cohort_id):
     cohort = get_object_or_404(
@@ -73,7 +72,7 @@ def run_affectation(request, cohort_id):
     return redirect(reverse('internship_affectation_hospitals',  kwargs={'cohort_id': cohort.id}))
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_hospitals(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -97,7 +96,7 @@ def view_hospitals(request, cohort_id):
     return render(request, "internship_affectation_hospitals.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_students(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -129,7 +128,7 @@ def view_students(request, cohort_id):
     return render(request, "internship_affectation_students.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_statistics(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -164,7 +163,7 @@ def view_statistics(request, cohort_id):
     return render(request, "internship_affectation_statistics.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def view_errors(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -192,7 +191,7 @@ def view_errors(request, cohort_id):
     return render(request, "internship_affectation_errors.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def internship_affectation_sumup(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
@@ -247,7 +246,7 @@ def internship_affectation_sumup(request, cohort_id):
     return render(request, "internship_affectation_sumup.html", context)
 
 
-@login_required
+
 @permission_required('internship.is_internship_manager', raise_exception=True)
 def import_affectations(request, cohort_id):
     cohort = get_object_or_404(models.cohort.Cohort, pk=cohort_id)
