@@ -24,11 +24,11 @@
 #
 ##############################################################################
 import datetime
+from datetime import date
 from unittest import mock
 
 from django.conf import settings
 from django.test import TestCase
-from django.utils.datetime_safe import date
 
 from base.tests.factories.student import StudentFactory
 from internship.models.enums.user_account_status import UserAccountStatus

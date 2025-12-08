@@ -24,6 +24,7 @@
 #
 ##############################################################################
 import json
+from datetime import date
 from datetime import timedelta
 from types import SimpleNamespace
 from unittest import mock, skipUnless
@@ -34,7 +35,6 @@ from django.contrib.auth.models import Permission
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.test import TestCase
 from django.urls import reverse
-from django.utils.datetime_safe import date
 from django.utils.translation import gettext as _
 from mock import Mock
 from rest_framework import status
