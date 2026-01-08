@@ -157,10 +157,10 @@
         $(document).ready(function() {
             students = $('#students').DataTable({
                 paging: false,
-                "columnDefs": [ {
-                    "targets": 'no-sort',
-                    "orderable": false
-                } ],
+                "columnDefs": [
+                    {"targets": 'no-sort', "orderable": false},
+                    {"className": "dt-left", "targets": "_all"}
+                ],
                 bInfo: false
             });
 
@@ -180,19 +180,19 @@
 
             $('#organizations').DataTable({
                 paging: false,
-                "columnDefs": [ {
-                    "targets": 'no-sort',
-                    "orderable": false
-                } ],
+                "columnDefs": [
+                    {"targets": 'no-sort', "orderable": false},
+                    {"className": "dt-left", "targets": "_all"}
+                ],
                 bInfo: false
             });
 
             $('#errors').DataTable({
                 paging: false,
-                "columnDefs": [ {
-                    "targets": 'no-sort',
-                    "orderable": false
-                } ],
+                "columnDefs": [
+                    {"targets": 'no-sort', "orderable": false},
+                    {"className": "dt-left", "targets": "_all"}
+                ],
                 bInfo: false
             });
         } );
