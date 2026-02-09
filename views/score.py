@@ -51,13 +51,14 @@ from internship.business.scores import InternshipScoreRules
 from internship.forms.score import ScoresFilterForm
 from internship.models.cohort import Cohort
 from internship.models.enums.role import Role
+from internship.models.internship import Internship
 from internship.models.internship_score import InternshipScore, APD_NUMBER, MIN_APDS, MAX_APDS
 from internship.models.internship_score_mapping import InternshipScoreMapping
 from internship.models.internship_score_reason import InternshipScoreReason
 from internship.models.internship_student_affectation_stat import InternshipStudentAffectationStat
 from internship.models.internship_student_information import InternshipStudentInformation
 from internship.models.master_allocation import MasterAllocation
-from internship.models.period import get_effective_periods, get_assignable_periods, get_subcohorts_periods
+from internship.models.period import get_effective_periods, get_assignable_periods, get_subcohorts_periods, Period
 from internship.templatetags.dictionary import is_edited, is_excused
 from internship.templatetags.student import has_remedial
 from internship.utils.exporting import score_encoding_xls, score_summary_pdf
@@ -1142,9 +1143,15 @@ def download_summary(request, cohort_id, student_id):
 
     cohorts = cohort.subcohorts.all() if cohort.is_parent else [cohort]
 
-    periods = cohort.period_set.filter(name__in=selected_periods).order_by('date_start')
-    student = cohort.internshipstudentinformation_set.get(id=student_id)
-    internships = cohort.internship_set.all().order_by('position')
+    if cohort.is_parent:
+        periods = Period.objects.filter(cohort__in=cohorts, name__in=selected_periods).order_by('date_start')
+        student = InternshipStudentInformation.objects.get(id=student_id)
+        internships = Internship.objects.filter(cohort__in=cohorts).order_by('position')
+    else:
+        periods = cohort.period_set.filter(name__in=selected_periods).order_by('date_start')
+        student = cohort.internshipstudentinformation_set.get(id=student_id)
+        internships = cohort.internship_set.all().order_by('position')
+
     internships = _list_internships_acronyms(internships)
     mapping = _prepare_score_table(cohorts, periods, [student])
     file = score_summary_pdf.generate_pdf(cohort, periods, student, internships, mapping, extra_data)
